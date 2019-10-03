@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/old_lynch"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Credits">
+
+    <ImageView
+        android:id="@+id/drop1"
+        android:layout_width="15dp"
+        android:layout_height="100dp"
+        android:src="@drawable/water_drop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.55"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0975" />
+
+    <ImageView
+        android:id="@+id/drop2"
+        android:layout_width="15dp"
+        android:layout_height="100dp"
+        android:src="@drawable/water_drop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.445"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.045" />
+
+    <ImageView
+        android:id="@+id/drop3"
+        android:layout_width="15dp"
+        android:layout_height="100dp"
+        android:src="@drawable/water_drop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.275"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.2" />
+
+    <TextView
+        style="@style/TitleCredit"
+        android:id="@+id/page"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Credits"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintVertical_bias="0.05"/>
+
+    <TextView
+        android:id="@+id/title1"
+        style="@style/TitleCredit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Project Leader"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/leader"
+        app:layout_constraintEnd_toEndOf="@+id/page"
+        app:layout_constraintStart_toStartOf="@+id/page"
+        app:layout_constraintTop_toBottomOf="@+id/page"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintVertical_bias="0.5" />
+
+    <TextView
+        android:id="@+id/leader"
+        style="@style/NormalText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=" Alec Kurkdjian"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/title2"
+        app:layout_constraintEnd_toEndOf="@+id/title1"
+        app:layout_constraintStart_toStartOf="@+id/title1"
+        app:layout_constraintTop_toBottomOf="@+id/title1"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/title2"
+        style="@style/TitleCredit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Technical Lead"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/technical"
+        app:layout_constraintEnd_toEndOf="@+id/leader"
+        app:layout_constraintStart_toStartOf="@+id/leader"
+        app:layout_constraintTop_toBottomOf="@+id/leader"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintVertical_bias="0.5" />
+
+    <TextView
+        style="@style/NormalText"
+        android:id="@+id/technical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cong-Vinh Vu"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/title3"
+        app:layout_constraintEnd_toEndOf="@+id/title2"
+        app:layout_constraintStart_toStartOf="@+id/title2"
+        app:layout_constraintTop_toBottomOf="@+id/title2"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintVertical_bias="0" />
+
+    <TextView
+        style="@style/TitleCredit"
+        android:id="@+id/title3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Developpers"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/dev1"
+        app:layout_constraintEnd_toEndOf="@+id/technical"
+        app:layout_constraintStart_toStartOf="@+id/technical"
+        app:layout_constraintTop_toBottomOf="@+id/technical"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintVertical_bias="0.5" />
+
+    <TextView
+        style="@style/NormalText"
+        android:id="@+id/dev1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Irfan Ahmed"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/dev2"
+        app:layout_constraintEnd_toEndOf="@+id/title3"
+        app:layout_constraintStart_toStartOf="@+id/title3"
+        app:layout_constraintTop_toBottomOf="@+id/title3"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintVertical_bias="0" />
+
+    <TextView
+        style="@style/NormalText"
+        android:id="@+id/dev2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Olasubulumi Jesutomi Ogo Oluwa "
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/dev3"
+        app:layout_constraintEnd_toEndOf="@+id/dev1"
+        app:layout_constraintStart_toStartOf="@+id/dev1"
+        app:layout_constraintTop_toBottomOf="@+id/dev1"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintVertical_bias="0" />
+
+    <TextView
+        style="@style/NormalText"
+        android:id="@+id/dev3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Shadi Makdissi "
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/dev2"
+        app:layout_constraintStart_toStartOf="@+id/dev2"
+        app:layout_constraintTop_toBottomOf="@+id/dev2"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintVertical_bias="0" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
