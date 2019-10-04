@@ -6,5 +6,5 @@ Cong-Vinh Vu
 Developpers:
 Alec Kurkdjian,
 Irfan Ahmed,
-Shadi Makdissi and,
+Shadi Makdissi, and
 Ogo-Oluwa Jesutomi Olasubulumi
