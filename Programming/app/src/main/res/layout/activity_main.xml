@@ -2,63 +2,73 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@drawable/blue_city"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/blue_city"
     tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/text"
-        style="@style/TitleText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="COEN/ELEC 390 Project"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintVertical_bias="0.05" />
+    <Button
+        android:id="@+id/history"
+        android:layout_width="194dp"
+        android:layout_height="45dp"
+        android:layout_marginBottom="20dp"
+        android:text="history"
+        app:layout_constraintBottom_toTopOf="@+id/credits"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias=".5"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        style="@style/Buttons"
-        android:id="@+id/start"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Start"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/text"
-        app:layout_constraintStart_toStartOf="@+id/text"
-        app:layout_constraintTop_toBottomOf="@+id/text"
-        app:layout_constraintHorizontal_bias="0"
-        app:layout_constraintVertical_bias="0.2" />
+        android:id="@+id/admin_access"
+        android:layout_width="194dp"
+        android:layout_height="45dp"
+        android:layout_marginBottom="20dp"
+        android:text="Admin Access"
+        app:layout_constraintBottom_toTopOf="@+id/history"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        style="@style/Buttons"
-        android:id="@+id/instructions"
-        android:layout_marginTop="5dp"
-        android:text="How to Use the App"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/start"
-        app:layout_constraintStart_toStartOf="@+id/start"
-        app:layout_constraintTop_toBottomOf="@+id/start"
-        app:layout_constraintHorizontal_bias="0"
-        app:layout_constraintVertical_bias="0.0" />
+        android:id="@+id/check_door"
+        android:layout_width="194dp"
+        android:layout_height="45dp"
+        android:layout_marginBottom="20dp"
+        android:text="Check door"
+        app:layout_constraintBottom_toTopOf="@+id/open_door"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.50"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        style="@style/Buttons"
+        android:id="@+id/open_door"
+        android:layout_width="194dp"
+        android:layout_height="45dp"
+        android:layout_marginBottom="20dp"
+        android:text="Open door"
+        app:layout_constraintBottom_toTopOf="@+id/admin_access"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias=".5"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
         android:id="@+id/credits"
-        android:layout_marginTop="5dp"
+        android:layout_width="194dp"
+        android:layout_height="45dp"
+        android:layout_marginBottom="50dp"
         android:text="Credits"
-        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/instructions"
-        app:layout_constraintStart_toStartOf="@+id/instructions"
-        app:layout_constraintTop_toBottomOf="@+id/instructions"
-        app:layout_constraintHorizontal_bias="0"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="300dp"
+        android:layout_height="241dp"
+        android:layout_marginBottom="92dp"
+        app:layout_constraintBottom_toTopOf="@+id/check_door"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias=".5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/door_logo" />
 </androidx.constraintlayout.widget.ConstraintLayout>
