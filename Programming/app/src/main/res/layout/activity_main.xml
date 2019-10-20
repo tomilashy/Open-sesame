@@ -4,71 +4,96 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/blue_city"
+    android:background="@color/lightPurple"
     tools:context=".MainActivity">
 
-    <Button
+    <ImageButton
         android:id="@+id/history"
-        android:layout_width="194dp"
-        android:layout_height="45dp"
+        android:layout_width="185dp"
+        android:layout_height="70dp"
+        android:layout_marginEnd="7dp"
+        android:layout_marginRight="10dp"
         android:layout_marginBottom="20dp"
-        android:text="history"
+        android:background="@drawable/smart_door_bacground_1_rectangle_67"
+        android:paddingBottom="10dp"
         app:layout_constraintBottom_toTopOf="@+id/credits"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias=".5"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/open_door"
+        app:srcCompat="@drawable/smart_door_bacground_1_history" />
 
-    <Button
-        android:id="@+id/admin_access"
-        android:layout_width="194dp"
-        android:layout_height="45dp"
-        android:layout_marginBottom="20dp"
-        android:text="Admin Access"
+
+    <ImageButton
+        android:id="@+id/open_door"
+        android:layout_width="185dp"
+        android:layout_height="70dp"
+        android:layout_marginTop="80dp"
+        android:layout_marginEnd="7dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/smart_door_bacground_1_rectangle_67"
+        android:paddingBottom="10dp"
         app:layout_constraintBottom_toTopOf="@+id/history"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/imageView"
+        app:srcCompat="@drawable/smart_door_bacground_1_open_door" />
 
-    <Button
+    <ImageButton
         android:id="@+id/check_door"
-        android:layout_width="194dp"
-        android:layout_height="45dp"
-        android:layout_marginBottom="20dp"
-        android:text="Check door"
-        app:layout_constraintBottom_toTopOf="@+id/open_door"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.50"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/open_door"
-        android:layout_width="194dp"
-        android:layout_height="45dp"
-        android:layout_marginBottom="20dp"
-        android:text="Open door"
+        android:layout_width="185dp"
+        android:layout_height="70dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="80dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/smart_door_bacground_1_rectangle_67"
+        android:paddingBottom="10dp"
         app:layout_constraintBottom_toTopOf="@+id/admin_access"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias=".5"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintEnd_toStartOf="@+id/open_door"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView"
+        app:srcCompat="@drawable/smart_door_bacground_1_check_door" />
 
-    <Button
+    <ImageButton
+        android:id="@+id/admin_access"
+        android:layout_width="185dp"
+        android:layout_height="70dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/smart_door_bacground_1_rectangle_67"
+        android:paddingBottom="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/credits"
+        app:layout_constraintEnd_toStartOf="@+id/history"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/check_door"
+        app:srcCompat="@drawable/smart_door_bacground_1_admin" />
+
+    <ImageButton
         android:id="@+id/credits"
-        android:layout_width="194dp"
-        android:layout_height="45dp"
-        android:layout_marginBottom="50dp"
-        android:text="Credits"
+        android:layout_width="185dp"
+        android:layout_height="70dp"
+        android:layout_marginBottom="24dp"
+        android:background="@drawable/smart_door_bacground_1_rectangle_67"
+        android:paddingBottom="10dp"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/smart_door_bacground_1_credits" />
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="300dp"
-        android:layout_height="241dp"
-        android:layout_marginBottom="92dp"
-        app:layout_constraintBottom_toTopOf="@+id/check_door"
+        android:layout_width="0dp"
+        android:layout_height="248dp"
+        android:layout_marginStart="65dp"
+        android:layout_marginLeft="65dp"
+        android:layout_marginTop="87dp"
+        android:layout_marginEnd="55dp"
+        android:layout_marginRight="55dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias=".5"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/door_logo" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/smart_door_bacground_1_undraw_login_v483" />
 </androidx.constraintlayout.widget.ConstraintLayout>

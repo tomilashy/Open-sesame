@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
-    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorPrimary">#AD3AEF</color>
+    <color name="colorPrimaryDark">#AD3AEF</color>
     <color name="colorAccent">#D81B60</color>
     <color name="lightBlue">#ff00ddff</color>
+    <color name="lightPurple">#C59ADE</color>
+    <color name="darkPurple">#AD3AEF</color>
+    <color name="buttonColour">#F2EAEA</color>
+    <color name="pinkishColour">#DCCBCB</color>
 </resources>

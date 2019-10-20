@@ -8,12 +8,13 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Button admin_button;
-    private Button open_door_button;
-    private Button credits_button;
+    private ImageButton admin_button;
+    private ImageButton open_door_button;
+    private ImageButton credits_button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
