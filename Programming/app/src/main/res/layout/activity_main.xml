@@ -34,7 +34,7 @@
         android:paddingBottom="10dp"
         app:layout_constraintBottom_toTopOf="@+id/history"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView"
+        app:layout_constraintTop_toBottomOf="@+id/doorImage"
         app:srcCompat="@drawable/smart_door_bacground_1_open_door" />
 
     <ImageButton
@@ -50,7 +50,7 @@
         app:layout_constraintBottom_toTopOf="@+id/admin_access"
         app:layout_constraintEnd_toStartOf="@+id/open_door"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView"
+        app:layout_constraintTop_toBottomOf="@+id/doorImage"
         app:srcCompat="@drawable/smart_door_bacground_1_check_door" />
 
     <ImageButton
@@ -83,7 +83,7 @@
         app:srcCompat="@drawable/smart_door_bacground_1_credits" />
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/doorImage"
         android:layout_width="0dp"
         android:layout_height="248dp"
         android:layout_marginStart="65dp"
