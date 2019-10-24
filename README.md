@@ -1,9 +1,7 @@
-# Magic Hand
+# SMART DOOR
 
-Team and Technical Lead:
+Developers:
 Cong-Vinh Vu
-
-Developpers:
 Alec Kurkdjian,
 Irfan Ahmed,
 Shadi Makdissi, and
