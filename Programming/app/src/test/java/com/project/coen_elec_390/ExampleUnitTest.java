@@ -1,4 +1,4 @@
-package com.example.coen_elec_390;
+package com.project.coen_elec_390;
 
 import org.junit.Test;
 

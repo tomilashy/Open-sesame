@@ -1,4 +1,4 @@
-package com.example.coen_elec_390;
+package com.project.coen_elec_390;
 
 import android.content.Context;
 
@@ -22,6 +22,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
 
-        assertEquals("com.example.coen_elec_390", appContext.getPackageName());
+        assertEquals("com.project.coen_elec_390", appContext.getPackageName());
     }
 }
