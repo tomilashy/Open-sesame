@@ -21,5 +21,5 @@ COEN 390 - Project
 * Email: Irfanahmed1289@hotmail.com
 ### 5 - Ogo-Oluwa Jesutomi Olasubulumi
 * Role: General Developer
-* Github: Cottonswab
+* Github: tomilashy
 * Email: tomilashy@gmail.com
