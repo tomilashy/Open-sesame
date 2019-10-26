@@ -22,7 +22,6 @@ import java.util.UUID;
 
 public class DatabaseHelper {
     private DatabaseReference database;
-    private FirebaseStorage storage;
     private StorageReference storageReference;
     private List<Profile> profiles;
     private List<ImageInfo> images;
@@ -30,8 +29,7 @@ public class DatabaseHelper {
     // Constructor
     public DatabaseHelper() {
         database = FirebaseDatabase.getInstance().getReference();
-        storage = FirebaseStorage.getInstance();
-        storageReference = storage.getReference();
+        storageReference = FirebaseStorage.getInstance().getReference("door1");
 
         //Get profiles from database
         ValueEventListener profilesEventListener = new ValueEventListener() {
@@ -83,7 +81,7 @@ public class DatabaseHelper {
     private void addProfileImage(final String username, final String password, final String email, final int doorID, Uri filePath, final Context context) {
         if(filePath != null)
         {
-            StorageReference ref = storageReference.child("images/"+ UUID.randomUUID().toString());
+            StorageReference ref = storageReference.child(UUID.randomUUID().toString());
             final String url = filePath.toString();
             ref.putFile(filePath)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -106,7 +104,7 @@ public class DatabaseHelper {
     //Store a picture for a profile
     private void addHistoryImage(final int doorID, Uri filePath,  final Context context) {
         if (filePath != null) {
-            StorageReference ref = storageReference.child("images/" + UUID.randomUUID().toString());
+            StorageReference ref = storageReference.child(UUID.randomUUID().toString());
             final String url = filePath.toString();
             ref.putFile(filePath)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
