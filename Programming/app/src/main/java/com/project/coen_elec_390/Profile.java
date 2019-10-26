@@ -11,16 +11,16 @@ public class Profile {
     private String username;
     private String password;
     private String email;
-    private List<Profile> profileAdmins;
-    public Map <String, Boolean> profiles = new HashMap<>();
+    private int doorID;
+    private List<Profile> admins;
 
     // Constructors
     public Profile() {}
 
-    public Profile(String uName, String pWord, String eMail) {
-        username = uName;
-        password = pWord;
-        email = eMail;
+    public Profile(String username, String password, String email) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
     }
 
     @Exclude
@@ -29,7 +29,7 @@ public class Profile {
         result.put("username", username);
         result.put("password", password);
         result.put("email", email);
-        result.put("profileAdmins", profileAdmins);
+        result.put("doorId", doorID);
         return result;
     }
 
@@ -37,14 +37,15 @@ public class Profile {
     public String getUsername() {return username;}
     public String getPassword() {return password;}
     public String getEmail() {return email;}
-    public List<Profile> getAdmins() {return profileAdmins;}
+    public int getDoorID() {return doorID;}
+    public List<Profile> getAdmins() {return admins;}
 
     // Setters
     public void setUsername(String username) {this.username = username;}
     public void setPassword(String password) {this.password = password;}
     public void setEmail(String email) {this.email = email;}
-
+    public void setDoorID(int doorID) {this.doorID = doorID;}
     public void addAdmin(Profile profile){
-        profileAdmins.add(profile);
+        admins.add(profile);
     }
 }
