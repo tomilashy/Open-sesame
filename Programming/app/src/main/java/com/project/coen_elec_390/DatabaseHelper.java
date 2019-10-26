@@ -17,9 +17,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 public class DatabaseHelper {
@@ -81,15 +79,44 @@ public class DatabaseHelper {
         database.child("profiles").child(username).setValue(profile);
     }
 
-    //Store a picture
-    private void addImage(Uri filePath, final Context context) {
+    //Store a picture for a profile
+    private void addProfileImage(final String username, final String password, final String email, final int doorID, Uri filePath, final Context context) {
         if(filePath != null)
         {
             StorageReference ref = storageReference.child("images/"+ UUID.randomUUID().toString());
+            final String url = filePath.toString();
             ref.putFile(filePath)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            Profile profile = new Profile(username, password, email, url, doorID);
+                            database.child("profiles").child(username).setValue(profile);
+                            Toast.makeText(context, "Uploaded", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(context, "Failed " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
+    }
+
+    //Store a picture for a profile
+    private void addHistoryImage(final int doorID, Uri filePath,  final Context context) {
+        if (filePath != null) {
+            StorageReference ref = storageReference.child("images/" + UUID.randomUUID().toString());
+            final String url = filePath.toString();
+            ref.putFile(filePath)
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            ImageInfo imageInfo = new ImageInfo(url, doorID);
+                            // Getting image upload ID.
+                            String ImageUploadId = database.push().getKey();
+                            // Adding image upload id s child element into databaseReference.
+                            database.child(ImageUploadId).setValue(imageInfo);
                             Toast.makeText(context, "Uploaded", Toast.LENGTH_SHORT).show();
                         }
                     })
