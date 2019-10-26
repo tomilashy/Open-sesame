@@ -2,30 +2,30 @@ package com.project.coen_elec_390;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
+import android.view.animation.Animation;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ImageButton admin_button;
-    private ImageButton open_door_button;
-    private ImageButton credits_button;
+    private Button start;
+    private Button instructions;
+    private Button credits;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        admin_button = findViewById(R.id.admin_access);
-        open_door_button = findViewById(R.id.open_door);
-        credits_button = findViewById(R.id.credits);
+        start = findViewById(R.id.start);
+        instructions = findViewById(R.id.instructions);
+        credits = findViewById(R.id.credits);
 
-        credits_button.setOnClickListener(new View.OnClickListener() {
+        credits.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 goToCredits();
             }
@@ -33,13 +33,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void goToCredits() {
-        Intent intent = new Intent(this, CreditsActivity.class);
+        Intent intent = new Intent(this, Credits.class);
         startActivity(intent);
-    }
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main_menu, menu);
-//        return super.onCreateOptionsMenu(menu);
-        return true;
     }
 }
