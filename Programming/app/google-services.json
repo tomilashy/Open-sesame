@@ -1,0 +1,85 @@
+{
+  "project_info": {
+    "project_number": "933161943288",
+    "firebase_url": "https://coen-elec-390-d0535.firebaseio.com",
+    "project_id": "coen-elec-390-d0535",
+    "storage_bucket": "coen-elec-390-d0535.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:933161943288:android:51a130faae4b62e9defb0d",
+        "android_client_info": {
+          "package_name": "com.example.coen_elec_390"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "933161943288-13vtb52hia8suepp3ec9vogf65cq0ngm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.coen_elec_390",
+            "certificate_hash": "359f73ceefd8c4337c25868a73c875584283b6fa"
+          }
+        },
+        {
+          "client_id": "933161943288-tk20ao3t7p9q4dsqih0rgpffcqsoavsh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDusOAhY3Q6u0lE_SNHUVBxEAPUokxWzII"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "933161943288-tk20ao3t7p9q4dsqih0rgpffcqsoavsh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:933161943288:android:4e83b67ef3983ab6defb0d",
+        "android_client_info": {
+          "package_name": "com.project.coen_elec_390"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "933161943288-m1dpe7b4pt2pts41o4ho7osvj8ihild2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.project.coen_elec_390",
+            "certificate_hash": "359f73ceefd8c4337c25868a73c875584283b6fa"
+          }
+        },
+        {
+          "client_id": "933161943288-tk20ao3t7p9q4dsqih0rgpffcqsoavsh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDusOAhY3Q6u0lE_SNHUVBxEAPUokxWzII"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "933161943288-tk20ao3t7p9q4dsqih0rgpffcqsoavsh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
