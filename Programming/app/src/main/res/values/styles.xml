@@ -15,13 +15,13 @@
 
     <style name="TitleCredit" parent="TextAppearance.AppCompat">
         <item name="android:fontFamily">casual</item>
-        <item name="android:textColor">@color/lightBlue</item>
+        <item name="android:textColor">@color/blue</item>
         <item name="android:textSize">32dp</item>
     </style>
 
     <style name="NormalText" parent="TextAppearance.AppCompat">
         <item name="android:fontFamily">casual</item>
-        <item name="android:textColor">@color/lightBlue</item>
+        <item name="android:textColor">@color/blue</item>
         <item name="android:textSize">18dp</item>
     </style>
 
