@@ -13,57 +13,36 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class DatabaseHelper {
-    private DatabaseReference database;
+    private FirebaseFirestore database;
     private StorageReference storageReference;
-    private List<Profile> profiles;
-    private List<ImageInfo> images;
+    private ArrayList<Profile> profiles;
+    private ArrayList<ImageInfo> images;
 
     // Constructor
     public DatabaseHelper() {
-        database = FirebaseDatabase.getInstance().getReference();
+        database = FirebaseFirestore.getInstance();
         storageReference = FirebaseStorage.getInstance().getReference("door1");
 
-        //Get profiles from database
-        ValueEventListener profilesEventListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    Profile profile = ds.child("profiles").getValue(Profile.class);
-                    profiles.add(profile);
-                }
-            }
+        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
+                .setPersistenceEnabled(true)
+                .build();
+        database.setFirestoreSettings(settings);
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        };
-
-        //Get images for history from database
-        ValueEventListener imagesEventListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                    ImageInfo imageUploadInfo = ds.child("profiles").getValue(ImageInfo.class);
-                    images.add(imageUploadInfo);
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        };
-        database.addValueEventListener(profilesEventListener);
-        database.addValueEventListener(imagesEventListener);
+        profiles = new ArrayList<Profile>();
+        images = new ArrayList<ImageInfo>();
     }
 
     public List<Profile> getProfiles()
@@ -71,24 +50,37 @@ public class DatabaseHelper {
         return profiles;
     }
 
-    // Store a profile
-    public void addProfile(String username, String password, String email, String urlImage, int doorID) {
-        Profile profile = new Profile(username, password, email, urlImage, doorID);
-        database.child("profiles").child(username).setValue(profile);
-    }
-
-    //Store a picture for a profile
-    private void addProfileImage(final String username, final String password, final String email, final int doorID, Uri filePath, final Context context) {
+    //Store a profile
+    public void addProfileImage(final Profile profile, Uri filePath, final Context context) {
         if(filePath != null)
         {
-            StorageReference ref = storageReference.child(UUID.randomUUID().toString());
-            final String url = filePath.toString();
+            final String url = UUID.randomUUID().toString() + ".png";
+            StorageReference ref = storageReference.child(url);
             ref.putFile(filePath)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            Profile profile = new Profile(username, password, email, url, doorID);
-                            database.child("profiles").child(username).setValue(profile);
+                            Map<String, Object> user = new HashMap<>();
+                            user.put("username", profile.getUsername());
+                            user.put("email", profile.getEmail());
+                            user.put("password", profile.getPassword());
+                            user.put("urlImage", url);
+                            user.put("doorID", profile.getDoorID());
+
+                            database.collection("profiles").document(profile.getUsername())
+                                    .set(user)
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Toast.makeText(context, "Failed upload of profile!" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+
                             Toast.makeText(context, "Uploaded", Toast.LENGTH_SHORT).show();
                         }
                     })
@@ -101,21 +93,31 @@ public class DatabaseHelper {
         }
     }
 
-    //Store a picture for a profile
-    private void addHistoryImage(final int doorID, Uri filePath,  final Context context) {
+    //Store a picture for history
+    public void addHistoryImage(final String iD,  Uri filePath,  final Context context) {
         if (filePath != null) {
-            StorageReference ref = storageReference.child(UUID.randomUUID().toString());
+            StorageReference ref = storageReference.child(UUID.randomUUID().toString() + ".png");
             final String url = filePath.toString();
             ref.putFile(filePath)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            ImageInfo imageInfo = new ImageInfo(url, doorID);
-                            // Getting image upload ID.
-                            String ImageUploadId = database.push().getKey();
-                            // Adding image upload id s child element into databaseReference.
-                            database.child(ImageUploadId).setValue(imageInfo);
-                            Toast.makeText(context, "Uploaded", Toast.LENGTH_SHORT).show();
+                            Map<String, Object> image = new HashMap<>();
+                            image.put("iD", iD);
+                            image.put("url", url);
+                            database.collection("profiles").document(iD)
+                                    .set(images)
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Toast.makeText(context, "Failed upload of profile!" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {

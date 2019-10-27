@@ -2,6 +2,7 @@ package com.project.coen_elec_390;
 
 import com.google.firebase.database.Exclude;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,7 +14,7 @@ public class Profile {
     private String email;
     private String urlImage;
     private int doorID;
-    private List<Profile> admins;
+    private ArrayList<Profile> admins;
 
     // Constructors
     public Profile() {}
@@ -24,6 +25,8 @@ public class Profile {
         this.email = email;
         this.urlImage = urlImage;
         this.doorID = doorID;
+
+        admins = new ArrayList<Profile>();
     }
 
     @Exclude

@@ -2,30 +2,30 @@ package com.project.coen_elec_390;
 
 public class ImageInfo {
     String url;
-    int doorID;
+    String iD;
 
     public ImageInfo() {
     }
 
-    public ImageInfo(String url, int doorID) {
+    public ImageInfo(String url, String iD) {
         this.url = url;
-        this.doorID = doorID;
+        this.iD = iD;
     }
 
     public String getUrl() {
         return url;
     }
 
-    public int getDoorID() {
-        return doorID;
+    public String getID() {
+        return iD;
     }
 
     public void setUrl(String url) {
         this.url = url;
     }
 
-    public void setDoorID(int doorID) {
-        this.doorID = doorID;
+    public void setDoorID(String iD) {
+        this.iD = iD;
     }
 }
 
