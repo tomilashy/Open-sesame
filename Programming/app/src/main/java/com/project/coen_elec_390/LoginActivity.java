@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -18,6 +19,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -31,6 +34,8 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth auth;
     private DatabaseHelper databaseHelper;
     private SharedPreferences sharedPreference;
+
+    private Profile profile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,18 +78,36 @@ public class LoginActivity extends AppCompatActivity {
                                                 Toast.LENGTH_SHORT);
                                         toast.show();
                                     } else {
-                                        databaseHelper.setProfile(sUsername);
-                                        String username = databaseHelper.getProfile().getUsername();
-                                        int doorID = databaseHelper.getProfile().getDoorID();
+                                        FirebaseFirestore database = databaseHelper.getDatabase();
+                                        database.collection("profiles").document(sUsername).get()
+                                                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                        if (task.isSuccessful()) {
+                                                            DocumentSnapshot document = task.getResult();
+                                                            Log.d("getProfile", document.getId());
+                                                            if (document.exists()) {
+                                                                profile = new Profile(document.getData().get("username").toString(), document.getData().get("email").toString(),
+                                                                        document.getData().get("password").toString(), Integer.parseInt(document.getData().get("doorID").toString()));
 
-                                        SharedPreferences.Editor editor = sharedPreference.edit();
-                                        editor.putString("username", username);
-                                        editor.putInt("dooID", doorID);
-                                        editor.commit();
+                                                                String username = profile.getUsername();
+                                                                int doorID = profile.getDoorID();
 
-                                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                        startActivity(intent);
-                                        finish();
+                                                                SharedPreferences.Editor editor = sharedPreference.edit();
+                                                                editor.putString("username", username);
+                                                                editor.putInt("dooID", doorID);
+                                                                editor.commit();
+
+                                                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                                                startActivity(intent);
+                                                                finish();
+                                                            } else {
+                                                                Log.d("getProfile", "No such document");
+                                                            }
+                                                        } else {
+                                                            Log.d("getProfile", "get failed with ", task.getException());
+                                                        }
+                                                    }
+                                                });
                                     }
                                 }
                             });

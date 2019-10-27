@@ -15,6 +15,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.Source;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -50,30 +51,9 @@ public class DatabaseHelper {
         this.doorID = doorID;
     }
 
-    public void setProfile(final String username) {
-        database.collection("profiles").document("cvu").get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            DocumentSnapshot document = task.getResult();
-                            Log.d("getProfile", document.getId());
-                            if (document.exists()) {
-                                profile = new Profile(document.getData().get("username").toString(), document.getData().get("email").toString(),
-                                        document.getData().get("password").toString(), Integer.parseInt(document.getData().get("username").toString()));
-                            } else {
-                                Log.d("getProfile", "No such document");
-                            }
-                        } else {
-                            Log.d("getProfile", "get failed with ", task.getException());
-                        }
-                    }
-                });
+    public FirebaseFirestore getDatabase() {
+        return database;
     }
-
-    public Profile getProfile() {
-        return profile;
-    }
-
 
     public List<Profile> getProfiles() {
         database.collection("profiles")
@@ -82,7 +62,7 @@ public class DatabaseHelper {
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
+                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 profiles.add(new Profile(document.getData().get("username").toString(), document.getData().get("email").toString(),
                                         document.getData().get("password").toString(), Integer.parseInt(document.getData().get("username").toString())));
@@ -113,7 +93,7 @@ public class DatabaseHelper {
                             user.put("username", profile.getUsername());
                             user.put("email", profile.getEmail());
                             user.put("password", profile.getPassword());
-                            user.put("doorId", doorID);
+                            user.put("doorID", doorID);
 
                             database.collection("profiles").document(profile.getUsername())
                                     .set(user)
