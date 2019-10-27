@@ -85,6 +85,19 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintVertical_bias="0.55" />
 
+    <!--Button
+        style="@style/Buttons"
+        android:id="@+id/upload"
+        android:layout_marginTop="5dp"
+        android:text="Upload"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintVertical_bias="0.65" /-->
+
     <Button
         style="@style/Buttons"
         android:id="@+id/logout"
