@@ -18,14 +18,14 @@
         app:layout_constraintVertical_bias="0.125">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/username"
+            android:id="@+id/sUsername"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Username" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <EditText
-        android:id="@+id/email"
+        android:id="@+id/sEmail"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:hint="Email"
@@ -39,7 +39,7 @@
         app:layout_constraintVertical_bias="0.25"/>
 
     <EditText
-        android:id="@+id/password"
+        android:id="@+id/sPassword"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:hint="Password"
@@ -53,7 +53,7 @@
         app:layout_constraintVertical_bias="0.375"/>
 
     <EditText
-        android:id="@+id/door"
+        android:id="@+id/sDoorID"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:hint="Door ID"
@@ -67,7 +67,7 @@
         app:layout_constraintVertical_bias="0.5"/>
 
     <Button
-        android:id="@+id/choose"
+        android:id="@+id/sPicture"
         android:layout_width="175dp"
         android:layout_height="175dp"
         android:text="Choose Picture"

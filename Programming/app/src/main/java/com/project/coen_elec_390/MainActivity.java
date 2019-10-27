@@ -25,19 +25,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         setTitle("Open Sesame");
 
-        sharedPreference = getSharedPreferences("ProfilePreference",
-                this.MODE_PRIVATE );
-        String username = sharedPreference.getString("profileName", null);
-        if (username != null) {
-            if (username.equals("")) {
-                Intent intent = new Intent(this, SignUpActivity.class);
-                startActivity(intent);
-            }
-        } else {
-            Intent intent = new Intent(this, SignUpActivity.class);
-            startActivity(intent);
-        }
-
         peek = findViewById(R.id.peek);
         unlock = findViewById(R.id.unlock);
         admins = findViewById(R.id.admins);

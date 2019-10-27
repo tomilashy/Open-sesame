@@ -7,8 +7,7 @@ public class ImageInfo {
     public ImageInfo() {
     }
 
-    public ImageInfo(String url, String iD) {
-        this.url = url;
+    public ImageInfo(String iD) {
         this.iD = iD;
     }
 

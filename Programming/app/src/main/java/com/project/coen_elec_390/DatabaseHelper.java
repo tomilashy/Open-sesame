@@ -6,10 +6,14 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -23,7 +27,7 @@ public class DatabaseHelper {
     private FirebaseFirestore database;
     private StorageReference storageReference;
     private ArrayList<Profile> profiles;
-    private ArrayList<ImageInfo> images;
+    private ArrayList<ImageInfo> UrlImages;
     private int doorID;
 
     // Constructor
@@ -36,15 +40,37 @@ public class DatabaseHelper {
         database.setFirestoreSettings(settings);
 
         profiles = new ArrayList<Profile>();
-        images = new ArrayList<ImageInfo>();
+        UrlImages = new ArrayList<ImageInfo>();
     }
 
+    /***Always set doorID before using DatabaseHelper***/
     public void setDoorID(int doorID) {
         this.doorID = doorID;
     }
 
     public List<Profile> getProfiles() {
+        database.collection("profiles")
+                .whereEqualTo("doorID", doorID)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                profiles.add(new Profile(document.getData().get("username").toString(), document.getData().get("email").toString(),
+                                        document.getData().get("password").toString(), Integer.parseInt(document.getData().get("username").toString())));
+                                Log.d("getProfiles", document.getId());
+                            }
+                        } else {
+                            Log.d("getProfiles", "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
         return profiles;
+    }
+
+    public List<ImageInfo> getImages() {
+        return UrlImages;
     }
 
     //Store a profile
@@ -56,14 +82,9 @@ public class DatabaseHelper {
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            Map<String, Object> user = new HashMap<>();
-                            user.put("username", profile.getUsername());
-                            user.put("email", profile.getEmail());
-                            user.put("password", profile.getPassword());
-                            user.put("doorID", profile.getDoorID());
 
                             database.collection("profiles").document(profile.getUsername())
-                                    .set(user)
+                                    .set(profile.toMap())
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
@@ -96,9 +117,8 @@ public class DatabaseHelper {
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             Map<String, Object> image = new HashMap<>();
                             image.put("iD", iD);
-                            image.put("url", "to_be_implemented");
-                            database.collection("images").document(iD)
-                                    .set(images)
+                            database.collection("images").document("door_" + doorID)
+                                    .set(image)
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
@@ -119,12 +139,11 @@ public class DatabaseHelper {
         }
     }
 
-    public void getImageURL(String iD) {
+    public void setUrlImage(String iD) {
         storageReference = FirebaseStorage.getInstance().getReference("door_" + doorID);
         storageReference.child(iD).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
-                // Got the download URL for 'users/me/profile.png'
                 Log.d("URL", "onSuccess: uri = " + uri.toString());
             }
         }).addOnFailureListener(new OnFailureListener() {

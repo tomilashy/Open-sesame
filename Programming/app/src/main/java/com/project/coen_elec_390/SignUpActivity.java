@@ -43,11 +43,11 @@ public class SignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-        username = findViewById(R.id.username);
-        email = findViewById(R.id.email);
-        password = findViewById(R.id.password);
-        doorID = findViewById(R.id.door);
-        picture = findViewById(R.id.choose);
+        username = findViewById(R.id.sUsername);
+        email = findViewById(R.id.sEmail);
+        password = findViewById(R.id.sPassword);
+        doorID = findViewById(R.id.sDoorID);
+        picture = findViewById(R.id.sPicture);
         signUp = findViewById(R.id.signUp);
         sharedPreference = this.getSharedPreferences("ProfilePreference",
                 this.MODE_PRIVATE );
@@ -117,7 +117,8 @@ public class SignUpActivity extends AppCompatActivity {
                                     profile.setDoorID(id);
 
                                     SharedPreferences.Editor editor = sharedPreference.edit();
-                                    editor.putString("profileName", username );
+                                    editor.putString("username", username );
+                                    editor.putInt("dooID", id );
                                     editor.commit();
 
                                     return true;
