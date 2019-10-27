@@ -10,6 +10,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -30,7 +31,6 @@ public class DatabaseHelper {
     private Profile profile;
     private ArrayList<ImageInfo> UrlImages;
     private int doorID;
-    private boolean done;
 
     // Constructor
     public DatabaseHelper() {
@@ -50,32 +50,32 @@ public class DatabaseHelper {
         this.doorID = doorID;
     }
 
-    public Profile getProfile(final String username, final String email) {
-        done = false;
-        database.collection("profiles")
-                .whereEqualTo("email", email)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+    public void setProfile(final String username) {
+        database.collection("profiles").document("cvu").get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
+                            DocumentSnapshot document = task.getResult();
+                            Log.d("getProfile", document.getId());
+                            if (document.exists()) {
                                 profile = new Profile(document.getData().get("username").toString(), document.getData().get("email").toString(),
                                         document.getData().get("password").toString(), Integer.parseInt(document.getData().get("username").toString()));
-                                done = true;
-                                Log.d("getProfile", document.getId());
+                            } else {
+                                Log.d("getProfile", "No such document");
                             }
                         } else {
-                            Log.d("getProfile", "Error getting documents: ", task.getException());
+                            Log.d("getProfile", "get failed with ", task.getException());
                         }
                     }
                 });
-        while(!done){Log.d("getProfile", "waiting");}
+    }
+
+    public Profile getProfile() {
         return profile;
     }
 
+
     public List<Profile> getProfiles() {
-        done = false;
         database.collection("profiles")
                 .whereEqualTo("doorID", doorID)
                 .get()
@@ -86,7 +86,6 @@ public class DatabaseHelper {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 profiles.add(new Profile(document.getData().get("username").toString(), document.getData().get("email").toString(),
                                         document.getData().get("password").toString(), Integer.parseInt(document.getData().get("username").toString())));
-                                done = true;
                                 Log.d("getProfiles", document.getId());
                             }
                         } else {
@@ -94,7 +93,6 @@ public class DatabaseHelper {
                         }
                     }
                 });
-        while(!done){}
         return profiles;
     }
 

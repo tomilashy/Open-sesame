@@ -15,11 +15,13 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class LoginActivity extends AppCompatActivity {
 
+    private TextInputEditText username;
     private EditText email;
     private EditText password;
     private Button logIn;
@@ -36,6 +38,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         setTitle("Log In");
 
+        username = findViewById(R.id.lUsername);
         email = findViewById(R.id.sEmail);
         password = findViewById(R.id.sPassword);
         logIn = findViewById(R.id.logIn);
@@ -45,12 +48,12 @@ public class LoginActivity extends AppCompatActivity {
         databaseHelper = new DatabaseHelper();
         sharedPreference = getSharedPreferences("ProfilePreference",
                 this.MODE_PRIVATE );
-        String username = sharedPreference.getString("username", null);
-        if (username == null) {
+        String sUsername = sharedPreference.getString("username", null);
+        if (sUsername == null) {
             Intent intent = new Intent(this, SignUpActivity.class);
             startActivity(intent);
         }
-        else if (username.equals("")) {
+        else if (sUsername.equals("")) {
             Intent intent = new Intent(this, SignUpActivity.class);
             startActivity(intent);
         }
@@ -59,7 +62,8 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 final String sEmail = email.getText().toString();
                 final String sPassword = password.getText().toString();
-                if (isValidInputs(sEmail, sPassword)) {
+                final String sUsername = username.getText().toString();
+                if (isValidInputs(sUsername, sEmail, sPassword)) {
                     auth.signInWithEmailAndPassword(sEmail, sPassword)
                             .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
                                 @Override
@@ -69,8 +73,9 @@ public class LoginActivity extends AppCompatActivity {
                                                 Toast.LENGTH_SHORT);
                                         toast.show();
                                     } else {
-                                        String username = databaseHelper.getProfile(sEmail).getUsername();
-                                        int doorID = databaseHelper.getProfile(sEmail).getDoorID();
+                                        databaseHelper.setProfile(sUsername);
+                                        String username = databaseHelper.getProfile().getUsername();
+                                        int doorID = databaseHelper.getProfile().getDoorID();
 
                                         SharedPreferences.Editor editor = sharedPreference.edit();
                                         editor.putString("username", username);
@@ -99,21 +104,25 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private boolean isValidInputs(String email, String password) {
-        if (!email.isEmpty() && !password.isEmpty()) {
+    private boolean isValidInputs(String username, String email, String password) {
+        if (!username.isEmpty() &&!email.isEmpty() && !password.isEmpty()) {
+            if (username.length() < 16) {
             if (!TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
                 if (password.length() < 16) {
-                        return true;
-                    } else {
+                    return true;
+                } else {
                     toast = Toast.makeText(this, "Maximum length for passwords is 16 characters!", Toast.LENGTH_SHORT);
                 }
             } else {
                 toast = Toast.makeText(this, "Invalid email!", Toast.LENGTH_SHORT);
             }
         } else {
-            toast = Toast.makeText(this, "One or more fields are empty!", Toast.LENGTH_SHORT);
+            toast = Toast.makeText(this, "Maximum length for user names is 16 characters!", Toast.LENGTH_SHORT);
         }
-        toast.show();
+    } else {
+        toast = Toast.makeText(this, "One or more fields are empty!", Toast.LENGTH_SHORT);
+    }
+    toast.show();
         return false;
     }
 }
