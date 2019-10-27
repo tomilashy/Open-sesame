@@ -57,4 +57,15 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, SignUpActivity.class);
         startActivity(intent);
     }
+
+    /*@Override
+    public void onBindViewHolder(ImageViewHolder holder, int position) {
+        Upload uploadCurrent = mUploads.get(position);
+        holder.textViewName.setText(uploadCurrent.getName());
+        Picasso.with(mContext)
+                .load(uploadCurrent.getImageUrl())
+                .fit()
+                .centerCrop()
+                .into(holder.imageView);
+    }*/
 }
