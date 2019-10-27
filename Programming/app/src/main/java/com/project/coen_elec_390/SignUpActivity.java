@@ -68,14 +68,15 @@ public class SignUpActivity extends AppCompatActivity {
                 if (isValidInputs(username.getText().toString(), email.getText().toString(),
                         password.getText().toString(), doorID.getText().toString())) {
                     if (filePath != null) {
-                        profile.setUrl(filePath.toString());
-                        databasehelper.addProfileImage(profile, filePath, SignUpActivity.this);
+                        databasehelper.setDoorID(profile.getDoorID());
+                        databasehelper.addProfile(profile, filePath, SignUpActivity.this);
+
+                        Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
+                        startActivity(intent);
                     } else {
                         toast = Toast.makeText(SignUpActivity.this, "A picture has not been chosen!", Toast.LENGTH_SHORT);
                         toast.show();
                     }
-                    Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
-                    startActivity(intent);
                 }
             }
         });

@@ -15,6 +15,7 @@ public class MainActivity extends AppCompatActivity {
     private Button admins;
     private Button history;
     private Button credits;
+    private Button logout;
 
     private SharedPreferences sharedPreference;
 
@@ -42,16 +43,31 @@ public class MainActivity extends AppCompatActivity {
         admins = findViewById(R.id.admins);
         history = findViewById(R.id.history);
         credits = findViewById(R.id.credits);
+        logout = findViewById(R.id.logout);
 
         credits.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 goToCredits();
             }
         });
+        logout.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                logout();
+            }
+        });
     }
 
     private void goToCredits() {
         Intent intent = new Intent(this, Credits.class);
+        startActivity(intent);
+    }
+
+    private void logout() {
+        SharedPreferences.Editor editor = sharedPreference.edit();
+        editor.clear();
+        editor.commit();
+
+        Intent intent = new Intent(this, SignUpActivity.class);
         startActivity(intent);
     }
 }

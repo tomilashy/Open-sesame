@@ -2,17 +2,12 @@ package com.project.coen_elec_390;
 
 import android.content.Context;
 import android.net.Uri;
-import android.widget.Toast;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.storage.FirebaseStorage;
@@ -23,18 +18,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 public class DatabaseHelper {
     private FirebaseFirestore database;
     private StorageReference storageReference;
     private ArrayList<Profile> profiles;
     private ArrayList<ImageInfo> images;
+    private int doorID;
 
     // Constructor
     public DatabaseHelper() {
         database = FirebaseFirestore.getInstance();
-        storageReference = FirebaseStorage.getInstance().getReference("door1");
 
         FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
                 .setPersistenceEnabled(true)
@@ -45,17 +39,19 @@ public class DatabaseHelper {
         images = new ArrayList<ImageInfo>();
     }
 
-    public List<Profile> getProfiles()
-    {
+    public void setDoorID(int doorID) {
+        this.doorID = doorID;
+    }
+
+    public List<Profile> getProfiles() {
         return profiles;
     }
 
     //Store a profile
-    public void addProfileImage(final Profile profile, Uri filePath, final Context context) {
-        if(filePath != null)
-        {
-            final String url = UUID.randomUUID().toString() + ".png";
-            StorageReference ref = storageReference.child(url);
+    public void addProfile(final Profile profile, Uri filePath, final Context context) {
+        if (filePath != null) {
+            storageReference = FirebaseStorage.getInstance().getReference("door_" + doorID);
+            StorageReference ref = storageReference.child(profile.getUsername());
             ref.putFile(filePath)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
@@ -64,7 +60,6 @@ public class DatabaseHelper {
                             user.put("username", profile.getUsername());
                             user.put("email", profile.getEmail());
                             user.put("password", profile.getPassword());
-                            user.put("urlImage", url);
                             user.put("doorID", profile.getDoorID());
 
                             database.collection("profiles").document(profile.getUsername())
@@ -77,35 +72,32 @@ public class DatabaseHelper {
                                     .addOnFailureListener(new OnFailureListener() {
                                         @Override
                                         public void onFailure(@NonNull Exception e) {
-                                            Toast.makeText(context, "Failed upload of profile!" + e.getMessage(), Toast.LENGTH_SHORT).show();
                                         }
                                     });
-
-                            Toast.makeText(context, "Uploaded", Toast.LENGTH_SHORT).show();
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(context, "Failed " + e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     });
         }
     }
 
     //Store a picture for history
-    public void addHistoryImage(final String iD,  Uri filePath,  final Context context) {
+    public void addHistoryImage(Uri filePath, final Context context) {
         if (filePath != null) {
-            StorageReference ref = storageReference.child(UUID.randomUUID().toString() + ".png");
-            final String url = filePath.toString();
+            final String iD = "door_" + doorID;
+            storageReference = FirebaseStorage.getInstance().getReference(iD);
+            StorageReference ref = storageReference.child("door_" + doorID);
             ref.putFile(filePath)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             Map<String, Object> image = new HashMap<>();
                             image.put("iD", iD);
-                            image.put("url", url);
-                            database.collection("profiles").document(iD)
+                            image.put("url", "to_be_implemented");
+                            database.collection("images").document(iD)
                                     .set(images)
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
@@ -115,7 +107,6 @@ public class DatabaseHelper {
                                     .addOnFailureListener(new OnFailureListener() {
                                         @Override
                                         public void onFailure(@NonNull Exception e) {
-                                            Toast.makeText(context, "Failed upload of profile!" + e.getMessage(), Toast.LENGTH_SHORT).show();
                                         }
                                     });
                         }
@@ -123,9 +114,23 @@ public class DatabaseHelper {
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(context, "Failed " + e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     });
         }
+    }
+
+    public void getImageURL(String iD) {
+        storageReference = FirebaseStorage.getInstance().getReference("door_" + doorID);
+        storageReference.child(iD).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                // Got the download URL for 'users/me/profile.png'
+                Log.d("URL", "onSuccess: uri = " + uri.toString());
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+            }
+        });
     }
 }

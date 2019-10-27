@@ -12,7 +12,6 @@ public class Profile {
     private String username;
     private String password;
     private String email;
-    private String urlImage;
     private int doorID;
     private ArrayList<Profile> admins;
 
@@ -23,7 +22,6 @@ public class Profile {
         this.username = username;
         this.password = password;
         this.email = email;
-        this.urlImage = urlImage;
         this.doorID = doorID;
 
         admins = new ArrayList<Profile>();
@@ -43,7 +41,6 @@ public class Profile {
     public String getUsername() {return username;}
     public String getPassword() {return password;}
     public String getEmail() {return email;}
-    public String getUrl() {return urlImage;}
     public int getDoorID() {return doorID;}
     public List<Profile> getAdmins() {return admins;}
 
@@ -51,7 +48,6 @@ public class Profile {
     public void setUsername(String username) {this.username = username;}
     public void setPassword(String password) {this.password = password;}
     public void setEmail(String email) {this.email = email;}
-    public void setUrl(String urlImage) {this.urlImage = urlImage;}
     public void setDoorID(int doorID) {this.doorID = doorID;}
     public void addAdmin(Profile profile){
         admins.add(profile);
