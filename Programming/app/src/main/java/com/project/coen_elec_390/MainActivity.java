@@ -32,6 +32,9 @@ public class MainActivity extends AppCompatActivity {
         credits = findViewById(R.id.credits);
         logout = findViewById(R.id.logout);
 
+        sharedPreference = getSharedPreferences("ProfilePreference",
+                this.MODE_PRIVATE );
+
         credits.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 goToCredits();
@@ -50,11 +53,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void logout() {
-        SharedPreferences.Editor editor = sharedPreference.edit();
-        editor.clear();
-        editor.commit();
-
-        Intent intent = new Intent(this, SignUpActivity.class);
+        Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
     }
 

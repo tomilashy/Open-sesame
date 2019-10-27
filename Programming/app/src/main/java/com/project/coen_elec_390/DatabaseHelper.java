@@ -27,8 +27,10 @@ public class DatabaseHelper {
     private FirebaseFirestore database;
     private StorageReference storageReference;
     private ArrayList<Profile> profiles;
+    private Profile profile;
     private ArrayList<ImageInfo> UrlImages;
     private int doorID;
+    private boolean done;
 
     // Constructor
     public DatabaseHelper() {
@@ -48,7 +50,32 @@ public class DatabaseHelper {
         this.doorID = doorID;
     }
 
+    public Profile getProfile(final String username, final String email) {
+        done = false;
+        database.collection("profiles")
+                .whereEqualTo("email", email)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                profile = new Profile(document.getData().get("username").toString(), document.getData().get("email").toString(),
+                                        document.getData().get("password").toString(), Integer.parseInt(document.getData().get("username").toString()));
+                                done = true;
+                                Log.d("getProfile", document.getId());
+                            }
+                        } else {
+                            Log.d("getProfile", "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+        while(!done){Log.d("getProfile", "waiting");}
+        return profile;
+    }
+
     public List<Profile> getProfiles() {
+        done = false;
         database.collection("profiles")
                 .whereEqualTo("doorID", doorID)
                 .get()
@@ -59,6 +86,7 @@ public class DatabaseHelper {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 profiles.add(new Profile(document.getData().get("username").toString(), document.getData().get("email").toString(),
                                         document.getData().get("password").toString(), Integer.parseInt(document.getData().get("username").toString())));
+                                done = true;
                                 Log.d("getProfiles", document.getId());
                             }
                         } else {
@@ -66,6 +94,7 @@ public class DatabaseHelper {
                         }
                     }
                 });
+        while(!done){}
         return profiles;
     }
 
@@ -76,15 +105,20 @@ public class DatabaseHelper {
     //Store a profile
     public void addProfile(final Profile profile, Uri filePath, final Context context) {
         if (filePath != null) {
-            storageReference = FirebaseStorage.getInstance().getReference("door_" + doorID);
+            storageReference = FirebaseStorage.getInstance().getReference("door_" + doorID + "/profiles");
             StorageReference ref = storageReference.child(profile.getUsername());
             ref.putFile(filePath)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            HashMap<String, Object> user = new HashMap<>();
+                            user.put("username", profile.getUsername());
+                            user.put("email", profile.getEmail());
+                            user.put("password", profile.getPassword());
+                            user.put("doorId", doorID);
 
                             database.collection("profiles").document(profile.getUsername())
-                                    .set(profile.toMap())
+                                    .set(user)
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
