@@ -33,9 +33,9 @@ public class SignUpActivity extends AppCompatActivity {
     private EditText doorID;
     private Button picture;
     private Button signUp;
+    private Button login;
     private Toast toast;
 
-    private FirebaseAuth auth;
     private DatabaseHelper databaseHelper;
     private SharedPreferences sharedPreference;
 
@@ -56,8 +56,8 @@ public class SignUpActivity extends AppCompatActivity {
         doorID = findViewById(R.id.sDoorID);
         picture = findViewById(R.id.sPicture);
         signUp = findViewById(R.id.signUp);
+        login = findViewById(R.id.sLogin);
 
-        auth = FirebaseAuth.getInstance();
         databaseHelper = new DatabaseHelper();
         sharedPreference = this.getSharedPreferences("ProfilePreference",
                 this.MODE_PRIVATE );
@@ -72,6 +72,13 @@ public class SignUpActivity extends AppCompatActivity {
                 startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
             }
         });
+
+        login.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                startActivity(new Intent(SignUpActivity.this, LoginActivity.class));
+            }
+        });
+
         signUp.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (isValidInputs(username.getText().toString(), email.getText().toString(),
@@ -79,21 +86,6 @@ public class SignUpActivity extends AppCompatActivity {
                     if (filePath != null) {
                         databaseHelper.setDoorID(profile.getDoorID());
                         databaseHelper.addProfile(profile, filePath, SignUpActivity.this);
-
-                        auth.createUserWithEmailAndPassword(email.getText().toString(), password.getText().toString())
-                                .addOnCompleteListener(SignUpActivity.this, new OnCompleteListener<AuthResult>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<AuthResult> task) {
-                                        if (!task.isSuccessful()) {
-                                            toast = Toast.makeText(SignUpActivity.this, "Authentication failed. " + task.getException(),
-                                                    Toast.LENGTH_SHORT);
-                                            toast.show();
-                                        } else {
-                                            startActivity(new Intent(SignUpActivity.this, MainActivity.class));
-                                            finish();
-                                        }
-                                    }
-                                });
                     } else {
                         toast = Toast.makeText(SignUpActivity.this, "A picture has not been chosen!", Toast.LENGTH_SHORT);
                         toast.show();

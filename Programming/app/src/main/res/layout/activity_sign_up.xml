@@ -21,7 +21,7 @@
             android:id="@+id/sUsername"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Username" />
+            android:hint="sUsername" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <EditText
@@ -89,4 +89,16 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintHorizontal_bias="0.85"
         app:layout_constraintVertical_bias="0.9"/>
+
+    <Button
+        android:id="@+id/sLogin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Log In"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintHorizontal_bias="0.85"
+        app:layout_constraintVertical_bias="0.75"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

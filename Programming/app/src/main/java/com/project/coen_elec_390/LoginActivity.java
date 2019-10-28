@@ -25,13 +25,11 @@ import com.google.firebase.firestore.FirebaseFirestore;
 public class LoginActivity extends AppCompatActivity {
 
     private TextInputEditText username;
-    private EditText email;
     private EditText password;
     private Button logIn;
     private Button signUp;
     private Toast toast;
 
-    private FirebaseAuth auth;
     private DatabaseHelper databaseHelper;
     private SharedPreferences sharedPreference;
 
@@ -44,74 +42,54 @@ public class LoginActivity extends AppCompatActivity {
         setTitle("Log In");
 
         username = findViewById(R.id.lUsername);
-        email = findViewById(R.id.sEmail);
         password = findViewById(R.id.sPassword);
-        logIn = findViewById(R.id.logIn);
+        logIn = findViewById(R.id.login);
         signUp = findViewById(R.id.lSignUp);
 
-        auth = FirebaseAuth.getInstance();
         databaseHelper = new DatabaseHelper();
         sharedPreference = getSharedPreferences("ProfilePreference",
                 this.MODE_PRIVATE );
-        String sUsername = sharedPreference.getString("username", null);
-        if (sUsername == null) {
-            Intent intent = new Intent(this, SignUpActivity.class);
-            startActivity(intent);
-        }
-        else if (sUsername.equals("")) {
-            Intent intent = new Intent(this, SignUpActivity.class);
-            startActivity(intent);
-        }
 
         logIn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                final String sEmail = email.getText().toString();
-                final String sPassword = password.getText().toString();
                 final String sUsername = username.getText().toString();
-                if (isValidInputs(sUsername, sEmail, sPassword)) {
-                    auth.signInWithEmailAndPassword(sEmail, sPassword)
-                            .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
-                                @Override
-                                public void onComplete(@NonNull Task<AuthResult> task) {
-                                    if (!task.isSuccessful()) {
-                                        toast = Toast.makeText(LoginActivity.this, "Authentication failed. " + task.getException(),
-                                                Toast.LENGTH_SHORT);
-                                        toast.show();
+                final String sPassword = password.getText().toString();
+                if (isValidInputs(sUsername, sPassword)) {
+                    FirebaseFirestore database = databaseHelper.getDatabase();
+                    database.collection("profiles").document(sUsername).get()
+                            .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        DocumentSnapshot document = task.getResult();
+                                        if (document.exists()) {
+                                            profile = new Profile(document.getData().get("username").toString(), document.getData().get("email").toString(),
+                                                    document.getData().get("password").toString(), Integer.parseInt(document.getData().get("doorID").toString()));
+
+                                            if (profile.getUsername().equals(sUsername) && profile.getPassword().equals(sPassword)) {
+                                                String username = profile.getUsername();
+                                                int doorID = profile.getDoorID();
+                                                Log.d("Login", username);
+                                                Log.d("Login", Integer.toString(doorID));
+
+                                                databaseHelper.setDoorID(doorID);
+
+                                                SharedPreferences.Editor editor = sharedPreference.edit();
+                                                editor.putString("username", username);
+                                                editor.putInt("dooID", doorID);
+                                                editor.commit();
+
+                                                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                                                finish();
+                                            } else {
+                                                toast = Toast.makeText(LoginActivity.this, "Wrong password or username!", Toast.LENGTH_SHORT);
+                                            }
+                                        } else {
+                                            toast = Toast.makeText(LoginActivity.this, "User does not exist!", Toast.LENGTH_SHORT);
+                                        }
                                     } else {
-                                        FirebaseFirestore database = databaseHelper.getDatabase();
-                                        database.collection("profiles").document(sUsername).get()
-                                                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                                        if (task.isSuccessful()) {
-                                                            DocumentSnapshot document = task.getResult();
-                                                            if (document.exists()) {
-                                                                profile = new Profile(document.getData().get("username").toString(), document.getData().get("email").toString(),
-                                                                        document.getData().get("password").toString(), Integer.parseInt(document.getData().get("doorID").toString()));
-
-                                                                String username = profile.getUsername();
-                                                                int doorID = profile.getDoorID();
-                                                                Log.d("Login", username);
-                                                                Log.d("Login", Integer.toString(doorID));
-
-                                                                databaseHelper.setDoorID(doorID);
-
-                                                                SharedPreferences.Editor editor = sharedPreference.edit();
-                                                                editor.putString("username", username);
-                                                                editor.putInt("dooID", doorID);
-                                                                editor.commit();
-
-                                                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                                                startActivity(intent);
-                                                                finish();
-                                                            } else {
-                                                                Log.d("Login", "No such document");
-                                                            }
-                                                        } else {
-                                                            Log.d("Login", "get() failed with ", task.getException());
-                                                        }
-                                                    }
-                                                });
+                                        Log.d("Login", "get() failed with ", task.getException());
                                     }
+                                    toast.show();
                                 }
                             });
                 }
@@ -130,17 +108,26 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private boolean isValidInputs(String username, String email, String password) {
-        if (!username.isEmpty() &&!email.isEmpty() && !password.isEmpty()) {
+    @Override
+    protected void onResume() {
+        checkDeviceAccount();
+        super.onResume();
+    }
+
+    private void checkDeviceAccount() {
+        String sUsername = sharedPreference.getString("username", null);
+        if (sUsername == null) {
+            startActivity(new Intent(this, SignUpActivity.class));
+        }
+    }
+
+    private boolean isValidInputs(String username, String password) {
+        if (!username.isEmpty() && !password.isEmpty()) {
             if (username.length() < 16) {
-            if (!TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
                 if (password.length() < 16) {
                     return true;
                 } else {
                     toast = Toast.makeText(this, "Maximum length for passwords is 16 characters!", Toast.LENGTH_SHORT);
-                }
-            } else {
-                toast = Toast.makeText(this, "Invalid email!", Toast.LENGTH_SHORT);
             }
         } else {
             toast = Toast.makeText(this, "Maximum length for user names is 16 characters!", Toast.LENGTH_SHORT);
