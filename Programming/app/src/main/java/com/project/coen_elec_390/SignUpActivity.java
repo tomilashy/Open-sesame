@@ -86,6 +86,7 @@ public class SignUpActivity extends AppCompatActivity {
                     if (filePath != null) {
                         databaseHelper.setDoorID(profile.getDoorID());
                         databaseHelper.addProfile(profile, filePath, SignUpActivity.this);
+                        startActivity(new Intent(SignUpActivity.this, MainActivity.class));
                     } else {
                         toast = Toast.makeText(SignUpActivity.this, "A picture has not been chosen!", Toast.LENGTH_SHORT);
                         toast.show();
@@ -139,7 +140,7 @@ public class SignUpActivity extends AppCompatActivity {
                                     toast = Toast.makeText(this, "Password contains whitespace!", Toast.LENGTH_SHORT);
                                 }
                             } else {
-                                toast = Toast.makeText(this, "Length of password should be between 5 and 16!", Toast.LENGTH_SHORT);
+                                toast = Toast.makeText(this, "Length of password should be between 6 and 16!", Toast.LENGTH_SHORT);
                             }
                         } else {
                             toast = Toast.makeText(this, "Door ID should be bigger than 0!", Toast.LENGTH_SHORT);

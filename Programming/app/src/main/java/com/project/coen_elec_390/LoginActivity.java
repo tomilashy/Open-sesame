@@ -42,7 +42,7 @@ public class LoginActivity extends AppCompatActivity {
         setTitle("Log In");
 
         username = findViewById(R.id.lUsername);
-        password = findViewById(R.id.sPassword);
+        password = findViewById(R.id.lPassword);
         logIn = findViewById(R.id.login);
         signUp = findViewById(R.id.lSignUp);
 
@@ -82,14 +82,15 @@ public class LoginActivity extends AppCompatActivity {
                                                 finish();
                                             } else {
                                                 toast = Toast.makeText(LoginActivity.this, "Wrong password or username!", Toast.LENGTH_SHORT);
+                                                toast.show();
                                             }
                                         } else {
                                             toast = Toast.makeText(LoginActivity.this, "User does not exist!", Toast.LENGTH_SHORT);
+                                            toast.show();
                                         }
                                     } else {
                                         Log.d("Login", "get() failed with ", task.getException());
                                     }
-                                    toast.show();
                                 }
                             });
                 }
@@ -116,7 +117,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void checkDeviceAccount() {
         String sUsername = sharedPreference.getString("username", null);
-        if (sUsername == null) {
+        if (sUsername == null || sUsername.equals("")) {
             startActivity(new Intent(this, SignUpActivity.class));
         }
     }
@@ -124,10 +125,10 @@ public class LoginActivity extends AppCompatActivity {
     private boolean isValidInputs(String username, String password) {
         if (!username.isEmpty() && !password.isEmpty()) {
             if (username.length() < 16) {
-                if (password.length() < 16) {
+                if (password.length() > 5 && password.length() < 16) {
                     return true;
                 } else {
-                    toast = Toast.makeText(this, "Maximum length for passwords is 16 characters!", Toast.LENGTH_SHORT);
+                    toast = Toast.makeText(this, "Length of the password should be between 6 and 16 characters!", Toast.LENGTH_SHORT);
             }
         } else {
             toast = Toast.makeText(this, "Maximum length for user names is 16 characters!", Toast.LENGTH_SHORT);
