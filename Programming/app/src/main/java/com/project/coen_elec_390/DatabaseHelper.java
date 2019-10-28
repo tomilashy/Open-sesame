@@ -20,17 +20,12 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class DatabaseHelper {
     private FirebaseFirestore database;
     private StorageReference storageReference;
-    private ArrayList<Profile> profiles;
-    private Profile profile;
-    private ArrayList<ImageInfo> UrlImages;
     private int doorID;
 
     public DatabaseHelper() {
@@ -40,9 +35,6 @@ public class DatabaseHelper {
                 .setPersistenceEnabled(true)
                 .build();
         database.setFirestoreSettings(settings);
-
-        profiles = new ArrayList<Profile>();
-        UrlImages = new ArrayList<ImageInfo>();
     }
 
     /***Always set doorID before using DatabaseHelper***/
