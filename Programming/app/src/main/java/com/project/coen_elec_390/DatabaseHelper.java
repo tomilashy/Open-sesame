@@ -33,7 +33,6 @@ public class DatabaseHelper {
     private ArrayList<ImageInfo> UrlImages;
     private int doorID;
 
-    // Constructor
     public DatabaseHelper() {
         database = FirebaseFirestore.getInstance();
 
@@ -53,31 +52,6 @@ public class DatabaseHelper {
 
     public FirebaseFirestore getDatabase() {
         return database;
-    }
-
-    public List<Profile> getProfiles() {
-        database.collection("profiles")
-                .whereEqualTo("doorID", doorID)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                         if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                profiles.add(new Profile(document.getData().get("username").toString(), document.getData().get("email").toString(),
-                                        document.getData().get("password").toString(), Integer.parseInt(document.getData().get("username").toString())));
-                                Log.d("getProfiles", document.getId());
-                            }
-                        } else {
-                            Log.d("getProfiles", "Error getting documents: ", task.getException());
-                        }
-                    }
-                });
-        return profiles;
-    }
-
-    public List<ImageInfo> getImages() {
-        return UrlImages;
     }
 
     //Store a profile

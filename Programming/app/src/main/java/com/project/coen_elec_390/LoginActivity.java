@@ -84,13 +84,16 @@ public class LoginActivity extends AppCompatActivity {
                                                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                                         if (task.isSuccessful()) {
                                                             DocumentSnapshot document = task.getResult();
-                                                            Log.d("getProfile", document.getId());
                                                             if (document.exists()) {
                                                                 profile = new Profile(document.getData().get("username").toString(), document.getData().get("email").toString(),
                                                                         document.getData().get("password").toString(), Integer.parseInt(document.getData().get("doorID").toString()));
 
                                                                 String username = profile.getUsername();
                                                                 int doorID = profile.getDoorID();
+                                                                Log.d("Login", username);
+                                                                Log.d("Login", Integer.toString(doorID));
+
+                                                                databaseHelper.setDoorID(doorID);
 
                                                                 SharedPreferences.Editor editor = sharedPreference.edit();
                                                                 editor.putString("username", username);
@@ -101,10 +104,10 @@ public class LoginActivity extends AppCompatActivity {
                                                                 startActivity(intent);
                                                                 finish();
                                                             } else {
-                                                                Log.d("getProfile", "No such document");
+                                                                Log.d("Login", "No such document");
                                                             }
                                                         } else {
-                                                            Log.d("getProfile", "get failed with ", task.getException());
+                                                            Log.d("Login", "get() failed with ", task.getException());
                                                         }
                                                     }
                                                 });
