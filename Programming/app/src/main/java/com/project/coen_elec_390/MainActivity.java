@@ -17,8 +17,6 @@ public class MainActivity extends AppCompatActivity {
     private Button credits;
     private Button logout;
 
-    private SharedPreferences sharedPreference;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,27 +43,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void goToCredits() {
-        Intent intent = new Intent(this, Credits.class);
-        startActivity(intent);
+        startActivity(new Intent(this, Credits.class));
     }
 
     private void logout() {
-        SharedPreferences.Editor editor = sharedPreference.edit();
-        editor.clear();
-        editor.commit();
-
-        Intent intent = new Intent(this, SignUpActivity.class);
-        startActivity(intent);
+        startActivity(new Intent(this, LoginActivity.class));
     }
-
-    /*@Override
-    public void onBindViewHolder(ImageViewHolder holder, int position) {
-        Upload uploadCurrent = mUploads.get(position);
-        holder.textViewName.setText(uploadCurrent.getName());
-        Picasso.with(mContext)
-                .load(uploadCurrent.getImageUrl())
-                .fit()
-                .centerCrop()
-                .into(holder.imageView);
-    }*/
 }
