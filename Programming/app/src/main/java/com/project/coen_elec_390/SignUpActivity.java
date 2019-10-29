@@ -1,8 +1,5 @@
 package com.project.coen_elec_390;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -17,11 +14,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.IOException;
 
@@ -84,6 +79,7 @@ public class SignUpActivity extends AppCompatActivity {
                 if (isValidInputs(username.getText().toString(), email.getText().toString(),
                         password.getText().toString(), doorID.getText().toString())) {
                     if (filePath != null) {
+                        databaseHelper.setDoorID(profile.getDoorID());
                         databaseHelper.addProfile(profile, filePath);
                         startActivity(new Intent(SignUpActivity.this, MainActivity.class));
                     } else {
