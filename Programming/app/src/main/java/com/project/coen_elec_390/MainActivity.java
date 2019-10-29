@@ -63,33 +63,16 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void goToCredits() {
-        Intent intent = new Intent(this, Credits.class);
-        startActivity(intent);
-    }
-
     /*private void goToUpload() {
         Intent intent = new Intent(this, UploadImage.class);
         startActivity(intent);
     }*/
 
-    private void logout() {
-        SharedPreferences.Editor editor = sharedPreference.edit();
-        editor.clear();
-        editor.commit();
-
-        Intent intent = new Intent(this, SignUpActivity.class);
-        startActivity(intent);
+    private void goToCredits() {
+        startActivity(new Intent(this, Credits.class));
     }
 
-    /*@Override
-    public void onBindViewHolder(ImageViewHolder holder, int position) {
-        Upload uploadCurrent = mUploads.get(position);
-        holder.textViewName.setText(uploadCurrent.getName());
-        Picasso.with(mContext)
-                .load(uploadCurrent.getImageUrl())
-                .fit()
-                .centerCrop()
-                .into(holder.imageView);
-    }*/
+    private void logout() {
+        startActivity(new Intent(this, LoginActivity.class));
+    }
 }
