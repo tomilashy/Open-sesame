@@ -22,4 +22,3 @@ COEN 390 - Project
 ### 5 - Ogo-Oluwa Jesutomi Olasubulumi
 * Role: General Developer
 * Github: tomilashy
-* Email: tomilashy@gmail.com
