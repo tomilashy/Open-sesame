@@ -2,6 +2,7 @@ package com.project.coen_elec_390;
 
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Bundle;
@@ -30,6 +31,7 @@ import com.squareup.picasso.Picasso;
 public class UploadImage extends AppCompatActivity {
 
     private static final int PICK_IMAGE_REQUEST = 1;
+    private int mDoorID;
 
     private Button mButtonChooseImage;
     private Button mButtonUpload;
@@ -42,6 +44,7 @@ public class UploadImage extends AppCompatActivity {
 
     private StorageReference mStorageRef;
     private DatabaseReference mDatabaseRef;
+    private SharedPreferences mSharedPreference;
 
     private StorageTask mUploadTask;
 
@@ -57,8 +60,11 @@ public class UploadImage extends AppCompatActivity {
         mImageView = findViewById(R.id.image_view);
         mProgressBar = findViewById(R.id.progress_bar);
 
-        mStorageRef = FirebaseStorage.getInstance().getReference("door_2");
-        mDatabaseRef = FirebaseDatabase.getInstance().getReference("door_2");
+        mSharedPreference = getSharedPreferences("ProfilePreference", this.MODE_PRIVATE);
+        mDoorID = mSharedPreference.getInt("doorID", 0);
+
+        mStorageRef = FirebaseStorage.getInstance().getReference("door_" + mDoorID + "/history");
+        mDatabaseRef = FirebaseDatabase.getInstance().getReference("door_" + mDoorID + "/history");
 
         mButtonChooseImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -131,7 +137,7 @@ public class UploadImage extends AppCompatActivity {
                     Task<Uri> urlTask = taskSnapshot.getStorage().getDownloadUrl();
                     while (!urlTask.isSuccessful());
                     Uri downloadUrl = urlTask.getResult();
-                    ImageInfo imageInfo = new ImageInfo(mEditTextFileName.getText().toString().trim(),downloadUrl.toString(), "1");
+                    ImageInfo imageInfo = new ImageInfo(mEditTextFileName.getText().toString().trim(),downloadUrl.toString(), Integer.toString(mDoorID));
 
                     String imageInfoId = mDatabaseRef.push().getKey();
                     mDatabaseRef.child(imageInfoId).setValue(imageInfo);

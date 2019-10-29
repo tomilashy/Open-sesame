@@ -1,5 +1,6 @@
 package com.project.coen_elec_390;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -22,7 +23,9 @@ public class DisplayHistory extends AppCompatActivity {
     private ProgressBar mProgressCircle;
 
     private DatabaseReference mDatabaseRef;
+    private SharedPreferences mSharedPreference;
     private List<ImageInfo> listImageInfo;
+    private int mDoorID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,9 +38,11 @@ public class DisplayHistory extends AppCompatActivity {
 
         mProgressCircle = findViewById(R.id.progress_circle);
 
+        mSharedPreference = getSharedPreferences("ProfilePreference", this.MODE_PRIVATE);
+        mDoorID = mSharedPreference.getInt("doorID", 0);
         listImageInfo = new ArrayList<>();
 
-        mDatabaseRef = FirebaseDatabase.getInstance().getReference("door_2");
+        mDatabaseRef = FirebaseDatabase.getInstance().getReference("door_" + mDoorID + "/history");
 
         mDatabaseRef.addValueEventListener(new ValueEventListener() {
             @Override

@@ -75,7 +75,7 @@ public class LoginActivity extends AppCompatActivity {
 
                                                 SharedPreferences.Editor editor = sharedPreference.edit();
                                                 editor.putString("username", username);
-                                                editor.putInt("dooID", doorID);
+                                                editor.putInt("doorID", doorID);
                                                 editor.commit();
 
                                                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
