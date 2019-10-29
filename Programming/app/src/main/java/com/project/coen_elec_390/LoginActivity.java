@@ -22,7 +22,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private TextInputEditText username;
     private EditText password;
-    private Button logIn;
+    private Button login;
     private Button signUp;
     private Toast toast;
 
@@ -39,14 +39,14 @@ public class LoginActivity extends AppCompatActivity {
 
         username = findViewById(R.id.lUsername);
         password = findViewById(R.id.lPassword);
-        logIn = findViewById(R.id.login);
+        login = findViewById(R.id.login);
         signUp = findViewById(R.id.lSignUp);
 
         databaseHelper = new DatabaseHelper();
         sharedPreference = getSharedPreferences("ProfilePreference",
                 this.MODE_PRIVATE);
 
-        logIn.setOnClickListener(new View.OnClickListener() {
+        login.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 final String sUsername = username.getText().toString();
                 final String sPassword = password.getText().toString();

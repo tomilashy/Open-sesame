@@ -59,13 +59,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void goToHistory() {
-        Intent intent = new Intent(this, DisplayHistory.class);
-        startActivity(intent);
+        startActivity(new Intent(this, DisplayHistory.class));
     }
 
     /*private void goToUpload() {
-        Intent intent = new Intent(this, UploadImage.class);
-        startActivity(intent);
+        startActivity(new Intent(this, UploadImage.class));
     }*/
 
     private void goToCredits() {
