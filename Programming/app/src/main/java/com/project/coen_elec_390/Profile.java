@@ -28,6 +28,16 @@ public class Profile {
         admins = new ArrayList<Profile>();
     }
 
+    @Exclude
+    public Map<String, Object> toMap() {
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("username", username);
+        result.put("email", email);
+        result.put("password", password);
+        result.put("doorId", doorID);
+        return result;
+    }
+
     // Getters
     public String getUsername() {return username;}
     public String getPassword() {return password;}

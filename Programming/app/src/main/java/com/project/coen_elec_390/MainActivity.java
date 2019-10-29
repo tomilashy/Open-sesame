@@ -16,6 +16,9 @@ public class MainActivity extends AppCompatActivity {
     private Button history;
     private Button credits;
     private Button logout;
+    //private Button upload;
+
+    private SharedPreferences sharedPreference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,12 +32,25 @@ public class MainActivity extends AppCompatActivity {
         history = findViewById(R.id.history);
         credits = findViewById(R.id.credits);
         logout = findViewById(R.id.logout);
+        //upload = findViewById(R.id.upload);
 
+        sharedPreference = getSharedPreferences("ProfilePreference", this.MODE_PRIVATE );
+
+        history.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                goToHistory();
+            }
+        });
         credits.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 goToCredits();
             }
         });
+        /*upload.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                goToUpload();
+            }
+        });*/
         logout.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 logout();
@@ -42,11 +58,38 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void goToCredits() {
-        startActivity(new Intent(this, Credits.class));
+    private void goToHistory() {
+        Intent intent = new Intent(this, DisplayHistory.class);
+        startActivity(intent);
     }
 
-    private void logout() {
-        startActivity(new Intent(this, LoginActivity.class));
+    private void goToCredits() {
+        Intent intent = new Intent(this, Credits.class);
+        startActivity(intent);
     }
+
+    /*private void goToUpload() {
+        Intent intent = new Intent(this, UploadImage.class);
+        startActivity(intent);
+    }*/
+
+    private void logout() {
+        SharedPreferences.Editor editor = sharedPreference.edit();
+        editor.clear();
+        editor.commit();
+
+        Intent intent = new Intent(this, SignUpActivity.class);
+        startActivity(intent);
+    }
+
+    /*@Override
+    public void onBindViewHolder(ImageViewHolder holder, int position) {
+        Upload uploadCurrent = mUploads.get(position);
+        holder.textViewName.setText(uploadCurrent.getName());
+        Picasso.with(mContext)
+                .load(uploadCurrent.getImageUrl())
+                .fit()
+                .centerCrop()
+                .into(holder.imageView);
+    }*/
 }

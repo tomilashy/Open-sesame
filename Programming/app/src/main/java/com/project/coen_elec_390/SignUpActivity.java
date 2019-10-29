@@ -1,6 +1,5 @@
 package com.project.coen_elec_390;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -17,11 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.IOException;
 
@@ -33,11 +28,10 @@ public class SignUpActivity extends AppCompatActivity {
     private EditText doorID;
     private Button picture;
     private Button signUp;
-    private Button login;
     private Toast toast;
 
-    private DatabaseHelper databaseHelper;
     private SharedPreferences sharedPreference;
+    private DatabaseHelper databasehelper;
 
     private Uri filePath;
     private final int PICK_IMAGE_REQUEST = 71;
@@ -48,7 +42,6 @@ public class SignUpActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
-        setTitle("Sign up");
 
         username = findViewById(R.id.sUsername);
         email = findViewById(R.id.sEmail);
@@ -56,11 +49,9 @@ public class SignUpActivity extends AppCompatActivity {
         doorID = findViewById(R.id.sDoorID);
         picture = findViewById(R.id.sPicture);
         signUp = findViewById(R.id.signUp);
-        login = findViewById(R.id.sLogin);
-
-        databaseHelper = new DatabaseHelper();
         sharedPreference = this.getSharedPreferences("ProfilePreference",
                 this.MODE_PRIVATE );
+        databasehelper = new DatabaseHelper();
 
         profile = new Profile();
 
@@ -72,21 +63,16 @@ public class SignUpActivity extends AppCompatActivity {
                 startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
             }
         });
-
-        login.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                startActivity(new Intent(SignUpActivity.this, LoginActivity.class));
-            }
-        });
-
         signUp.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if (isValidInputs(username.getText().toString(), email.getText().toString(),
                         password.getText().toString(), doorID.getText().toString())) {
                     if (filePath != null) {
-                        databaseHelper.setDoorID(profile.getDoorID());
-                        databaseHelper.addProfile(profile, filePath, SignUpActivity.this);
-                        startActivity(new Intent(SignUpActivity.this, MainActivity.class));
+                        databasehelper.setDoorID(profile.getDoorID());
+                        databasehelper.addProfile(profile, filePath, SignUpActivity.this);
+
+                        Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
+                        startActivity(intent);
                     } else {
                         toast = Toast.makeText(SignUpActivity.this, "A picture has not been chosen!", Toast.LENGTH_SHORT);
                         toast.show();
@@ -122,7 +108,7 @@ public class SignUpActivity extends AppCompatActivity {
                     if (doorID.matches("[0-9]+")) {
                         int id = Integer.parseInt(doorID);
                         if (id > 0) {
-                            if (password.length() > 5 && password.length() < 16) {
+                            if (password.length() < 16) {
                                 if (!password.contains(" ")) {
                                     //Save valid information
                                     profile.setUsername(username);
@@ -131,8 +117,8 @@ public class SignUpActivity extends AppCompatActivity {
                                     profile.setDoorID(id);
 
                                     SharedPreferences.Editor editor = sharedPreference.edit();
-                                    editor.putString("username", username);
-                                    editor.putInt("dooID", id);
+                                    editor.putString("username", username );
+                                    editor.putInt("dooID", id );
                                     editor.commit();
 
                                     return true;
@@ -140,7 +126,7 @@ public class SignUpActivity extends AppCompatActivity {
                                     toast = Toast.makeText(this, "Password contains whitespace!", Toast.LENGTH_SHORT);
                                 }
                             } else {
-                                toast = Toast.makeText(this, "Length of password should be between 6 and 16!", Toast.LENGTH_SHORT);
+                                toast = Toast.makeText(this, "Maximum length for passwords is 16 characters!", Toast.LENGTH_SHORT);
                             }
                         } else {
                             toast = Toast.makeText(this, "Door ID should be bigger than 0!", Toast.LENGTH_SHORT);
