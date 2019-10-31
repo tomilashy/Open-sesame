@@ -2,46 +2,10 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@drawable/old_lynch"
+    android:background="@drawable/blue_city"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".Credits">
-
-    <ImageView
-        android:id="@+id/drop1"
-        android:layout_width="15dp"
-        android:layout_height="100dp"
-        android:src="@drawable/water_drop"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.55"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0975" />
-
-    <ImageView
-        android:id="@+id/drop2"
-        android:layout_width="15dp"
-        android:layout_height="100dp"
-        android:src="@drawable/water_drop"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.445"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.045" />
-
-    <ImageView
-        android:id="@+id/drop3"
-        android:layout_width="15dp"
-        android:layout_height="100dp"
-        android:src="@drawable/water_drop"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.275"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.2" />
 
     <TextView
         style="@style/TitleCredit"
@@ -55,14 +19,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintVertical_bias="0.05"/>
+        app:layout_constraintVertical_bias="0.025"/>
 
     <TextView
         android:id="@+id/title1"
         style="@style/TitleCredit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Project Leader"
+        android:text="Product Owner"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="@+id/leader"
         app:layout_constraintEnd_toEndOf="@+id/page"
@@ -76,7 +40,7 @@
         style="@style/NormalText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text=" Alec Kurkdjian"
+        android:text=" Shadi Makdissi"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="@+id/title2"
@@ -119,7 +83,7 @@
         android:id="@+id/title3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Developpers"
+        android:text="Developers"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="@+id/dev1"
         app:layout_constraintEnd_toEndOf="@+id/technical"
@@ -133,7 +97,7 @@
         android:id="@+id/dev1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Irfan Ahmed"
+        android:text="Alec Kurkdjian"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="@+id/dev2"
         app:layout_constraintEnd_toEndOf="@+id/title3"
@@ -147,7 +111,7 @@
         android:id="@+id/dev2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Olasubulumi Jesutomi Ogo Oluwa "
+        android:text="Irfan Ahmed"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="@+id/dev3"
         app:layout_constraintEnd_toEndOf="@+id/dev1"
@@ -161,7 +125,7 @@
         android:id="@+id/dev3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Shadi Makdissi "
+        android:text="Olasubulumi Jesutomi Ogo Oluwa"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/dev2"
