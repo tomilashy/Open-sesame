@@ -96,6 +96,8 @@ public class LoginActivity extends AppCompatActivity {
                                     }
                                 }
                             });
+                } else {
+                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                 }
             }
         });

@@ -203,8 +203,7 @@ public class SignUpActivity extends AppCompatActivity {
 
                         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                     }
-                }
-                else {
+                } else {
                     getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                 }
             }
