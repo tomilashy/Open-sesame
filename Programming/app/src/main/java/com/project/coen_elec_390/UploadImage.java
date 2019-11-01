@@ -21,12 +21,15 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
+import java.util.HashMap;
+import java.util.Map;
 
 public class UploadImage extends AppCompatActivity {
 
@@ -41,11 +44,10 @@ public class UploadImage extends AppCompatActivity {
     private ProgressBar mProgressBar;
 
     private Uri mImageUri;
-
     private StorageReference mStorageRef;
-    private DatabaseReference mDatabaseRef;
     private SharedPreferences mSharedPreference;
-
+    private DatabaseHelper mDatabaseHelper;
+    private FirebaseFirestore mDatabaseFirestore;
     private StorageTask mUploadTask;
 
     @Override
@@ -64,7 +66,8 @@ public class UploadImage extends AppCompatActivity {
         mDoorID = mSharedPreference.getInt("doorID", 0);
 
         mStorageRef = FirebaseStorage.getInstance().getReference("door_" + mDoorID + "/history");
-        mDatabaseRef = FirebaseDatabase.getInstance().getReference("door_" + mDoorID + "/history");
+        mDatabaseHelper = new DatabaseHelper();
+        mDatabaseFirestore = mDatabaseHelper.getDatabase();
 
         mButtonChooseImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,7 +82,7 @@ public class UploadImage extends AppCompatActivity {
                 if (mUploadTask != null && mUploadTask.isInProgress()) {
                     Toast.makeText(UploadImage.this, "Upload in progress", Toast.LENGTH_SHORT).show();
                 } else {
-                    uploadFile();
+                    uploadImage();
                 }
             }
         });
@@ -102,11 +105,9 @@ public class UploadImage extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
                 && data != null && data.getData() != null) {
             mImageUri = data.getData();
-
             Picasso.with(this).load(mImageUri).into(mImageView);
         }
     }
@@ -117,11 +118,9 @@ public class UploadImage extends AppCompatActivity {
         return mime.getExtensionFromMimeType(cR.getType(uri));
     }
 
-    private void uploadFile() {
+    private void uploadImage() {
         if (mImageUri != null) {
-            StorageReference fileReference = mStorageRef.child(System.currentTimeMillis()
-                    + "." + getFileExtension(mImageUri));
-
+            StorageReference fileReference = mStorageRef.child(String.valueOf(mEditTextFileName.getText()));
             mUploadTask = fileReference.putFile(mImageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -139,8 +138,23 @@ public class UploadImage extends AppCompatActivity {
                     Uri downloadUrl = urlTask.getResult();
                     ImageInfo imageInfo = new ImageInfo(mEditTextFileName.getText().toString().trim(),downloadUrl.toString(), Integer.toString(mDoorID));
 
-                    String imageInfoId = mDatabaseRef.push().getKey();
-                    mDatabaseRef.child(imageInfoId).setValue(imageInfo);
+                    Map<String, Object> image = new HashMap<>();
+                    image.put("imageName", imageInfo.getImageName());
+                    image.put("imageUrl", imageInfo.getImageUrl());
+                    image.put("doorID", imageInfo.getImageID());
+
+                    mDatabaseFirestore.collection("door_" + imageInfo.getImageID()).document(imageInfo.getImageName())
+                            .set(image)
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                }
+                            });
                 }
             })
                     .addOnFailureListener(new OnFailureListener() {
