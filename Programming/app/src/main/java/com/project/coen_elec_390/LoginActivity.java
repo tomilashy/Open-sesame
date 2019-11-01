@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -29,6 +30,8 @@ public class LoginActivity extends AppCompatActivity {
     private DatabaseHelper databaseHelper;
     private SharedPreferences sharedPreference;
 
+    private final String TAG = "LOGIN";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +51,9 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 final String sUsername = username.getText().toString();
                 final String sPassword = password.getText().toString();
+                getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+
                 if (isValidInputs(sUsername, sPassword)) {
                     FirebaseFirestore database = databaseHelper.getDatabase();
                     database.collection("profiles").document(sUsername).get()
@@ -59,8 +65,8 @@ public class LoginActivity extends AppCompatActivity {
 
                                             if (sPassword.equals(document.getData().get("password").toString())) {
                                                 int doorID =  Integer.parseInt(document.getData().get("doorID").toString());
-                                                Log.d("Login", sUsername);
-                                                Log.d("Login", Integer.toString(doorID));
+                                                Log.d(TAG, sUsername);
+                                                Log.d(TAG, Integer.toString(doorID));
 
                                                 databaseHelper.setDoorID(doorID);
 
@@ -74,13 +80,19 @@ public class LoginActivity extends AppCompatActivity {
                                             } else {
                                                 toast = Toast.makeText(LoginActivity.this, "Wrong password or username!", Toast.LENGTH_SHORT);
                                                 toast.show();
+
+                                                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                                             }
                                         } else {
                                             toast = Toast.makeText(LoginActivity.this, "User does not exist!", Toast.LENGTH_SHORT);
                                             toast.show();
+
+                                            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                                         }
                                     } else {
-                                        Log.d("Login", "get() failed with ", task.getException());
+                                        Log.d(TAG, "get() failed with ", task.getException());
+
+                                        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                                     }
                                 }
                             });

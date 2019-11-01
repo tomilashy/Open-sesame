@@ -2,7 +2,7 @@ package com.project.coen_elec_390;
 
 import android.content.Context;
 import android.net.Uri;
-import android.util.Log;;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
