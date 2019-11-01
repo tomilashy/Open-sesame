@@ -31,7 +31,6 @@ public class DatabaseHelper {
         database.setFirestoreSettings(settings);
     }
 
-    /***Always set doorID before using DatabaseHelper***/
     public void setDoorID(int doorID) {
         this.doorID = doorID;
     }
@@ -40,42 +39,7 @@ public class DatabaseHelper {
         return database;
     }
 
-    //Store a profile
-    public void addProfile(final Profile profile, Uri filePath) {
-        if (filePath != null) {
-            storageReference = FirebaseStorage.getInstance().getReference("door_" + doorID + "/profiles");
-            StorageReference ref = storageReference.child(profile.getUsername());
-            ref.putFile(filePath)
-                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            HashMap<String, Object> user = new HashMap<>();
-                            user.put("username", profile.getUsername());
-                            user.put("email", profile.getEmail());
-                            user.put("password", profile.getPassword());
-                            user.put("doorID", doorID);
-
-                            database.collection("profiles").document(profile.getUsername())
-                                    .set(user)
-                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void aVoid) {
-                                        }
-                                    })
-                                    .addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                        }
-                                    });
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                        }
-                    });
-        }
-    }
+    public StorageReference getStorageReference(final String reference) {return FirebaseStorage.getInstance().getReference(reference);}
 
     //Store a picture for history
     public void addHistoryImage(Uri filePath, final Context context) {
