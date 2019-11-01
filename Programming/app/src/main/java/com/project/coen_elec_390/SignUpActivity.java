@@ -8,17 +8,29 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -76,20 +88,86 @@ public class SignUpActivity extends AppCompatActivity {
 
         signUp.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+
+                final String sDoorID = doorID.getText().toString();
                 if (isValidInputs(username.getText().toString(), email.getText().toString(),
-                        password.getText().toString(), doorID.getText().toString())) {
+                        password.getText().toString(), sDoorID)) {
                     if (filePath != null) {
-                        databaseHelper.setDoorID(profile.getDoorID());
-                        databaseHelper.addProfile(profile, filePath);
-                        startActivity(new Intent(SignUpActivity.this, MainActivity.class));
+                        final StorageReference storageReference = databaseHelper.getStorageReference("door_" + sDoorID + "/profiles");
+                        final FirebaseFirestore database = databaseHelper.getDatabase();
+                        database.collection("doors")
+                                .document(sDoorID).get()
+                                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            DocumentSnapshot document = task.getResult();
+                                            if (document.exists()) {
+                                                if (filePath != null) {
+                                                    storageReference.child(profile.getUsername()).putFile(filePath)
+                                                            .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                                                @Override
+                                                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                                                    HashMap<String, Object> user = new HashMap<>();
+                                                                    user.put("username", profile.getUsername());
+                                                                    user.put("email", profile.getEmail());
+                                                                    user.put("password", profile.getPassword());
+                                                                    user.put("doorID", profile.getDoorID());
+
+                                                                    database.collection("profiles")
+                                                                            .document(profile.getUsername())
+                                                                            .set(user)
+                                                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                                @Override
+                                                                                public void onSuccess(Void aVoid) {
+                                                                                    startActivity(new Intent(SignUpActivity.this, MainActivity.class));
+                                                                                }
+                                                                            })
+                                                                            .addOnFailureListener(new OnFailureListener() {
+                                                                                @Override
+                                                                                public void onFailure(@NonNull Exception e) {
+                                                                                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                                                                                }
+                                                                            });
+                                                                }
+                                                            })
+                                                            .addOnFailureListener(new OnFailureListener() {
+                                                                @Override
+                                                                public void onFailure(@NonNull Exception e) {
+                                                                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                                                                }
+                                                            });
+                                                }
+                                            } else {
+                                                toast = Toast.makeText(SignUpActivity.this, "Wrong doorID!", Toast.LENGTH_SHORT);
+                                                toast.show();
+
+                                                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                                            }
+                                        } else {
+                                            Log.d("Login", "get() failed with ", task.getException());
+
+                                            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                                        }
+                                    }
+                                });
                     } else {
                         toast = Toast.makeText(SignUpActivity.this, "A picture has not been chosen!", Toast.LENGTH_SHORT);
                         toast.show();
+
+                        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                     }
+                }
+                else {
+                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                 }
             }
         });
     }
+
+    @Override
+    public void onBackPressed() { }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

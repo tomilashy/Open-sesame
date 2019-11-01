@@ -29,8 +29,6 @@ public class LoginActivity extends AppCompatActivity {
     private DatabaseHelper databaseHelper;
     private SharedPreferences sharedPreference;
 
-    private Profile profile;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,19 +56,16 @@ public class LoginActivity extends AppCompatActivity {
                                     if (task.isSuccessful()) {
                                         DocumentSnapshot document = task.getResult();
                                         if (document.exists()) {
-                                            profile = new Profile(document.getData().get("username").toString(), document.getData().get("email").toString(),
-                                                    document.getData().get("password").toString(), Integer.parseInt(document.getData().get("doorID").toString()));
 
-                                            if (profile.getUsername().equals(sUsername) && profile.getPassword().equals(sPassword)) {
-                                                String username = profile.getUsername();
-                                                int doorID = profile.getDoorID();
-                                                Log.d("Login", username);
+                                            if (sPassword.equals(document.getData().get("password").toString())) {
+                                                int doorID =  Integer.parseInt(document.getData().get("doorID").toString());
+                                                Log.d("Login", sUsername);
                                                 Log.d("Login", Integer.toString(doorID));
 
                                                 databaseHelper.setDoorID(doorID);
 
                                                 SharedPreferences.Editor editor = sharedPreference.edit();
-                                                editor.putString("username", username);
+                                                editor.putString("username", sUsername);
                                                 editor.putInt("doorID", doorID);
                                                 editor.commit();
 
@@ -103,6 +98,9 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    public void onBackPressed() { }
 
     private boolean isValidInputs(String username, String password) {
         if (!username.isEmpty() && !password.isEmpty()) {
