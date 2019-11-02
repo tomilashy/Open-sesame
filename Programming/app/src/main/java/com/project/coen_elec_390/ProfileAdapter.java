@@ -37,7 +37,6 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ImageVie
         Picasso.with(context)
                 .load(profile.getImageUrl())
                 .fit()
-                .centerCrop()
                 .into(holder.imageView);
     }
 

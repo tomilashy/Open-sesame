@@ -2,7 +2,8 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#80000000">
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    card_view:cardBackgroundColor="@android:color/transparent">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,8 +15,8 @@
             android:layout_width="200dp"
             android:layout_height="200dp"
             android:layout_marginBottom="10dp"
-            android:scaleType="centerInside"
-            android:adjustViewBounds="true"/>
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="10dp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -23,28 +24,22 @@
             android:orientation="vertical">
 
             <TextView
+                style="@style/NormalText"
                 android:id="@+id/text_view_username"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="50dp"
                 android:layout_marginBottom="25dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:text="Text"
-                android:textColor="@android:color/black"
-                android:textSize="16dp" />
+                android:layout_marginStart="10dp" />
 
             <TextView
+                style="@style/NormalText"
                 android:id="@+id/text_view_email"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="25dp"
                 android:layout_marginBottom="50dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:text="Text"
-                android:textColor="@android:color/black"
-                android:textSize="16dp" />
+                android:layout_marginStart="10dp" />
         </LinearLayout>
 
     </LinearLayout>
