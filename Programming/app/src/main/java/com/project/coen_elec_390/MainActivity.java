@@ -36,6 +36,11 @@ public class MainActivity extends AppCompatActivity {
 
         sharedPreference = getSharedPreferences("ProfilePreference", this.MODE_PRIVATE );
 
+        admins.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                goToAdministrators();
+            }
+        });
         history.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 goToHistory();
@@ -46,11 +51,6 @@ public class MainActivity extends AppCompatActivity {
                 goToCredits();
             }
         });
-        /*upload.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                goToUpload();
-            }
-        });*/
         logout.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 logout();
@@ -58,13 +58,9 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void goToHistory() {
-        startActivity(new Intent(this, DisplayHistory.class));
-    }
+    private void goToAdministrators() { startActivity(new Intent(this, AdminsActivity.class)); }
 
-    /*private void goToUpload() {
-        startActivity(new Intent(this, UploadImage.class));
-    }*/
+    private void goToHistory() { startActivity(new Intent(this, DisplayHistory.class)); }
 
     private void goToCredits() {
         startActivity(new Intent(this, Credits.class));

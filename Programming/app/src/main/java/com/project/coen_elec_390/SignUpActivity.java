@@ -142,11 +142,16 @@ public class SignUpActivity extends AppCompatActivity {
                                                                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                                                                         @Override
                                                                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                                                            Task<Uri> urlTask = taskSnapshot.getStorage().getDownloadUrl();
+                                                                            while (!urlTask.isSuccessful());
+                                                                            Uri downloadUrl = urlTask.getResult();
+
                                                                             HashMap<String, Object> user = new HashMap<>();
                                                                             user.put("username", profile.getUsername());
                                                                             user.put("email", profile.getEmail());
                                                                             user.put("password", profile.getPassword());
                                                                             user.put("doorID", profile.getDoorID());
+                                                                            user.put("imageUrl", downloadUrl.toString());
 
                                                                             database.collection("profiles")
                                                                                     .document(profile.getUsername())
@@ -223,6 +228,7 @@ public class SignUpActivity extends AppCompatActivity {
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
                 BitmapDrawable drawable = new BitmapDrawable(this.getResources(), bitmap);
+                picture.setText("");
                 picture.setBackground(drawable);
             }
             catch (IOException e) {

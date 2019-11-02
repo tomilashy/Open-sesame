@@ -10,7 +10,6 @@ public class Profile {
     private String email;
     private String imageUrl;
     private int doorID;
-    private ArrayList<Profile> admins;
 
     // Constructors
     public Profile() {}
@@ -20,8 +19,14 @@ public class Profile {
         this.email = email;
         this.password = password;
         this.doorID = doorID;
+    }
 
-        admins = new ArrayList<Profile>();
+    public Profile(String username, String email, String password, int doorID, String imageUrl) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.doorID = doorID;
+        this.imageUrl = imageUrl;
     }
 
     // Getters
@@ -30,7 +35,6 @@ public class Profile {
     public String getEmail() {return email;}
     public String getImageUrl() {return imageUrl;}
     public int getDoorID() {return doorID;}
-    public List<Profile> getAdmins() {return admins;}
 
     // Setters
     public void setUsername(String username) {this.username = username;}
@@ -38,7 +42,4 @@ public class Profile {
     public void setEmail(String email) {this.email = email;}
     public void setImageUrl(String url) {this.imageUrl = url;}
     public void setDoorID(int doorID) {this.doorID = doorID;}
-    public void addAdmin(Profile profile){
-        admins.add(profile);
-    }
 }
