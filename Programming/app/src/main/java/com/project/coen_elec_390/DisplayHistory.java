@@ -57,7 +57,7 @@ public class DisplayHistory extends AppCompatActivity {
         mListImageInfo = new ArrayList<>();
 
         mDatabaseRef = FirebaseDatabase.getInstance().getReference("door_" + mDoorID + "/history");
-        setTitle("Door " + mDoorID + " History");
+        setTitle("History");
 
         mDatabaseRef.addValueEventListener(new ValueEventListener() {
             @Override

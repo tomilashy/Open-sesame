@@ -68,8 +68,6 @@ public class LoginActivity extends AppCompatActivity {
                                                 Log.d(TAG, sUsername);
                                                 Log.d(TAG, Integer.toString(doorID));
 
-                                                databaseHelper.setDoorID(doorID);
-
                                                 SharedPreferences.Editor editor = sharedPreference.edit();
                                                 editor.putString("username", sUsername);
                                                 editor.putInt("doorID", doorID);

@@ -15,7 +15,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".AdminsActivity"></activity>
-        <activity android:name=".UploadImage" />
         <activity android:name=".DisplayHistory" />
         <activity android:name=".LoginActivity">
             <intent-filter>
