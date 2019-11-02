@@ -1,12 +1,12 @@
 package com.project.coen_elec_390;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -16,7 +16,6 @@ public class MainActivity extends AppCompatActivity {
     private Button history;
     private Button credits;
     private Button logout;
-    //private Button upload;
 
     private SharedPreferences sharedPreference;
 
@@ -32,7 +31,6 @@ public class MainActivity extends AppCompatActivity {
         history = findViewById(R.id.history);
         credits = findViewById(R.id.credits);
         logout = findViewById(R.id.logout);
-        //upload = findViewById(R.id.upload);
 
         sharedPreference = getSharedPreferences("ProfilePreference", this.MODE_PRIVATE );
 

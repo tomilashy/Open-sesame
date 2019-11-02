@@ -39,9 +39,8 @@
         app:layout_constraintVertical_bias="0.5"/>
 
     <Button
+        style="@style/Login_Sign_Up_Buttons"
         android:id="@+id/login"
-        android:layout_width="150dp"
-        android:layout_height="50dp"
         android:text="Log In"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -51,9 +50,8 @@
         app:layout_constraintVertical_bias="0.75"/>
 
     <Button
+        style="@style/Login_Sign_Up_Buttons"
         android:id="@+id/lSignUp"
-        android:layout_width="150dp"
-        android:layout_height="50dp"
         android:text="Sign Up"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
