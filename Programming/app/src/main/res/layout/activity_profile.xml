@@ -6,21 +6,20 @@
     android:searchSuggestSelection=" ?"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".DisplayHistory">
+    tools:context=".ProfileActivity">
 
     <com.github.siyamed.shapeimageview.CircularImageView
         android:id="@+id/circular_view"
         android:layout_width="210dp"
         android:layout_height="210dp"
-        android:src="@drawable/cong"
         app:layout_constraintEnd_toStartOf="@+id/guideline3"
         app:layout_constraintStart_toStartOf="@+id/guideline5"
         app:layout_constraintTop_toTopOf="@+id/guideline4"
         app:siBorderColor="@color/black"
         app:siBorderWidth="3dp" />
 
-    <EditText
-        android:id="@+id/edit_user"
+    <TextView
+        android:id="@+id/text_user"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -61,8 +60,8 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.75" />
 
-    <EditText
-        android:id="@+id/edit_doorID"
+    <TextView
+        android:id="@+id/text_doorID"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -116,13 +115,5 @@
         app:layout_constraintBottom_toTopOf="@+id/guideline11"
         app:layout_constraintEnd_toStartOf="@+id/guideline3"
         app:layout_constraintStart_toStartOf="@+id/guideline5" />
-
-    <Button
-        android:id="@+id/editButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Edit"
-        app:layout_constraintBottom_toTopOf="@+id/guideline4"
-        app:layout_constraintStart_toStartOf="@+id/guideline3" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

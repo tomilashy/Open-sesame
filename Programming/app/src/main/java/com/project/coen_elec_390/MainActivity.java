@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu, menu);
+        inflater.inflate(R.menu.menu_main, menu);
         return true;
     }
 
@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
             case R.id.item1:
-                profileInfo();
+                editProfile();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
         startActivity(new Intent(this, LoginActivity.class));
     }
 
-    private void profileInfo() {
-        startActivity(new Intent(this, ProfileInfo.class));
+    private void editProfile() {
+        startActivity(new Intent(this, ProfileActivity.class));
     }
 }
