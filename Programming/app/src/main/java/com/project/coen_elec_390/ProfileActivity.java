@@ -41,6 +41,8 @@ public class ProfileActivity extends AppCompatActivity {
     private TextView username;
     private EditText email;
     private EditText password;
+    private TextView email_text;
+    private TextView password_text;
     private TextView doorID;
     private Button saveButton;
     private CircularImageView circularImageView;
@@ -75,6 +77,8 @@ public class ProfileActivity extends AppCompatActivity {
         username = findViewById(R.id.text_user);
         email = findViewById(R.id.edit_email);
         password = findViewById(R.id.edit_password);
+        email_text = findViewById(R.id.text_email);
+        password_text = findViewById(R.id.text_password);
         doorID = findViewById(R.id.text_doorID);
         saveButton = findViewById(R.id.saveButton);
         circularImageView = findViewById(R.id.circular_view);
@@ -82,12 +86,18 @@ public class ProfileActivity extends AppCompatActivity {
         username.setTextSize(19);
         email.setFocusable(false);
         password.setFocusable(false);
+        email_text.setTextSize(19);
+        password_text.setTextSize(19);
         doorID.setTextSize(19);
 
         username.setGravity(Gravity.CENTER_HORIZONTAL);
         email.setGravity(Gravity.CENTER_HORIZONTAL);
         password.setGravity(Gravity.CENTER_HORIZONTAL);
+        email_text.setGravity(Gravity.CENTER_HORIZONTAL);
+        password_text.setGravity(Gravity.CENTER_HORIZONTAL);
         doorID.setGravity(Gravity.CENTER_HORIZONTAL);
+        email.setVisibility(View.INVISIBLE);
+        password.setVisibility(View.INVISIBLE);
         saveButton.setVisibility(View.INVISIBLE);
 
         databaseHelper = new DatabaseHelper();
@@ -104,6 +114,10 @@ public class ProfileActivity extends AppCompatActivity {
         saveButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if(editMode == 1){
+                    email.setVisibility(View.INVISIBLE);
+                    password.setVisibility(View.INVISIBLE);
+                    email_text.setVisibility(View.VISIBLE);
+                    password_text.setVisibility(View.VISIBLE);
                     updateProfileInfo();
                 } else if (editMode == 2) {
                     deletePreviousPicture();
@@ -127,6 +141,10 @@ public class ProfileActivity extends AppCompatActivity {
         switch (item.getItemId()){
             case R.id.item2:
                 editMode = 1;
+                email_text.setVisibility(View.INVISIBLE);
+                password_text.setVisibility(View.INVISIBLE);
+                email.setVisibility(View.VISIBLE);
+                password.setVisibility(View.VISIBLE);
                 saveButton.setVisibility(View.VISIBLE);
                 email.setFocusableInTouchMode(true);
                 password.setFocusableInTouchMode(true);
@@ -191,6 +209,8 @@ public class ProfileActivity extends AppCompatActivity {
                         username.setText(profileName);
                         email.setText(document.getData().get("email").toString());
                         password.setText(document.getData().get("password").toString());
+                        email_text.setText(document.getData().get("email").toString());
+                        password_text.setText(document.getData().get("password").toString());
                         doorID.setText(document.getData().get("doorID").toString());
                         profileEmail = document.getData().get("email").toString();
                         profileUrl = document.getData().get("imageUrl").toString();
