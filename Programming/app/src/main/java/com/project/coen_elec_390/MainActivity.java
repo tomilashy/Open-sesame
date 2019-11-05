@@ -83,4 +83,6 @@ public class MainActivity extends AppCompatActivity {
     private void goToCredits() { startActivity(new Intent(this, Credits.class)); }
 
     private void editProfile() { startActivity(new Intent(this, ProfileActivity.class)); }
+
+    private void logout() { startActivity(new Intent(this, LoginActivity.class)); }
 }
