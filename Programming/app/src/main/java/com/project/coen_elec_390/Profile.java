@@ -3,6 +3,7 @@ package com.project.coen_elec_390;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class Profile {
     // Data Members
     private String username;
