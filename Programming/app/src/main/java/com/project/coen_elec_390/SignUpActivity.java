@@ -138,7 +138,7 @@ public class SignUpActivity extends AppCompatActivity {
                                                     DocumentSnapshot document = task.getResult();
                                                     if (document.exists()) {
                                                         if (filePath != null) {
-                                                            storageReference.child(profile.getUsername()).putFile(filePath)
+                                                            storageReference.child(profile.getUsername() + ".jpg").putFile(filePath)
                                                                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                                                                         @Override
                                                                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
