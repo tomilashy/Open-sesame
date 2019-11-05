@@ -247,8 +247,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     private void uploadImage() {
         if (imageUri != null) {
-            StorageReference fileReference = storageRef.child(String.valueOf(profileName));
-            String uri = imageUri.toString();
+            StorageReference fileReference = storageRef.child((profileName + ".jpg"));
             uploadTask = fileReference.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
