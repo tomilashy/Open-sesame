@@ -17,8 +17,6 @@ public class MainActivity extends AppCompatActivity {
     private Button credits;
     private Button logout;
 
-    private SharedPreferences sharedPreference;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,8 +29,6 @@ public class MainActivity extends AppCompatActivity {
         history = findViewById(R.id.history);
         credits = findViewById(R.id.credits);
         logout = findViewById(R.id.logout);
-
-        sharedPreference = getSharedPreferences("ProfilePreference", this.MODE_PRIVATE );
 
         admins.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -60,9 +56,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void goToHistory() { startActivity(new Intent(this, DisplayHistory.class)); }
 
-    private void goToCredits() {
-        startActivity(new Intent(this, Credits.class));
-    }
+    private void goToCredits() { startActivity(new Intent(this, Credits.class)); }
 
     private void logout() {
         startActivity(new Intent(this, LoginActivity.class));
