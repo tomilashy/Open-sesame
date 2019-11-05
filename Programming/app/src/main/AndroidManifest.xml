@@ -15,6 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".AdminsActivity"></activity>
+        <activity android:name=".ProfileActivity"></activity>
         <activity android:name=".DisplayHistory" />
         <activity android:name=".LoginActivity">
             <intent-filter>
