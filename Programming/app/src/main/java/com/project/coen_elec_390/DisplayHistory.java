@@ -1,6 +1,7 @@
 package com.project.coen_elec_390;
 
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -12,6 +13,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -21,6 +24,10 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.ListResult;
+import com.google.firebase.storage.StorageReference;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,65 +35,85 @@ public class DisplayHistory extends AppCompatActivity {
 
     private RecyclerView mRecyclerView;
     private ImageAdapter mAdapter;
-    private ProgressBar mProgressCircle;
 
-    private DatabaseReference mDatabaseRef;
     private SharedPreferences mSharedPreference;
     private DatabaseHelper mDatabaseHelper;
-    private FirebaseFirestore mDatabase;
+    private StorageReference storageReference;
+    private FirebaseStorage storage;
 
     private List<ImageInfo> mListImageInfo;
     private int mDoorID;
+
+    private final String TAG = "HISTORY";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_history);
+        setTitle("History");
 
         mDatabaseHelper = new DatabaseHelper();
-        mDatabase = mDatabaseHelper.getDatabase();
 
         mRecyclerView = findViewById(R.id.recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(DisplayHistory.this));
         mRecyclerView.setHasFixedSize(true);
 
-        mProgressCircle = findViewById(R.id.progress_circle);
-
         mSharedPreference = getSharedPreferences("ProfilePreference", this.MODE_PRIVATE);
         mDoorID = mSharedPreference.getInt("doorID", 0);
         mListImageInfo = new ArrayList<>();
 
-        mDatabaseRef = FirebaseDatabase.getInstance().getReference("door_" + mDoorID + "/history");
-        setTitle("History");
+        mAdapter = new ImageAdapter(DisplayHistory.this, mListImageInfo);
+        mRecyclerView.setAdapter(mAdapter);
 
-        mDatabaseRef.addValueEventListener(new ValueEventListener() {
+        storage = FirebaseStorage.getInstance();
+        storageReference = mDatabaseHelper.getStorageReference("door_" + mDoorID + "/history");
+
+        storageReference.listAll().addOnSuccessListener(new OnSuccessListener<ListResult>() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                mDatabase.collection("door_" + mDoorID)
-                        .get()
-                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                if (task.isSuccessful()) {
-                                    for (QueryDocumentSnapshot document : task.getResult()) {
-                                        mListImageInfo.add(new ImageInfo(document.getData().get("imageName").toString()
-                                                , document.getData().get("imageUrl").toString()
-                                                , document.getData().get("doorID").toString()));
-                                    }
-                                    mAdapter = new ImageAdapter(DisplayHistory.this, mListImageInfo);
-                                    mRecyclerView.setAdapter(mAdapter);
-                                    mProgressCircle.setVisibility(View.INVISIBLE);
-                                } else {
-                                    Log.d(TAG, "Error getting documents: ", task.getException());
-                                }
-                            }
-                        });
+            public void onSuccess(ListResult result) {
+                for(StorageReference fileRef : result.getItems()) {
+                    StorageReference gsReference = storage.getReferenceFromUrl(fileRef.toString());
+                    gsReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            mListImageInfo.add(new ImageInfo(getFileName(uri.toString())
+                                    , uri.toString()
+                                    , Integer.toString(mDoorID)));
+                            Log.d(TAG, uri.toString());
+
+                            mAdapter.notifyDataSetChanged();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            // Handle any errors
+                        }
+                    });
+                }
             }
+        }).addOnFailureListener(new OnFailureListener() {
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Toast.makeText(DisplayHistory.this, databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-                mProgressCircle.setVisibility(View.INVISIBLE);
+            public void onFailure(Exception exception) {
             }
         });
+    }
+
+    private String getFileName(String url) {
+        int counter = 0;
+        String name = "";
+        for (int i = 0; i < url.length(); ++i) {
+            if (url.charAt(i) == '%' && counter == 0) {
+                ++counter;
+            } else if (url.charAt(i) == '%' && counter == 1) {
+                i += 3;
+                while (url.charAt(i) != '?') {
+                    name += url.charAt(i);
+                    ++i;
+                }
+                Log.d(TAG, name);
+                return name;
+            }
+        }
+        return name;
     }
 }
