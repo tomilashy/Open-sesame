@@ -14,7 +14,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".UploadImage" />
+        <activity android:name=".AdminsActivity"></activity>
         <activity android:name=".DisplayHistory" />
         <activity android:name=".LoginActivity">
             <intent-filter>
@@ -25,8 +25,7 @@
         </activity>
         <activity android:name=".SignUpActivity" />
         <activity android:name=".Credits" />
-        <activity android:name=".MainActivity">
-        </activity>
+        <activity android:name=".MainActivity"></activity>
     </application>
 
 </manifest>

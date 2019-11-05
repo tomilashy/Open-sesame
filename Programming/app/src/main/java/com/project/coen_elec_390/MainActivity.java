@@ -1,12 +1,12 @@
 package com.project.coen_elec_390;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -16,9 +16,6 @@ public class MainActivity extends AppCompatActivity {
     private Button history;
     private Button credits;
     private Button logout;
-    //private Button upload;
-
-    private SharedPreferences sharedPreference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,10 +29,12 @@ public class MainActivity extends AppCompatActivity {
         history = findViewById(R.id.history);
         credits = findViewById(R.id.credits);
         logout = findViewById(R.id.logout);
-        //upload = findViewById(R.id.upload);
 
-        sharedPreference = getSharedPreferences("ProfilePreference", this.MODE_PRIVATE );
-
+        admins.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                goToAdministrators();
+            }
+        });
         history.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 goToHistory();
@@ -46,11 +45,6 @@ public class MainActivity extends AppCompatActivity {
                 goToCredits();
             }
         });
-        /*upload.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                goToUpload();
-            }
-        });*/
         logout.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 logout();
@@ -58,17 +52,11 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void goToHistory() {
-        startActivity(new Intent(this, DisplayHistory.class));
-    }
+    private void goToAdministrators() { startActivity(new Intent(this, AdminsActivity.class)); }
 
-    /*private void goToUpload() {
-        startActivity(new Intent(this, UploadImage.class));
-    }*/
+    private void goToHistory() { startActivity(new Intent(this, DisplayHistory.class)); }
 
-    private void goToCredits() {
-        startActivity(new Intent(this, Credits.class));
-    }
+    private void goToCredits() { startActivity(new Intent(this, Credits.class)); }
 
     private void logout() {
         startActivity(new Intent(this, LoginActivity.class));
