@@ -83,23 +83,6 @@ public class ProfileActivity extends AppCompatActivity {
         saveButton = findViewById(R.id.saveButton);
         circularImageView = findViewById(R.id.circular_view);
 
-        username.setTextSize(19);
-        email.setFocusable(false);
-        password.setFocusable(false);
-        email_text.setTextSize(19);
-        password_text.setTextSize(19);
-        doorID.setTextSize(19);
-
-        username.setGravity(Gravity.CENTER_HORIZONTAL);
-        email.setGravity(Gravity.CENTER_HORIZONTAL);
-        password.setGravity(Gravity.CENTER_HORIZONTAL);
-        email_text.setGravity(Gravity.CENTER_HORIZONTAL);
-        password_text.setGravity(Gravity.CENTER_HORIZONTAL);
-        doorID.setGravity(Gravity.CENTER_HORIZONTAL);
-        email.setVisibility(View.INVISIBLE);
-        password.setVisibility(View.INVISIBLE);
-        saveButton.setVisibility(View.INVISIBLE);
-
         databaseHelper = new DatabaseHelper();
         db = databaseHelper.getDatabase();
         sharedPreference = getSharedPreferences("ProfilePreference", this.MODE_PRIVATE);
