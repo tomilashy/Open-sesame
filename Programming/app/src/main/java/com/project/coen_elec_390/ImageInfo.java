@@ -3,17 +3,21 @@ package com.project.coen_elec_390;
 import android.util.Log;
 
 public class ImageInfo {
+    
     private String imageName;
     private String imageUrl;
+    private int dateInMinutes;
 
     final String TAG = "IMAGEINFO";
 
     public ImageInfo(String name, String url) {
         imageName = name;
         imageUrl = url;
+
+        parseNameToMinutes();
     }
 
-    public int parseNameToMinutes() {
+    public void parseNameToMinutes() {
         String parsed = "";
         int minutes = 0;
         int hours = 0;
@@ -50,11 +54,10 @@ public class ImageInfo {
 
         Log.d(TAG, "hours: " + hours + ", minutes: " + minutes + ", " +
                 "days: " + days + ", months: " + months + ", years: " + years);
-        return minutes + hours * 60 + days * 1440 + months * 43200 + years * 518400;
+        dateInMinutes = minutes + hours * 60 + days * 1440 + months * 43200 + years * 518400;
     }
 
     public String getImageName() { return imageName; }
-    public String getImageUrl() {
-        return imageUrl;
-    }
+    public String getImageUrl() { return imageUrl; }
+    public int getDateInMinutes () { return dateInMinutes; }
 }

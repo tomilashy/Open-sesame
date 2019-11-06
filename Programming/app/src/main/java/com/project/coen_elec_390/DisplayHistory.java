@@ -69,7 +69,7 @@ public class DisplayHistory extends AppCompatActivity {
                                 @Override
                                 public int compare(ImageInfo a, ImageInfo b)
                                 {
-                                    return Integer.compare(b.parseNameToMinutes(), a.parseNameToMinutes());
+                                    return Integer.compare(b.getDateInMinutes(), a.getDateInMinutes());
                                 }
                             });
 
@@ -90,16 +90,18 @@ public class DisplayHistory extends AppCompatActivity {
 
     private String getFileName(String url) {
         int counter = 0;
+        int startIndex = - 1;
+        int endIndex;
         String name = "";
         for (int i = 0; i < url.length(); ++i) {
             if (url.charAt(i) == '%' && counter == 0) {
                 ++counter;
             } else if (url.charAt(i) == '%' && counter == 1) {
                 i += 3;
-                while (url.charAt(i) != '?') {
-                    name += url.charAt(i);
-                    ++i;
-                }
+                startIndex = i;
+            } else if (url.charAt(i) == '?') {
+                endIndex = i;
+                name = url.substring(startIndex, endIndex);
                 Log.d(TAG, name);
                 return name;
             }
