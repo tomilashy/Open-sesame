@@ -1,9 +1,6 @@
 package com.project.coen_elec_390;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -11,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -66,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.item1:
                 editProfile();
                 return true;
@@ -76,13 +74,23 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void goToAdministrators() { startActivity(new Intent(this, AdminsActivity.class)); }
+    private void goToAdministrators() {
+        startActivity(new Intent(this, AdminsActivity.class));
+    }
 
-    private void goToHistory() { startActivity(new Intent(this, DisplayHistory.class)); }
+    private void goToHistory() {
+        startActivity(new Intent(this, DisplayHistory.class));
+    }
 
-    private void goToCredits() { startActivity(new Intent(this, Credits.class)); }
+    private void goToCredits() {
+        startActivity(new Intent(this, Credits.class));
+    }
 
-    private void editProfile() { startActivity(new Intent(this, ProfileActivity.class)); }
+    private void editProfile() {
+        startActivity(new Intent(this, ProfileActivity.class));
+    }
 
-    private void logout() { startActivity(new Intent(this, LoginActivity.class)); }
+    private void logout() {
+        startActivity(new Intent(this, LoginActivity.class));
+    }
 }
