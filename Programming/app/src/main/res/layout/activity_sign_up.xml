@@ -80,7 +80,7 @@
         app:layout_constraintVertical_bias="0.9"/>
 
     <Button
-        style="@style/Login_Sign_Up_Buttons"
+        style="@style/Small_Buttons"
         android:id="@+id/signUp"
         android:text="Sign Up"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -91,7 +91,7 @@
         app:layout_constraintVertical_bias="0.9"/>
 
     <Button
-        style="@style/Login_Sign_Up_Buttons"
+        style="@style/Small_Buttons"
         android:id="@+id/sLogin"
         android:text="Log In"
         app:layout_constraintBottom_toBottomOf="parent"

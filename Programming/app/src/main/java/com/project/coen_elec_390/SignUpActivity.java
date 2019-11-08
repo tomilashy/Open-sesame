@@ -131,7 +131,8 @@ public class SignUpActivity extends AppCompatActivity {
                             if (filePath != null) {
                                 final StorageReference storageReference = databaseHelper.getStorageReference("door_" + sDoorID + "/profiles");
                                 database.collection("doors")
-                                        .document(sDoorID).get()
+                                        .document(sDoorID)
+                                        .get()
                                         .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                                 if (task.isSuccessful()) {
