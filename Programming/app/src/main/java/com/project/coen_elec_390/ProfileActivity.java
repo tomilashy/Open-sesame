@@ -48,6 +48,8 @@ public class ProfileActivity extends AppCompatActivity {
     private TextView doorID;
     private Button saveButton;
     private CircularImageView circularImageView;
+    private MenuItem itemProfile;
+    private MenuItem itemImage;
 
     private SharedPreferences sharedPreference;
     private FirebaseFirestore db;
@@ -110,6 +112,9 @@ public class ProfileActivity extends AppCompatActivity {
                     saveButton.setVisibility(View.INVISIBLE);
                     circularImageView.setEnabled(false);
                 }
+                itemImage.setVisible(true);
+                itemProfile.setVisible(true);
+                editMode = 0;
             }
         });
     }
@@ -118,6 +123,18 @@ public class ProfileActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_profile, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        itemProfile = menu.findItem(R.id.item2);
+        itemImage = menu.findItem(R.id.item3);
+        if (editMode == 1) {
+            itemImage.setVisible(false);
+        } else if (editMode == 2) {
+            itemProfile.setVisible(false);
+        }
         return true;
     }
 
