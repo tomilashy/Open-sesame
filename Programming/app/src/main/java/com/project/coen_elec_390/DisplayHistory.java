@@ -77,13 +77,16 @@ public class DisplayHistory extends AppCompatActivity {
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
-                        public void onFailure(@NonNull Exception exception) { }
+                        public void onFailure(@NonNull Exception exception) {
+                            Log.d(TAG, "Unable to get uri!");
+                        }
                     });
                 }
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(Exception exception) {
+                Log.d(TAG, "listALL() failed!");
             }
         });
     }

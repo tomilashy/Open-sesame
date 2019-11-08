@@ -51,7 +51,7 @@ public class ImageInfo {
             }
         }
 
-        Log.d(TAG, "hours: " + hours + ", minutes: " + minutes + ", " +
+        Log.d(TAG, "hours: " + hours + ", minutes: " + minutes + ", seconds: " + seconds + ", " +
                 "days: " + days + ", months: " + months + ", years: " + years);
         dateInSeconds = seconds + minutes * 60 + hours * 3600 + days * 86400 + months * 2592000 + years * 31557600 ;
     }
