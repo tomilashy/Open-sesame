@@ -100,11 +100,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         saveButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if(editMode == 1){
-                    email.setVisibility(View.INVISIBLE);
-                    password.setVisibility(View.INVISIBLE);
-                    email_text.setVisibility(View.VISIBLE);
-                    password_text.setVisibility(View.VISIBLE);
+                if(editMode == 1) {
                     updateProfileInfo();
                 } else if (editMode == 2) {
                     deletePreviousPicture();
@@ -112,9 +108,6 @@ public class ProfileActivity extends AppCompatActivity {
                     saveButton.setVisibility(View.INVISIBLE);
                     circularImageView.setEnabled(false);
                 }
-                itemImage.setVisible(true);
-                itemProfile.setVisible(true);
-                editMode = 0;
             }
         });
     }
@@ -178,7 +171,9 @@ public class ProfileActivity extends AppCompatActivity {
 
     private void updateProfileInfo() {
         final String editEmail = email.getText().toString();
-        if (isValidInputs(editEmail, password.getText().toString())) {
+        final String editPassword =  password.getText().toString();
+
+        if (isValidInputs(editEmail, editPassword)) {
             if (!isEmailTaken(editEmail) || editEmail.equals(profileEmail)) {
                 docRef.update("email", editEmail, "password", password.getText().toString()).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -186,6 +181,21 @@ public class ProfileActivity extends AppCompatActivity {
                         saveButton.setVisibility(View.INVISIBLE);
                         email.setFocusable(false);
                         password.setFocusable(false);
+
+                        email_text.setText(editEmail);
+                        password_text.setText(editPassword);
+
+                        email.setVisibility(View.INVISIBLE);
+                        password.setVisibility(View.INVISIBLE);
+                        email_text.setVisibility(TextView.VISIBLE);
+                        password_text.setVisibility(TextView.VISIBLE);
+
+                        itemImage.setVisible(true);
+                        itemProfile.setVisible(true);
+                        editMode = 0;
+
+                        toast = Toast.makeText(ProfileActivity.this, "Profile Updated!", Toast.LENGTH_SHORT);
+                        toast.show();
                         Log.d(TAG, "DocumentSnapshot successfully updated!");
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -270,7 +280,6 @@ public class ProfileActivity extends AppCompatActivity {
             uploadTask = fileReference.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    Toast.makeText(ProfileActivity.this, "Upload successful", Toast.LENGTH_LONG).show();
                     Task<Uri> urlTask = taskSnapshot.getStorage().getDownloadUrl();
                     while (!urlTask.isSuccessful());
                     Uri downloadUrl = urlTask.getResult();
@@ -278,6 +287,12 @@ public class ProfileActivity extends AppCompatActivity {
                     docRef.update("imageUrl", url).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
+                            itemImage.setVisible(true);
+                            itemProfile.setVisible(true);
+                            editMode = 0;
+
+                            toast = Toast.makeText(ProfileActivity.this, "Image Updated!", Toast.LENGTH_SHORT);
+                            toast.show();
                             Log.d(TAG, "DocumentSnapshot successfully updated!");
                         }
                     })
@@ -295,7 +310,11 @@ public class ProfileActivity extends AppCompatActivity {
                 }
             });
         } else {
-            Toast.makeText(this, "No file selected", Toast.LENGTH_SHORT).show();
+            itemImage.setVisible(true);
+            itemProfile.setVisible(true);
+            editMode = 0;
+
+            Toast.makeText(this, "Saved!", Toast.LENGTH_SHORT).show();
         }
     }
 

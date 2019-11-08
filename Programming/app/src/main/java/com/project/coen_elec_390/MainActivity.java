@@ -9,6 +9,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -66,7 +67,8 @@ public class MainActivity extends AppCompatActivity {
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
-                                Log.d(TAG, "Door unlocked!");
+                                Toast.makeText(MainActivity.this, "Door successfully unlocked!", Toast.LENGTH_LONG).show();
+                                Log.d(TAG, "Door successfully unlocked!");
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                     @Override
