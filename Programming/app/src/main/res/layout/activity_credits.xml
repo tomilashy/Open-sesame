@@ -8,7 +8,7 @@
     tools:context=".Credits">
 
     <TextView
-        style="@style/TitleCredit"
+        style="@style/BlueTitleText"
         android:id="@+id/page"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -23,7 +23,7 @@
 
     <TextView
         android:id="@+id/title1"
-        style="@style/TitleCredit"
+        style="@style/BlueTitleText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Product Owner"
@@ -52,7 +52,7 @@
 
     <TextView
         android:id="@+id/title2"
-        style="@style/TitleCredit"
+        style="@style/BlueTitleText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Technical Lead"
@@ -79,7 +79,7 @@
         app:layout_constraintVertical_bias="0" />
 
     <TextView
-        style="@style/TitleCredit"
+        style="@style/BlueTitleText"
         android:id="@+id/title3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

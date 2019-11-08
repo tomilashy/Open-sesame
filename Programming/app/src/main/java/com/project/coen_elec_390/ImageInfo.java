@@ -6,7 +6,7 @@ public class ImageInfo {
     
     private String imageName;
     private String imageUrl;
-    private int dateInMinutes;
+    private long dateInSeconds;
 
     final String TAG = "IMAGEINFO";
 
@@ -19,32 +19,31 @@ public class ImageInfo {
 
     public void parseNameToMinutes() {
         String parsed = "";
-        int minutes = 0;
-        int hours = 0;
-        int days = 0;
-        int months = 0;
-        int years = 0;
-        int counter = 0;
+        long seconds = -1;
+        long minutes = -1;
+        long hours = -1;
+        long days = -1;
+        long months = -1;
+        long years = -1;
         for (int i = 0; i < imageName.length(); ++i) {
             if (imageName.charAt(i) == '.') {
-                if (counter == 0) {
-                    ++counter;
-                    hours = Integer.parseInt(parsed);
+                if (hours == -1) {
+                    hours = Long.parseLong(parsed);
                     parsed = "";
-                } else if (counter == 1) {
-                    ++counter;
-                    minutes = Integer.parseInt(parsed);
+                } else if (minutes == -1) {
+                    minutes = Long.parseLong(parsed);
                     parsed = "";
-                } else if (counter == 2) {
-                    ++counter;
-                    days = Integer.parseInt(parsed);
+                } else if (seconds == -1) {
+                    seconds = Long.parseLong(parsed);
                     parsed = "";
-                } else if (counter == 3) {
-                    ++counter;
-                    months = Integer.parseInt(parsed);
+                } else if (days == -1) {
+                    days = Long.parseLong(parsed);
+                    parsed = "";
+                } else if (months == -1) {
+                    months = Long.parseLong(parsed);
                     parsed = "";
                 } else {
-                    years = Integer.parseInt(parsed);
+                    years = Long.parseLong(parsed);
                     parsed = "";
                 }
             } else {
@@ -54,10 +53,10 @@ public class ImageInfo {
 
         Log.d(TAG, "hours: " + hours + ", minutes: " + minutes + ", " +
                 "days: " + days + ", months: " + months + ", years: " + years);
-        dateInMinutes = minutes + hours * 60 + days * 1440 + months * 43200 + years * 518400;
+        dateInSeconds = seconds + minutes * 60 + hours * 3600 + days * 86400 + months * 2592000 + years * 31557600 ;
     }
 
     public String getImageName() { return imageName; }
     public String getImageUrl() { return imageUrl; }
-    public int getDateInMinutes () { return dateInMinutes; }
+    public long getDateInSeconds () { return dateInSeconds; }
 }

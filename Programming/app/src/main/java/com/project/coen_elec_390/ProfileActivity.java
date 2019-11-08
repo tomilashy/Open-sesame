@@ -128,8 +128,8 @@ public class ProfileActivity extends AppCompatActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        itemProfile = menu.findItem(R.id.item2);
-        itemImage = menu.findItem(R.id.item3);
+        itemProfile = menu.findItem(R.id.editInfo);
+        itemImage = menu.findItem(R.id.editPicture);
         if (editMode == 1) {
             itemImage.setVisible(false);
         } else if (editMode == 2) {
@@ -141,7 +141,7 @@ public class ProfileActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
-            case R.id.item2:
+            case R.id.editInfo:
                 editMode = 1;
                 email_text.setVisibility(View.INVISIBLE);
                 password_text.setVisibility(View.INVISIBLE);
@@ -153,7 +153,7 @@ public class ProfileActivity extends AppCompatActivity {
                 getListOfEmails();
                 getDataFromFirestore();
                 return true;
-            case R.id.item3:
+            case R.id.editPicture:
                 editMode = 2;
                 saveButton.setVisibility(View.VISIBLE);
                 circularImageView.setEnabled(true);

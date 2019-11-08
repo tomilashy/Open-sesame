@@ -2,11 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/item2"
+    <item android:id="@+id/editInfo"
         android:title="Edit Profile Info"
         app:showAsAction="never" />
 
-    <item android:id="@+id/item3"
+    <item android:id="@+id/editPicture"
         android:title="Edit Profile Image"
         app:showAsAction="never" />
 

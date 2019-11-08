@@ -1,7 +1,9 @@
 package com.project.coen_elec_390;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -11,6 +13,10 @@ import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 public class MainActivity extends AppCompatActivity {
 
     private Button peek;
@@ -19,6 +25,13 @@ public class MainActivity extends AppCompatActivity {
     private Button history;
     private Button credits;
     private Button logout;
+
+    private SharedPreferences sharedPreference;
+    private DatabaseHelper databaseHelper;
+
+    private int doorID;
+
+    private String TAG = "MAIN";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +46,36 @@ public class MainActivity extends AppCompatActivity {
         credits = findViewById(R.id.credits);
         logout = findViewById(R.id.logout);
 
+        databaseHelper = new DatabaseHelper();
+        final FirebaseFirestore database = databaseHelper.getDatabase();
+
+        sharedPreference = getSharedPreferences("ProfilePreference", this.MODE_PRIVATE);
+        doorID = sharedPreference.getInt("doorID", 0);
+        final String sDoorID = Integer.toString(doorID);
+
+        peek.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                goToPeek();
+            }
+        });
+        unlock.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                database.collection("doors")
+                        .document(sDoorID)
+                        .update("lock", false)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Log.d(TAG, "Door unlocked!");
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error updating document", e);
+                    }
+                });
+            }
+        });
         admins.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 goToAdministrators();
@@ -65,13 +108,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.item1:
+            case R.id.editProfile:
                 editProfile();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
 
+    }
+
+    private void goToPeek() {
+        startActivity(new Intent(this, PeekActivity.class));
     }
 
     private void goToAdministrators() {
