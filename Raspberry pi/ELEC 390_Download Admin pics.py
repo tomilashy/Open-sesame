@@ -23,27 +23,6 @@ def downloadAdminPics():  # store admin pics to a certain folder for face recogn
     global bucket_1
     global datadir
     
-    doc_refs = store.collection(u'doors')
-    namelist=[]
-    for blob in bucket_1.list_blobs():
-        name = str(blob.name)
-        if "door_6768/history/" in name:  
-            if "jpg" in name:
-                namelist.append(name.split("door_6768/history/")[1].split(".jpg")[0])
-    
-#     print(namelist)
-    
-    for blob in bucket_1.list_blobs():
-        name = str(blob.name)
-        if max(namelist, key=lambda x: datetime.strptime(x, "%H.%M.%S.%d.%m.%Y")) in name:
-            
-            blob_img = bucket_1.blob(name)
-            lastUrl = blob_img.generate_signed_url(timedelta(seconds=300), method='GET')
-            urllib.request.urlretrieve(lastUrl, "image.jpg")
-#     print(max(namelist, key=lambda x: datetime.strptime(x, "%H.%M.%S.%d.%m.%Y")))
-    
-    namelist.sort(reverse=True)
-    
     print("download started")
     storage = firebase.storage()
     # storage.child("images/example.jpg").download("downloaded.jpg")
@@ -80,13 +59,7 @@ def downloadAdminPics():  # store admin pics to a certain folder for face recogn
                 name_img = str(path + namelist[i])
                 urllib.request.urlretrieve(url, name_img)
             i += 1
-
-
-####################################
-#  FACE RECOGNITION
-####################################
-def recognizeFace(imagePath):
-    global known_face_names
+def learnFaces():
     global doc_ref
     #  LEARN ADMIN'S FACES
     # Load a sample picture and learn how to recognize it.
@@ -113,68 +86,10 @@ def recognizeFace(imagePath):
     for encoding in images:
         known_face_encodings.append(face_recognition.face_encodings(encoding)[0])
 #     print(known_face_encodings)
+    with open("face_tags.json","w") as json_file:
+        json.dump(known_face_encodings,json_file)
 
     print('Learned encoding for', len(known_face_encodings), 'images.')
-    #######################################################################
-    # Load an image with an unknown face
-    known_face_encodings=[]
-    with open("face_tags.json") as json_file:
-        known_face_encodings= json.load(json_file)
-
-
-    unknown_image = face_recognition.load_image_file("image.jpg")
-    # unknown_image1 = face_recognition.load_image_file("test3.jpg")
-
-
-
-    # Find all the faces and face encodings in the unknown image
-    face_locations = face_recognition.face_locations(unknown_image)
-    face_encodings = face_recognition.face_encodings(unknown_image, face_locations)
-    # Convert the image to a PIL-format image so that we can draw on top of it with the Pillow library
-
-    pil_image = Image.fromarray(unknown_image)
-    # Create a Pillow ImageDraw Draw instance to draw with
-    draw = ImageDraw.Draw(pil_image)
-    # draw1 = ImageDraw.Draw(pil_image1)
-
-    # THE TEST PART
-
-    # Loop through each face found in the unknown image
-    for (top, right, bottom, left), face_encoding in zip(face_locations, face_encodings):
-        # See if the face is a match for the known face(s)
-        matches = face_recognition.compare_faces(known_face_encodings, face_encoding)
-
-        name = "Unknown"
-
-        # Or instead, use the known face with the smallest distance to the new face
-        face_distances = face_recognition.face_distance(known_face_encodings, face_encoding)
-        best_match_index = np.argmin(face_distances)
-        if matches[best_match_index]:
-            name = known_face_names[best_match_index]
-            print(name)
-
-        if (name in known_face_names):
-            doc_ref.update({
-                u'lock': False})
-            print("door unlocked")
-        # Draw a box around the face using the Pillow module
-        draw.rectangle(((left, top), (right, bottom)), outline=(0, 0, 255))
-
-        # Draw a label with a name below the face
-        text_width, text_height = draw.textsize(name)
-        draw.rectangle(((left, bottom - text_height - 10), (right, bottom)), fill=(0, 0, 255), outline=(0, 0, 255))
-        draw.text((left + 6, bottom - text_height - 5), name, fill=(255, 255, 255, 255))
-
-
-
-
-    # Remove the drawing library from memory as per the Pillow docs
-    del draw
-
-    # Display the resulting image
-    display(pil_image)
-
-    pil_image.show()
 ###################################################################
 #  SETTING VARIABLES
 ###################################################################
@@ -201,7 +116,7 @@ cred={
   "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-qgtwz%40coen-elec-390-d0535.iam.gserviceaccount.com"
 }
 
-print("wifi connected")
+# print("wifi connected")
 firebase = pyrebase.initialize_app(config)
 # Get a reference to the auth service
 auth = firebase.auth()
@@ -212,15 +127,24 @@ app=firebase_admin.initialize_app(credentials.Certificate(cred),{'storageBucket'
 bucket_1 = admin_storage.bucket(app=app)
 store =firestore.client()
 doc_ref = store.collection(u'doors').document(u'6768')
-
+print("wifi connected")
 known_face_names= []
-times = os.path.getmtime("image.jpg")
+doc_refs = store.collection(u'doors')
 while True:
-    if lastImage != str(time.strftime("%H.%M.%S.%d.%m.%Y",time.localtime(times))):
-        lastImage = str(time.strftime("%H.%M.%S.%d.%m.%Y", time.localtime(times)))
-        downloadAdminPics()
-        recognizeFace(datadir)
-        
-
-    else:
+    try:
+        docs = doc_refs.stream()
+        for doc in docs:
+            print(doc)
+            if str(doc.id) == "6768":
+                dict = doc.to_dict()
+                print(dict)
+                if dict['adminChanged']:
+                    print("downloading new picture")
+                    downloadAdminPics()
+                    learnFaces()
+                    doc_ref.update({u'adminChanged': False})
+                else:
+                    pass
+    except Exception as e:
+        print(f"error: {e}")
         pass
