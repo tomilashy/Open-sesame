@@ -128,6 +128,7 @@
         android:layout_marginBottom="40dp"
         android:background="@drawable/smart_door_bacground_1_rectangle_67"
         android:paddingBottom="10dp"
+        app:srcCompat="@drawable/smart_door_bacground_1_Logout"
         android:text="Logout"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
