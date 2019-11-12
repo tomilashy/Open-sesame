@@ -2,136 +2,236 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@drawable/blue_city"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Credits">
+    android:background="@color/lightPurple"
+    tools:context=".CreditsActivity">
 
-    <TextView
-        style="@style/BlueTitleText"
-        android:id="@+id/page"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Credits"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/shadiView"
+        android:layout_width="0dp"
+        android:layout_height="227dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="50dp"
+        android:layout_marginRight="50dp"
+        android:background="@color/buttonColour"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="0dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintVertical_bias="0.025"/>
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/title1"
-        style="@style/BlueTitleText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Product Owner"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="@+id/leader"
-        app:layout_constraintEnd_toEndOf="@+id/page"
-        app:layout_constraintStart_toStartOf="@+id/page"
-        app:layout_constraintTop_toBottomOf="@+id/page"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintVertical_bias="0.5" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/leader"
-        style="@style/NormalText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text=" Shadi Makdissi"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="@+id/title2"
-        app:layout_constraintEnd_toEndOf="@+id/title1"
-        app:layout_constraintStart_toStartOf="@+id/title1"
-        app:layout_constraintTop_toBottomOf="@+id/title1"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintVertical_bias="0.0" />
+            <ImageView
+                android:id="@+id/shadiImage"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:contentDescription="shadi pic"
+                app:layout_constraintBottom_toTopOf="@+id/shadiListview"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0"
+                app:srcCompat="@drawable/blue_city" />
 
-    <TextView
-        android:id="@+id/title2"
-        style="@style/BlueTitleText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Technical Lead"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="@+id/technical"
-        app:layout_constraintEnd_toEndOf="@+id/leader"
-        app:layout_constraintStart_toStartOf="@+id/leader"
-        app:layout_constraintTop_toBottomOf="@+id/leader"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintVertical_bias="0.5" />
+            <ListView
+                android:id="@+id/shadiListview"
+                android:layout_width="match_parent"
+                android:layout_height="54dp"
+                android:scrollbars="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.49"
+                app:layout_constraintStart_toStartOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <TextView
-        style="@style/NormalText"
-        android:id="@+id/technical"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Cong-Vinh Vu"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="@+id/title3"
-        app:layout_constraintEnd_toEndOf="@+id/title2"
-        app:layout_constraintStart_toStartOf="@+id/title2"
-        app:layout_constraintTop_toBottomOf="@+id/title2"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintVertical_bias="0" />
+    </androidx.cardview.widget.CardView>
 
-    <TextView
-        style="@style/BlueTitleText"
-        android:id="@+id/title3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Developers"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="@+id/dev1"
-        app:layout_constraintEnd_toEndOf="@+id/technical"
-        app:layout_constraintStart_toStartOf="@+id/technical"
-        app:layout_constraintTop_toBottomOf="@+id/technical"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintVertical_bias="0.5" />
+    <androidx.cardview.widget.CardView
+        android:id="@+id/alecView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginRight="7dp"
+        android:layout_marginBottom="10dp"
+        android:background="@color/buttonColour"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/cvuView"
+        app:layout_constraintLeft_toRightOf="@id/irfanView"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/shadiView">
 
-    <TextView
-        style="@style/NormalText"
-        android:id="@+id/dev1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Alec Kurkdjian"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="@+id/dev2"
-        app:layout_constraintEnd_toEndOf="@+id/title3"
-        app:layout_constraintStart_toStartOf="@+id/title3"
-        app:layout_constraintTop_toBottomOf="@+id/title3"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintVertical_bias="0" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    <TextView
-        style="@style/NormalText"
-        android:id="@+id/dev2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Irfan Ahmed"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="@+id/dev3"
-        app:layout_constraintEnd_toEndOf="@+id/dev1"
-        app:layout_constraintStart_toStartOf="@+id/dev1"
-        app:layout_constraintTop_toBottomOf="@+id/dev1"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintVertical_bias="0" />
+            <ImageView
+                android:id="@+id/alecImage"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toTopOf="@+id/alecListview"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0"
+                app:srcCompat="@drawable/blue_city" />
 
-    <TextView
-        style="@style/NormalText"
-        android:id="@+id/dev3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Olasubulumi Jesutomi Ogo Oluwa"
-        android:visibility="visible"
+            <ListView
+                android:id="@+id/alecListview"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:scrollbars="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.49"
+                app:layout_constraintStart_toStartOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/irfanView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginLeft="7dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@color/buttonColour"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/tomiView"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/alecView"
+        app:layout_constraintTop_toBottomOf="@+id/shadiView">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/ifanImage"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:contentDescription="shadi pic"
+                app:layout_constraintBottom_toTopOf="@+id/irfanListview"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0"
+                app:srcCompat="@drawable/blue_city" />
+
+            <ListView
+                android:id="@+id/irfanListview"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:scrollbars="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.49"
+                app:layout_constraintStart_toStartOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/tomiView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginLeft="7dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="25dp"
+        android:background="@color/buttonColour"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/dev2"
-        app:layout_constraintStart_toStartOf="@+id/dev2"
-        app:layout_constraintTop_toBottomOf="@+id/dev2"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintVertical_bias="0" />
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/cvuView"
+        app:layout_constraintTop_toBottomOf="@+id/irfanView">
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/tomiImage"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:contentDescription="shadi pic"
+                app:layout_constraintBottom_toTopOf="@+id/tomiListview"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0"
+                app:srcCompat="@drawable/blue_city" />
+
+            <ListView
+                android:id="@+id/tomiListview"
+                android:layout_width="match_parent"
+                android:layout_height="54dp"
+                android:scrollbars="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.49"
+                app:layout_constraintStart_toStartOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cvuView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="7dp"
+        android:layout_marginBottom="25dp"
+        android:background="@color/buttonColour"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/tomiView"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/alecView">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/cvuImage"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toTopOf="@+id/cvuListview"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0"
+                app:srcCompat="@drawable/blue_city" />
+
+            <ListView
+                android:id="@+id/cvuListview"
+                android:layout_width="match_parent"
+                android:layout_height="54dp"
+                android:scrollbars="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.49"
+                app:layout_constraintStart_toStartOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

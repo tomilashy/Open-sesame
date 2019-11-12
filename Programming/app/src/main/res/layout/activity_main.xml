@@ -67,7 +67,7 @@
         app:layout_constraintBottom_toTopOf="@+id/history"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/doorImage"
-        app:srcCompat="@drawable/smart_door_bacground_1_open_door" />
+        app:srcCompat="@drawable/smart_door_bacground_1_unlock_door" />
 
     <ImageButton
         android:id="@+id/admins"
