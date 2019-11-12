@@ -9,6 +9,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -20,12 +21,12 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Button peek;
-    private Button unlock;
-    private Button admins;
-    private Button history;
-    private Button credits;
-    private Button logout;
+    private ImageButton peek;
+    private ImageButton unlock;
+    private ImageButton admins;
+    private ImageButton history;
+    private ImageButton credits;
+    private ImageButton logout;
 
     private SharedPreferences sharedPreference;
     private DatabaseHelper databaseHelper;
