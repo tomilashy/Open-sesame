@@ -6,7 +6,7 @@
     android:searchSuggestSelection=" ?"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/lightPurple"
+    android:background="@drawable/blue_city"
     tools:context=".ProfileActivity">
 
     <com.github.siyamed.shapeimageview.CircularImageView
