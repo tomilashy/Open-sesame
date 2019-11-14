@@ -6,6 +6,7 @@
     android:searchSuggestSelection=" ?"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/blue_city"
     tools:context=".ProfileActivity">
 
     <com.github.siyamed.shapeimageview.CircularImageView
@@ -19,13 +20,13 @@
         app:siBorderWidth="3dp" />
 
     <TextView
+        style="@style/MediumText"
         android:id="@+id/text_user"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="Username"
         android:inputType="textEmailAddress"
-        android:textSize="19dp"
         android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -35,6 +36,7 @@
         app:layout_constraintVertical_bias="0.5" />
 
     <EditText
+        style="@style/MediumText"
         android:id="@+id/edit_email"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
@@ -52,6 +54,7 @@
         app:layout_constraintVertical_bias="0.625" />
 
     <EditText
+        style="@style/MediumText"
         android:id="@+id/edit_password"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
@@ -69,13 +72,13 @@
         app:layout_constraintVertical_bias="0.75" />
 
     <TextView
+        style="@style/MediumText"
         android:id="@+id/text_email"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="email"
         android:inputType="textEmailAddress"
-        android:textSize="19dp"
         android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -85,13 +88,11 @@
         app:layout_constraintVertical_bias="0.625" />
 
     <TextView
+        style="@style/MediumText"
         android:id="@+id/text_password"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="password"
-        android:inputType="textPassword"
-        android:textSize="19dp"
         android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -101,13 +102,13 @@
         app:layout_constraintVertical_bias="0.75" />
 
     <TextView
+        style="@style/MediumText"
         android:id="@+id/text_doorID"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="Door ID"
         android:inputType="number"
-        android:textSize="19dp"
         android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -149,10 +150,11 @@
         app:layout_constraintGuide_percent="0.98" />
 
     <Button
+        style="@style/Small_Buttons"
         android:id="@+id/saveButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp"
+        android:layout_marginBottom="15dp"
         android:text="Save"
         android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/guideline11"

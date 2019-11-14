@@ -1,28 +1,27 @@
 package com.project.coen_elec_390;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import android.widget.ImageView;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-public class DisplayHistory extends AppCompatActivity {
+public class PeekActivity extends AppCompatActivity {
 
-    private ImageAdapter adapter;
-    private RecyclerView recyclerView;
+    private ImageView peekImage;
 
     private SharedPreferences sharedPreference;
     private DatabaseHelper databaseHelper;
@@ -36,21 +35,16 @@ public class DisplayHistory extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_display_history);
-        setTitle("History");
+        setContentView(R.layout.activity_peek);
+        setTitle("Peek Door");
+
+        peekImage = findViewById(R.id.peekImage);
 
         databaseHelper = new DatabaseHelper();
-
-        recyclerView = findViewById(R.id.recycler_view);
-        recyclerView.setLayoutManager(new LinearLayoutManager(DisplayHistory.this));
-        recyclerView.setHasFixedSize(true);
 
         sharedPreference = getSharedPreferences("ProfilePreference", this.MODE_PRIVATE);
         doorID = sharedPreference.getInt("doorID", 0);
         imageInfoList = new ArrayList<>();
-
-        adapter = new ImageAdapter(DisplayHistory.this, imageInfoList);
-        recyclerView.setAdapter(adapter);
 
         storageReference = databaseHelper.getStorageReference("door_" + doorID + "/history");
 
@@ -73,20 +67,20 @@ public class DisplayHistory extends AppCompatActivity {
                                 }
                             });
 
-                            adapter.notifyDataSetChanged();
+                            Picasso.with(PeekActivity.this)
+                                    .load(imageInfoList.get(0).getImageUrl())
+                                    .fit()
+                                    .into(peekImage);
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
-                        public void onFailure(@NonNull Exception exception) {
-                            Log.d(TAG, "Unable to get uri!");
-                        }
+                        public void onFailure(@NonNull Exception exception) { }
                     });
                 }
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(Exception exception) {
-                Log.d(TAG, "listALL() failed!");
             }
         });
     }

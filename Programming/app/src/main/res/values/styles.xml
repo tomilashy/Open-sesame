@@ -13,7 +13,7 @@
         <item name="android:textSize">32dp</item>
     </style>
 
-    <style name="TitleCredit" parent="TextAppearance.AppCompat">
+    <style name="BlueTitleText" parent="TextAppearance.AppCompat">
         <item name="android:fontFamily">casual</item>
         <item name="android:textColor">@color/blue</item>
         <item name="android:textSize">32dp</item>
@@ -25,15 +25,21 @@
         <item name="android:textSize">16dp</item>
     </style>
 
+    <style name="MediumText" parent="TextAppearance.AppCompat">
+        <item name="android:fontFamily">casual</item>
+        <item name="android:textColor">@color/blue</item>
+        <item name="android:textSize">20dp</item>
+    </style>
+
     <style name="Buttons" parent="Widget.AppCompat.Button">
         <item name="android:background">@color/colorPrimary</item>
         <item name="android:layout_width">350dp</item>
         <item name="android:layout_height">50dp</item>
     </style>
 
-    <style name="Login_Sign_Up_Buttons" parent="Widget.AppCompat.Button">
+    <style name="Small_Buttons" parent="Widget.AppCompat.Button">
         <item name="android:background">@color/colorPrimary</item>
-        <item name="android:layout_width">150dp</item>
+        <item name="android:layout_width">125dp</item>
         <item name="android:layout_height">50dp</item>
     </style>
 

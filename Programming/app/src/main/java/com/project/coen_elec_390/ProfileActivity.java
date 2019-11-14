@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -16,8 +15,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.github.siyamed.shapeimageview.CircularImageView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -33,6 +34,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,6 +48,8 @@ public class ProfileActivity extends AppCompatActivity {
     private TextView doorID;
     private Button saveButton;
     private CircularImageView circularImageView;
+    private MenuItem itemProfile;
+    private MenuItem itemImage;
 
     private SharedPreferences sharedPreference;
     private FirebaseFirestore db;
@@ -96,11 +100,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         saveButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if(editMode == 1){
-                    email.setVisibility(View.INVISIBLE);
-                    password.setVisibility(View.INVISIBLE);
-                    email_text.setVisibility(View.VISIBLE);
-                    password_text.setVisibility(View.VISIBLE);
+                if(editMode == 1) {
                     updateProfileInfo();
                 } else if (editMode == 2) {
                     deletePreviousPicture();
@@ -120,9 +120,21 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        itemProfile = menu.findItem(R.id.editInfo);
+        itemImage = menu.findItem(R.id.editPicture);
+        if (editMode == 1) {
+            itemImage.setVisible(false);
+        } else if (editMode == 2) {
+            itemProfile.setVisible(false);
+        }
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
-            case R.id.item2:
+            case R.id.editInfo:
                 editMode = 1;
                 email_text.setVisibility(View.INVISIBLE);
                 password_text.setVisibility(View.INVISIBLE);
@@ -134,7 +146,7 @@ public class ProfileActivity extends AppCompatActivity {
                 getListOfEmails();
                 getDataFromFirestore();
                 return true;
-            case R.id.item3:
+            case R.id.editPicture:
                 editMode = 2;
                 saveButton.setVisibility(View.VISIBLE);
                 circularImageView.setEnabled(true);
@@ -159,7 +171,9 @@ public class ProfileActivity extends AppCompatActivity {
 
     private void updateProfileInfo() {
         final String editEmail = email.getText().toString();
-        if (isValidInputs(editEmail, password.getText().toString())) {
+        final String editPassword =  password.getText().toString();
+
+        if (isValidInputs(editEmail, editPassword)) {
             if (!isEmailTaken(editEmail) || editEmail.equals(profileEmail)) {
                 docRef.update("email", editEmail, "password", password.getText().toString()).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -167,6 +181,21 @@ public class ProfileActivity extends AppCompatActivity {
                         saveButton.setVisibility(View.INVISIBLE);
                         email.setFocusable(false);
                         password.setFocusable(false);
+
+                        email_text.setText(editEmail);
+                        password_text.setText(editPassword);
+
+                        email.setVisibility(View.INVISIBLE);
+                        password.setVisibility(View.INVISIBLE);
+                        email_text.setVisibility(TextView.VISIBLE);
+                        password_text.setVisibility(TextView.VISIBLE);
+
+                        itemImage.setVisible(true);
+                        itemProfile.setVisible(true);
+                        editMode = 0;
+
+                        toast = Toast.makeText(ProfileActivity.this, "Profile Updated!", Toast.LENGTH_SHORT);
+                        toast.show();
                         Log.d(TAG, "DocumentSnapshot successfully updated!");
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -251,7 +280,6 @@ public class ProfileActivity extends AppCompatActivity {
             uploadTask = fileReference.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    Toast.makeText(ProfileActivity.this, "Upload successful", Toast.LENGTH_LONG).show();
                     Task<Uri> urlTask = taskSnapshot.getStorage().getDownloadUrl();
                     while (!urlTask.isSuccessful());
                     Uri downloadUrl = urlTask.getResult();
@@ -259,6 +287,12 @@ public class ProfileActivity extends AppCompatActivity {
                     docRef.update("imageUrl", url).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
+                            itemImage.setVisible(true);
+                            itemProfile.setVisible(true);
+                            editMode = 0;
+
+                            toast = Toast.makeText(ProfileActivity.this, "Image Updated!", Toast.LENGTH_SHORT);
+                            toast.show();
                             Log.d(TAG, "DocumentSnapshot successfully updated!");
                         }
                     })
@@ -276,7 +310,11 @@ public class ProfileActivity extends AppCompatActivity {
                 }
             });
         } else {
-            Toast.makeText(this, "No file selected", Toast.LENGTH_SHORT).show();
+            itemImage.setVisible(true);
+            itemProfile.setVisible(true);
+            editMode = 0;
+
+            Toast.makeText(this, "Saved!", Toast.LENGTH_SHORT).show();
         }
     }
 
