@@ -91,6 +91,7 @@ while True:
                     downloadLastPics()
                     doc_ref.update({u'motionDetected': False})
                 else:
+#                     print("no change")
                     pass
     except Exception as e:
         print(f"error: {e}")

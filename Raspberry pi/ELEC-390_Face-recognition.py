@@ -2,6 +2,7 @@
 from time import sleep # Import the sleep function from the time module
 
 import time
+from time import sleep
 import face_recognition
 import numpy as np
 from PIL import Image, ImageDraw
@@ -14,6 +15,7 @@ import firebase_admin
 from firebase_admin import credentials,firestore
 from firebase_admin import storage as admin_storage
 import urllib.request
+import json
 
 import pyrebase
 from bleach._vendor.html5lib._ihatexml import name
@@ -90,7 +92,7 @@ def recognizeFace(imagePath):
     global doc_ref
     #  LEARN ADMIN'S FACES
     # Load a sample picture and learn how to recognize it.
-
+ 
     images =[]
     known_face_encodings =[]
     print("Started"+ imagePath)
@@ -98,30 +100,30 @@ def recognizeFace(imagePath):
     files2 = glob.glob(imagePath + "*.png")
     files.extend(files2)
     # print("\n".join(files))
-
-#     for file in files:
-#         img = Image.open(file)
-#         img.save(file,optimize=True,quality=0)
-#         img.close()
-#     print("image resized")
-    # printing out files in sorted form
+ 
+# #     for file in files:
+# #         img = Image.open(file)
+# #         img.save(file,optimize=True,quality=0)
+# #         img.close()
+# #     print("image resized")
+#     # printing out files in sorted form
     known_face_names = [x.split(imagePath)[1].split(".jpg")[0] for x in files]
     print(known_face_names)
-    for file in files:
-        images.append(face_recognition.load_image_file(file));
-    #print(images)
-    for encoding in images:
-        known_face_encodings.append(face_recognition.face_encodings(encoding)[0])
-#     print(known_face_encodings)
-
-    print('Learned encoding for', len(known_face_encodings), 'images.')
+#     for file in files:
+#         images.append(face_recognition.load_image_file(file));
+#     #print(images)
+#     for encoding in images:
+#         known_face_encodings.append(face_recognition.face_encodings(encoding)[0])
+# #     print(known_face_encodings)
+# 
+#     print('Learned encoding for', len(known_face_encodings), 'images.')
     #######################################################################
     # Load an image with an unknown face
     known_face_encodings=[]
     with open("face_tags.json") as json_file:
         known_face_encodings= json.load(json_file)
 
-
+    known_face_encodings=[np.array(x) for x in known_face_encodings]
     unknown_image = face_recognition.load_image_file("image.jpg")
     # unknown_image1 = face_recognition.load_image_file("test3.jpg")
 
@@ -214,11 +216,15 @@ store =firestore.client()
 doc_ref = store.collection(u'doors').document(u'6768')
 
 known_face_names= []
-times = os.path.getmtime("image.jpg")
+
 while True:
+    times = os.path.getmtime("image.jpg")
+    current = str(time.strftime("%H.%M.%S.%d.%m.%Y",time.localtime(times)))
+    print(f"lastpic-{lastImage} \n recent-{current} ")
+    sleep(5)
     if lastImage != str(time.strftime("%H.%M.%S.%d.%m.%Y",time.localtime(times))):
         lastImage = str(time.strftime("%H.%M.%S.%d.%m.%Y", time.localtime(times)))
-        downloadAdminPics()
+#         downloadAdminPics()
         recognizeFace(datadir)
         
 

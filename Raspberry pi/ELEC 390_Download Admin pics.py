@@ -14,6 +14,7 @@ import firebase_admin
 from firebase_admin import credentials,firestore
 from firebase_admin import storage as admin_storage
 import urllib.request
+import codecs,json
 
 import pyrebase
 from bleach._vendor.html5lib._ihatexml import name
@@ -66,9 +67,9 @@ def learnFaces():
 
     images =[]
     known_face_encodings =[]
-    print("Started"+ imagePath)
-    files = glob.glob(imagePath +"*.jpg")
-    files2 = glob.glob(imagePath + "*.png")
+    print("Started"+ datadir)
+    files = glob.glob(datadir +"*.jpg")
+    files2 = glob.glob(datadir + "*.png")
     files.extend(files2)
     # print("\n".join(files))
 
@@ -78,16 +79,17 @@ def learnFaces():
 #         img.close()
 #     print("image resized")
     # printing out files in sorted form
-    known_face_names = [x.split(imagePath)[1].split(".jpg")[0] for x in files]
+    known_face_names = [x.split(datadir)[1].split(".jpg")[0] for x in files]
     print(known_face_names)
     for file in files:
         images.append(face_recognition.load_image_file(file));
     #print(images)
     for encoding in images:
-        known_face_encodings.append(face_recognition.face_encodings(encoding)[0])
+        known_face_encodings.append(face_recognition.face_encodings(encoding)[0].tolist())
 #     print(known_face_encodings)
     with open("face_tags.json","w") as json_file:
         json.dump(known_face_encodings,json_file)
+#     json.dump(known_face_encodings,codecs.open("face_tags.json", 'w', encoding='utf-8'), separators=(',', ':'),indent=4)
 
     print('Learned encoding for', len(known_face_encodings), 'images.')
 ###################################################################
@@ -134,7 +136,7 @@ while True:
     try:
         docs = doc_refs.stream()
         for doc in docs:
-            print(doc)
+#             print(doc)
             if str(doc.id) == "6768":
                 dict = doc.to_dict()
                 print(dict)
