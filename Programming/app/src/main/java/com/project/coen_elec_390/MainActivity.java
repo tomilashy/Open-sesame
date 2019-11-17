@@ -24,7 +24,6 @@ public class MainActivity extends AppCompatActivity {
     private Button unlock;
     private Button admins;
     private Button history;
-    private Button credits;
     private Button logout;
 
     private SharedPreferences sharedPreference;
@@ -44,7 +43,6 @@ public class MainActivity extends AppCompatActivity {
         unlock = findViewById(R.id.unlock);
         admins = findViewById(R.id.admins);
         history = findViewById(R.id.history);
-        credits = findViewById(R.id.credits);
         logout = findViewById(R.id.logout);
 
         databaseHelper = new DatabaseHelper();
@@ -73,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
                         }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error updating document", e);
+                        Log.w(TAG, "Error updating document ", e);
                     }
                 });
             }
@@ -86,11 +84,6 @@ public class MainActivity extends AppCompatActivity {
         history.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 goToHistory();
-            }
-        });
-        credits.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                goToCredits();
             }
         });
         logout.setOnClickListener(new View.OnClickListener() {
@@ -112,6 +105,9 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.editProfile:
                 editProfile();
+                return true;
+            case R.id.goToCredits:
+                goToCredits();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

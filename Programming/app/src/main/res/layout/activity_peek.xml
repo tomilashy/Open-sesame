@@ -7,20 +7,6 @@
     android:background="@drawable/blue_city"
     tools:context=".PeekActivity">
 
-    <TextView
-        style="@style/BlueTitleText"
-        android:id="@+id/peekTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="You have been visited by God"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintVertical_bias="0.1"/>
-
     <ImageView
         android:id="@+id/peekImage"
         android:layout_width="300dp"
@@ -31,20 +17,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintVertical_bias="0.5"/>
-
-    <TextView
-        style="@style/BlueTitleText"
-        android:id="@+id/peekText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="Within the next 24 hours you will experience happiness!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintVertical_bias="0.9"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

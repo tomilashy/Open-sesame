@@ -6,5 +6,7 @@
         android:title="Edit Profile"
         app:showAsAction="never" />
 
-
+    <item android:id="@+id/goToCredits"
+        android:title="Credits"
+        app:showAsAction="never" />
 </menu>

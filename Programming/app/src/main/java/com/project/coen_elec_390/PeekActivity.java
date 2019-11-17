@@ -1,23 +1,18 @@
 package com.project.coen_elec_390;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.storage.ListResult;
-import com.google.firebase.storage.StorageReference;
-import com.squareup.picasso.Picasso;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.squareup.picasso.Picasso;
 
 public class PeekActivity extends AppCompatActivity {
 
@@ -25,9 +20,8 @@ public class PeekActivity extends AppCompatActivity {
 
     private SharedPreferences sharedPreference;
     private DatabaseHelper databaseHelper;
-    private StorageReference storageReference;
+    private FirebaseFirestore database;
 
-    private ArrayList<ImageInfo> imageInfoList;
     private int doorID;
 
     private final String TAG = "HISTORY";
@@ -44,65 +38,28 @@ public class PeekActivity extends AppCompatActivity {
 
         sharedPreference = getSharedPreferences("ProfilePreference", this.MODE_PRIVATE);
         doorID = sharedPreference.getInt("doorID", 0);
-        imageInfoList = new ArrayList<>();
+        database = databaseHelper.getDatabase();
 
-        storageReference = databaseHelper.getStorageReference("door_" + doorID + "/history");
-
-        storageReference.listAll().addOnSuccessListener(new OnSuccessListener<ListResult>() {
-            @Override
-            public void onSuccess(ListResult result) {
-                for (StorageReference fileRef : result.getItems()) {
-                    fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                        @Override
-                        public void onSuccess(Uri uri) {
-                            imageInfoList.add(new ImageInfo(getFileName(uri.toString())
-                                    , uri.toString()));
-                            Log.d(TAG, uri.toString());
-
-                            Collections.sort(imageInfoList, new Comparator<ImageInfo>() {
-                                @Override
-                                public int compare(ImageInfo a, ImageInfo b)
-                                {
-                                    return Long.compare(b.getDateInSeconds(), a.getDateInSeconds());
-                                }
-                            });
-
-                            Picasso.with(PeekActivity.this)
-                                    .load(imageInfoList.get(0).getImageUrl())
-                                    .fit()
-                                    .into(peekImage);
+        database.collection("doors")
+                .document(Integer.toString(doorID))
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            if (document.exists()) {
+                                Picasso.with(PeekActivity.this)
+                                        .load(document.getString("lastImageUrl"))
+                                        .fit()
+                                        .into(peekImage);
+                            } else {
+                                Log.d(TAG, "No such document exists!");
+                            }
+                        } else {
+                            Log.d(TAG, "get failed with ", task.getException());
                         }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception exception) { }
-                    });
-                }
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(Exception exception) {
-            }
-        });
-    }
-
-    private String getFileName(String url) {
-        int counter = 0;
-        int startIndex = - 1;
-        int endIndex;
-        String name = "";
-        for (int i = 0; i < url.length(); ++i) {
-            if (url.charAt(i) == '%' && counter == 0) {
-                ++counter;
-            } else if (url.charAt(i) == '%' && counter == 1) {
-                i += 3;
-                startIndex = i;
-            } else if (url.charAt(i) == '?') {
-                endIndex = i;
-                name = url.substring(startIndex, endIndex);
-                Log.d(TAG, name);
-                return name;
-            }
-        }
-        return name;
+                    }
+                });
     }
 }

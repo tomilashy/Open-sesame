@@ -24,7 +24,6 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -33,6 +32,7 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 public class SignUpActivity extends AppCompatActivity {
@@ -56,6 +56,10 @@ public class SignUpActivity extends AppCompatActivity {
     private ArrayList<String> emails;
     private ArrayList<String> usernames;
 
+    private int invalidCount;
+    private long timeout;
+    private boolean locked;
+
     private final String TAG = "SIGNUP";
 
     @Override
@@ -73,12 +77,20 @@ public class SignUpActivity extends AppCompatActivity {
         login = findViewById(R.id.sLogin);
 
         databaseHelper = new DatabaseHelper();
-        sharedPreference = this.getSharedPreferences("ProfilePreference",
-                this.MODE_PRIVATE);
+        sharedPreference = this.getSharedPreferences("ProfilePreference", this.MODE_PRIVATE);
 
         profile = new Profile();
         emails = new ArrayList<>();
         usernames = new ArrayList<>();
+
+        invalidCount = 0;
+        long seconds = (new Date().getTime()) / 1000;
+        timeout = sharedPreference.getLong("time", seconds - 1L);
+        if (seconds < timeout) {
+            locked = true;
+        } else {
+            locked = false;
+        }
 
         final FirebaseFirestore database = databaseHelper.getDatabase();
 
@@ -121,99 +133,111 @@ public class SignUpActivity extends AppCompatActivity {
                 final String sEmail = email.getText().toString();
                 getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                         WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                if (!locked) {
+                    if (isValidInputs(sUsername,
+                            sEmail,
+                            password.getText().toString(),
+                            sDoorID)) {
+                        if (!isUsernameTaken(sUsername)) {
+                            if (!isEmailTaken(sEmail)) {
+                                if (filePath != null) {
+                                    final StorageReference storageReference = databaseHelper.getStorageReference("door_" + sDoorID + "/profiles");
+                                    database.collection("doors")
+                                            .document(sDoorID)
+                                            .update("adminChanged", true)
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                public void onSuccess(Void aVoid) {
+                                                    if (filePath != null) {
+                                                        storageReference.child(profile.getUsername() + ".jpg").putFile(filePath)
+                                                                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                                                    @Override
+                                                                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                                                        Task<Uri> urlTask = taskSnapshot.getStorage().getDownloadUrl();
+                                                                        while (!urlTask.isSuccessful());
+                                                                        Uri downloadUrl = urlTask.getResult();
 
-                if (isValidInputs(sUsername,
-                        sEmail,
-                        password.getText().toString(),
-                        sDoorID)) {
-                    if (!isUsernameTaken(sUsername)) {
-                        if (!isEmailTaken(sEmail)) {
-                            if (filePath != null) {
-                                final StorageReference storageReference = databaseHelper.getStorageReference("door_" + sDoorID + "/profiles");
-                                database.collection("doors")
-                                        .document(sDoorID)
-                                        .get()
-                                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                                if (task.isSuccessful()) {
-                                                    DocumentSnapshot document = task.getResult();
-                                                    if (document.exists()) {
-                                                        if (filePath != null) {
-                                                            storageReference.child(profile.getUsername() + ".jpg").putFile(filePath)
-                                                                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                                                                        @Override
-                                                                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                                                            Task<Uri> urlTask = taskSnapshot.getStorage().getDownloadUrl();
-                                                                            while (!urlTask.isSuccessful());
-                                                                            Uri downloadUrl = urlTask.getResult();
+                                                                        HashMap<String, Object> user = new HashMap<>();
+                                                                        user.put("username", profile.getUsername());
+                                                                        user.put("email", profile.getEmail());
+                                                                        user.put("password", profile.getPassword());
+                                                                        user.put("doorID", profile.getDoorID());
+                                                                        user.put("imageUrl", downloadUrl.toString());
 
-                                                                            HashMap<String, Object> user = new HashMap<>();
-                                                                            user.put("username", profile.getUsername());
-                                                                            user.put("email", profile.getEmail());
-                                                                            user.put("password", profile.getPassword());
-                                                                            user.put("doorID", profile.getDoorID());
-                                                                            user.put("imageUrl", downloadUrl.toString());
-
-                                                                            database.collection("profiles")
-                                                                                    .document(profile.getUsername())
-                                                                                    .set(user)
-                                                                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                                                        @Override
-                                                                                        public void onSuccess(Void aVoid) {
-                                                                                            startActivity(new Intent(SignUpActivity.this, MainActivity.class));
-                                                                                        }
-                                                                                    })
-                                                                                    .addOnFailureListener(new OnFailureListener() {
-                                                                                        @Override
-                                                                                        public void onFailure(@NonNull Exception e) {
-                                                                                            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                                                                                        }
-                                                                                    });
-                                                                        }
-                                                                    })
-                                                                    .addOnFailureListener(new OnFailureListener() {
-                                                                        @Override
-                                                                        public void onFailure(@NonNull Exception e) {
-                                                                            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                                                                        }
-                                                                    });
-                                                        }
-                                                    } else {
-                                                        toast = Toast.makeText(SignUpActivity.this, "Wrong doorID!", Toast.LENGTH_SHORT);
-                                                        toast.show();
-
-                                                        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                                                                        database.collection("profiles")
+                                                                                .document(profile.getUsername())
+                                                                                .set(user)
+                                                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                                    @Override
+                                                                                    public void onSuccess(Void aVoid) {
+                                                                                        startActivity(new Intent(SignUpActivity.this, MainActivity.class));
+                                                                                    }
+                                                                                })
+                                                                                .addOnFailureListener(new OnFailureListener() {
+                                                                                    @Override
+                                                                                    public void onFailure(@NonNull Exception e) {
+                                                                                        toast = Toast.makeText(SignUpActivity.this, "Unable to sign up, please try again.", Toast.LENGTH_SHORT);
+                                                                                        toast.show();
+                                                                                        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                                                                                    }
+                                                                                });
+                                                                    }
+                                                                })
+                                                                .addOnFailureListener(new OnFailureListener() {
+                                                                    @Override
+                                                                    public void onFailure(@NonNull Exception e) {
+                                                                        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                                                                    }
+                                                                });
                                                     }
-                                                } else {
-                                                    Log.d(TAG, "get() failed with ", task.getException());
-
-                                                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                                                 }
-                                            }
-                                        });
-                            } else {
-                                toast = Toast.makeText(SignUpActivity.this, "A picture has not been chosen!", Toast.LENGTH_SHORT);
-                                toast.show();
+                                            }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            ++invalidCount;
+                                            if (invalidCount > 2) {
+                                                locked = true;
 
+                                                timeout = ((new Date().getTime()) / 1000) + 3600L;
+                                                SharedPreferences.Editor editor = sharedPreference.edit();
+                                                editor.putLong("time", timeout);
+                                                editor.apply();
+
+                                                Log.d(TAG, "Timeout: " + timeout);
+
+                                                toast = Toast.makeText(SignUpActivity.this, "Timeout! Please wait for 1 hour!", Toast.LENGTH_SHORT);;
+                                            } else {
+                                                toast = Toast.makeText(SignUpActivity.this, "Wrong door identifier!", Toast.LENGTH_SHORT);
+                                            }
+                                            toast.show();
+                                            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                                        }
+                                    });
+                                } else {
+                                    toast = Toast.makeText(SignUpActivity.this, "A picture has not been chosen!", Toast.LENGTH_SHORT);
+                                    toast.show();
+                                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                                }
+                            } else {
+                                toast = Toast.makeText(SignUpActivity.this, "Email has been taken!", Toast.LENGTH_SHORT);
+                                toast.show();
                                 getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                             }
                         } else {
-                            toast = Toast.makeText(SignUpActivity.this, "Email has been taken!", Toast.LENGTH_SHORT);
+                            toast = Toast.makeText(SignUpActivity.this, "Username has been taken!", Toast.LENGTH_SHORT);
                             toast.show();
-
                             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                         }
                     } else {
-                        toast = Toast.makeText(SignUpActivity.this, "Username has been taken!", Toast.LENGTH_SHORT);
-                        toast.show();
-
                         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                     }
                 } else {
+                    toast = Toast.makeText(SignUpActivity.this, "You have been timed out!", Toast.LENGTH_SHORT);
+                    toast.show();
                     getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                 }
             }
         });
+
     }
 
     @Override
