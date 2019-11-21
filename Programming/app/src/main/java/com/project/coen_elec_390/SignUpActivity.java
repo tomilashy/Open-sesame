@@ -156,6 +156,11 @@ public class SignUpActivity extends AppCompatActivity {
                                                                         while (!urlTask.isSuccessful());
                                                                         Uri downloadUrl = urlTask.getResult();
 
+                                                                        SharedPreferences.Editor editor = sharedPreference.edit();
+                                                                        editor.putString("username", profile.getUsername());
+                                                                        editor.putInt("doorID", profile.getDoorID());
+                                                                        editor.commit();
+
                                                                         HashMap<String, Object> user = new HashMap<>();
                                                                         user.put("username", profile.getUsername());
                                                                         user.put("email", profile.getEmail());
@@ -296,11 +301,6 @@ public class SignUpActivity extends AppCompatActivity {
                                             profile.setEmail(email);
                                             profile.setPassword(password);
                                             profile.setDoorID(id);
-
-                                            SharedPreferences.Editor editor = sharedPreference.edit();
-                                            editor.putString("username", username);
-                                            editor.putInt("doorID", id);
-                                            editor.commit();
 
                                             return true;
                                         } else {

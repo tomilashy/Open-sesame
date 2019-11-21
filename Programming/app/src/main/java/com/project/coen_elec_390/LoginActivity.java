@@ -102,11 +102,6 @@ public class LoginActivity extends AppCompatActivity {
 
         signUp.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                SharedPreferences.Editor editor = sharedPreference.edit();
-                editor.remove("username");
-                editor.remove("doorID");
-                editor.commit();
-
                 startActivity(new Intent(LoginActivity.this, SignUpActivity.class));
             }
         });

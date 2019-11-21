@@ -14,9 +14,12 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -25,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     private Button admins;
     private Button history;
     private Button logout;
+    private Toast toast;
 
     private SharedPreferences sharedPreference;
     private DatabaseHelper databaseHelper;
@@ -65,7 +69,9 @@ public class MainActivity extends AppCompatActivity {
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
-                                Toast.makeText(MainActivity.this, "Door successfully unlocked!", Toast.LENGTH_LONG).show();
+                                toast = Toast.makeText(MainActivity.this, "Door successfully unlocked!", Toast.LENGTH_LONG);
+                                toast.show();
+
                                 Log.d(TAG, "Door successfully unlocked!");
                             }
                         }).addOnFailureListener(new OnFailureListener() {
@@ -91,6 +97,17 @@ public class MainActivity extends AppCompatActivity {
                 logout();
             }
         });
+
+        FirebaseMessaging.getInstance().subscribeToTopic(Integer.toString(doorID))
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        toast = Toast.makeText(MainActivity.this, "Subscribed to door: " + doorID, Toast.LENGTH_LONG);
+                        toast.show();
+
+                        Log.d(TAG, "Subscribed to door: " + doorID);
+                    }
+                });
     }
 
     @Override
