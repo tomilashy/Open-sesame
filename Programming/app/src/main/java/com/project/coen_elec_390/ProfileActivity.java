@@ -37,13 +37,14 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class ProfileActivity extends AppCompatActivity {
 
     private TextView username;
-    private EditText email;
+    private EditText phoneNumber;
     private EditText password;
-    private TextView email_text;
+    private TextView phone_text;
     private TextView password_text;
     private TextView doorID;
     private Button saveButton;
@@ -60,10 +61,10 @@ public class ProfileActivity extends AppCompatActivity {
     private DocumentReference docRef;
 
     private String profileName;
-    private String profileEmail;
+    private String profilePhoneNumber;
     private String profileUrl;
     private int profileDoorID;
-    private List<String> emails;
+    private List<String> phoneNumbers;
 
     private final String TAG = "ProfileActivity";
     private static final int PICK_IMAGE_REQUEST = 1;
@@ -79,9 +80,9 @@ public class ProfileActivity extends AppCompatActivity {
         editMode = 0;
 
         username = findViewById(R.id.text_user);
-        email = findViewById(R.id.edit_email);
+        phoneNumber = findViewById(R.id.edit_phone);
         password = findViewById(R.id.edit_password);
-        email_text = findViewById(R.id.text_email);
+        phone_text = findViewById(R.id.text_phone);
         password_text = findViewById(R.id.text_password);
         doorID = findViewById(R.id.text_doorID);
         saveButton = findViewById(R.id.saveButton);
@@ -95,7 +96,7 @@ public class ProfileActivity extends AppCompatActivity {
         docRef = db.collection("profiles").document(profileName);
         storageRef = FirebaseStorage.getInstance().getReference("door_" + profileDoorID + "/profiles");
 
-        getListOfEmails();
+        getListOfPhoneNumbers();
         getDataFromFirestore();
 
         saveButton.setOnClickListener(new View.OnClickListener() {
@@ -136,14 +137,14 @@ public class ProfileActivity extends AppCompatActivity {
         switch (item.getItemId()){
             case R.id.editInfo:
                 editMode = 1;
-                email_text.setVisibility(View.INVISIBLE);
+                phone_text.setVisibility(View.INVISIBLE);
                 password_text.setVisibility(View.INVISIBLE);
-                email.setVisibility(View.VISIBLE);
+                phoneNumber.setVisibility(View.VISIBLE);
                 password.setVisibility(View.VISIBLE);
                 saveButton.setVisibility(View.VISIBLE);
-                email.setFocusableInTouchMode(true);
+                phoneNumber.setFocusableInTouchMode(true);
                 password.setFocusableInTouchMode(true);
-                getListOfEmails();
+                getListOfPhoneNumbers();
                 getDataFromFirestore();
                 return true;
             case R.id.editPicture:
@@ -170,24 +171,24 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void updateProfileInfo() {
-        final String editEmail = email.getText().toString();
+        final String editPhoneNumber = phoneNumber.getText().toString();
         final String editPassword =  password.getText().toString();
 
-        if (isValidInputs(editEmail, editPassword)) {
-            if (!isEmailTaken(editEmail) || editEmail.equals(profileEmail)) {
-                docRef.update("email", editEmail, "password", password.getText().toString()).addOnSuccessListener(new OnSuccessListener<Void>() {
+        if (isValidInputs(editPhoneNumber, editPassword)) {
+            if (!isPhoneNumberTaken(editPhoneNumber) || editPhoneNumber.equals(profilePhoneNumber)) {
+                docRef.update("phoneNum", editPhoneNumber, "password", password.getText().toString()).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
                         saveButton.setVisibility(View.INVISIBLE);
-                        email.setFocusable(false);
+                        phoneNumber.setFocusable(false);
                         password.setFocusable(false);
 
-                        email_text.setText(editEmail);
+                        phone_text.setText(editPhoneNumber);
                         password_text.setText(editPassword);
 
-                        email.setVisibility(View.INVISIBLE);
+                        phoneNumber.setVisibility(View.INVISIBLE);
                         password.setVisibility(View.INVISIBLE);
-                        email_text.setVisibility(TextView.VISIBLE);
+                        phone_text.setVisibility(TextView.VISIBLE);
                         password_text.setVisibility(TextView.VISIBLE);
 
                         itemImage.setVisible(true);
@@ -205,7 +206,7 @@ public class ProfileActivity extends AppCompatActivity {
                     }
                 });
             } else {
-                toast = Toast.makeText(ProfileActivity.this, "Email has been taken!", Toast.LENGTH_SHORT);
+                toast = Toast.makeText(ProfileActivity.this, "Phone number has been taken!", Toast.LENGTH_SHORT);
                 toast.show();
             }
         }
@@ -219,12 +220,12 @@ public class ProfileActivity extends AppCompatActivity {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         username.setText(profileName);
-                        email.setText(document.getData().get("email").toString());
+                        phoneNumber.setText(document.getData().get("phoneNum").toString());
                         password.setText(document.getData().get("password").toString());
-                        email_text.setText(document.getData().get("email").toString());
+                        phone_text.setText(document.getData().get("phoneNum").toString());
                         password_text.setText(document.getData().get("password").toString());
                         doorID.setText(document.getData().get("doorID").toString());
-                        profileEmail = document.getData().get("email").toString();
+                        profilePhoneNumber = document.getData().get("phoneNum").toString();
                         profileUrl = document.getData().get("imageUrl").toString();
                         Picasso.with(ProfileActivity.this)
                                 .load(profileUrl)
@@ -242,14 +243,14 @@ public class ProfileActivity extends AppCompatActivity {
         });
     }
 
-    private void getListOfEmails () {
-        emails = new ArrayList<String>();
+    private void getListOfPhoneNumbers () {
+        phoneNumbers = new ArrayList<String>();
         db.collection("profiles").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     for (QueryDocumentSnapshot document : task.getResult()) {
-                        emails.add(document.getData().get("email").toString());
+                        phoneNumbers.add(document.getData().get("phoneNum").toString());
                         Log.d(TAG, document.getId() + " => " + document.getData());
                     }
                 } else {
@@ -328,17 +329,17 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
-    private boolean isEmailTaken(final String sEmail) {
-        for (String e : emails) {
-            if (e.equals(sEmail)) {
+    private boolean isPhoneNumberTaken(final String sPhoneNum) {
+        for (String pN : phoneNumbers) {
+            if (pN.equals(sPhoneNum)) {
                 return true;
             }
         }
         return false;
     }
 
-    private boolean isValidInputs(String email, String password) {
-        if (!TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+    private boolean isValidInputs(String phoneNum, String password) {
+        if (!TextUtils.isEmpty(phoneNum) && Pattern.matches("[a-zA-Z]+", phoneNum) == false && phoneNum.length() == 10) {
             if (password.matches("[a-zA-Z0-9]+")) {
                 if (password.length() > 5 && password.length() < 16) {
                     if (!password.contains(" ")) {
@@ -353,7 +354,7 @@ public class ProfileActivity extends AppCompatActivity {
                 toast = Toast.makeText(this, "Password contains invalid characters!", Toast.LENGTH_SHORT);
             }
         } else {
-            toast = Toast.makeText(this, "Invalid email!", Toast.LENGTH_SHORT);
+            toast = Toast.makeText(this, "Invalid phone number!", Toast.LENGTH_SHORT);
         }
         toast.show();
         return false;

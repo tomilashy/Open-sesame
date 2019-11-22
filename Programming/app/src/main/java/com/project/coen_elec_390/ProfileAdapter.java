@@ -33,7 +33,7 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ImageVie
     public void onBindViewHolder(ProfileAdapter.ImageViewHolder holder, int index) {
         Profile profile = profiles.get(index);
         holder.usernameTextView.setText(profile.getUsername());
-        holder.emailTextView.setText(profile.getEmail());
+        holder.phoneNumberTextView.setText(profile.getPhoneNumber());
         Picasso.with(context)
                 .load(profile.getImageUrl())
                 .fit()
@@ -47,14 +47,14 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.ImageVie
 
     public class ImageViewHolder extends RecyclerView.ViewHolder {
         public TextView usernameTextView;
-        public TextView emailTextView;
+        public TextView phoneNumberTextView;
         public ImageView imageView;
 
         public ImageViewHolder(View itemView) {
             super(itemView);
 
             usernameTextView = itemView.findViewById(R.id.text_view_username);
-            emailTextView = itemView.findViewById(R.id.text_view_email);
+            phoneNumberTextView = itemView.findViewById(R.id.text_view_phone);
             imageView = itemView.findViewById(R.id.image_view_profile_image);
         }
     }

@@ -34,7 +34,7 @@
 
             <TextView
                 style="@style/NormalText"
-                android:id="@+id/text_view_email"
+                android:id="@+id/text_view_phone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="25dp"
