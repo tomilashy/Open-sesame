@@ -5,18 +5,15 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.telephony.SmsManager;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
@@ -24,8 +21,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.squareup.picasso.Picasso;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -124,13 +119,11 @@ public class ForgotPassActivity extends AppCompatActivity {
 
                     Toast.makeText(ForgotPassActivity.this,
                             "Permission accepted", Toast.LENGTH_LONG).show();
-
                 } else {
                     Toast.makeText(ForgotPassActivity.this,
                             "Permission denied", Toast.LENGTH_LONG).show();
                     Button sendSMS1 = findViewById(R.id.sms);
                     sendSMS1.setEnabled(false);
-
                 }
                 break;
         }
@@ -162,4 +155,3 @@ public class ForgotPassActivity extends AppCompatActivity {
         return false;
     }
 }
-
