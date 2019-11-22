@@ -58,7 +58,7 @@ public class AdminsActivity extends AppCompatActivity {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 profiles.add(new Profile(
                                         document.getData().get("username").toString(),
-                                        document.getData().get("email").toString(),
+                                        document.getData().get("phoneNum").toString(),
                                         document.getData().get("password").toString(),
                                         Integer.parseInt(document.getData().get("doorID").toString()),
                                         document.getData().get("imageUrl").toString()));

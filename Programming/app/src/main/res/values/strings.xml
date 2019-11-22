@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Open Sesame</string>
+    <string name="pass"><u><b>Forgot Password</b></u></string>
 </resources>

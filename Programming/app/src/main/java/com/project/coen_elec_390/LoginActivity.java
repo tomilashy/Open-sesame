@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -29,6 +30,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button login;
     private Button signUp;
     private Toast toast;
+    private TextView forgotPassword;
 
     private DatabaseHelper databaseHelper;
     private SharedPreferences sharedPreference;
@@ -45,6 +47,7 @@ public class LoginActivity extends AppCompatActivity {
         password = findViewById(R.id.lPassword);
         login = findViewById(R.id.login);
         signUp = findViewById(R.id.lSignUp);
+        forgotPassword = findViewById(R.id.forgot_pass);
 
         databaseHelper = new DatabaseHelper();
         sharedPreference = getSharedPreferences("ProfilePreference",
@@ -106,6 +109,12 @@ public class LoginActivity extends AppCompatActivity {
         signUp.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 startActivity(new Intent(LoginActivity.this, SignUpActivity.class));
+            }
+        });
+
+        forgotPassword.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                startActivity(new Intent(LoginActivity.this, ForgotPassActivity.class));
             }
         });
     }

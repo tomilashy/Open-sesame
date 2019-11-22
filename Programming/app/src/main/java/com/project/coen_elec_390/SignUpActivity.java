@@ -34,11 +34,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.regex.Pattern;
 
 public class SignUpActivity extends AppCompatActivity {
 
     private TextInputEditText username;
-    private EditText email;
+    private EditText phoneNumber;
     private EditText password;
     private EditText doorID;
     private Button picture;
@@ -53,7 +54,7 @@ public class SignUpActivity extends AppCompatActivity {
     private final int PICK_IMAGE_REQUEST = 71;
 
     private Profile profile;
-    private ArrayList<String> emails;
+    private ArrayList<String> phoneNumbers;
     private ArrayList<String> usernames;
 
     private int invalidCount;
@@ -69,7 +70,7 @@ public class SignUpActivity extends AppCompatActivity {
         setTitle("Sign up");
 
         username = findViewById(R.id.sUsername);
-        email = findViewById(R.id.sEmail);
+        phoneNumber = findViewById(R.id.sPhoneNum);
         password = findViewById(R.id.sPassword);
         doorID = findViewById(R.id.sDoorID);
         picture = findViewById(R.id.sPicture);
@@ -80,7 +81,7 @@ public class SignUpActivity extends AppCompatActivity {
         sharedPreference = this.getSharedPreferences("ProfilePreference", this.MODE_PRIVATE);
 
         profile = new Profile();
-        emails = new ArrayList<>();
+        phoneNumbers = new ArrayList<>();
         usernames = new ArrayList<>();
 
         invalidCount = 0;
@@ -101,7 +102,7 @@ public class SignUpActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                emails.add(document.getData().get("email").toString());
+                                phoneNumbers.add(document.getData().get("phoneNum").toString());
                                 usernames.add(document.getData().get("username").toString());
                                 Log.d(TAG, document.getId() + " => " + document.getData());
                             }
@@ -130,16 +131,16 @@ public class SignUpActivity extends AppCompatActivity {
             public void onClick(View v) {
                 final String sDoorID = doorID.getText().toString();
                 final String sUsername = username.getText().toString();
-                final String sEmail = email.getText().toString();
+                final String sPhoneNum = phoneNumber.getText().toString();
                 getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
                         WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                 if (!locked) {
                     if (isValidInputs(sUsername,
-                            sEmail,
+                            sPhoneNum,
                             password.getText().toString(),
                             sDoorID)) {
                         if (!isUsernameTaken(sUsername)) {
-                            if (!isEmailTaken(sEmail)) {
+                            if (!isPhoneNumberTaken(sPhoneNum)) {
                                 if (filePath != null) {
                                     final StorageReference storageReference = databaseHelper.getStorageReference("door_" + sDoorID + "/profiles");
                                     database.collection("doors")
@@ -163,7 +164,7 @@ public class SignUpActivity extends AppCompatActivity {
 
                                                                         HashMap<String, Object> user = new HashMap<>();
                                                                         user.put("username", profile.getUsername());
-                                                                        user.put("email", profile.getEmail());
+                                                                        user.put("phoneNum", profile.getPhoneNumber());
                                                                         user.put("password", profile.getPassword());
                                                                         user.put("doorID", profile.getDoorID());
                                                                         user.put("imageUrl", downloadUrl.toString());
@@ -223,7 +224,7 @@ public class SignUpActivity extends AppCompatActivity {
                                     getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                                 }
                             } else {
-                                toast = Toast.makeText(SignUpActivity.this, "Email has been taken!", Toast.LENGTH_SHORT);
+                                toast = Toast.makeText(SignUpActivity.this, "Phone number has been taken!", Toast.LENGTH_SHORT);
                                 toast.show();
                                 getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                             }
@@ -267,9 +268,9 @@ public class SignUpActivity extends AppCompatActivity {
         }
     }
 
-    private boolean isEmailTaken(final String sEmail) {
-        for (String e : emails) {
-            if (e.equals(sEmail)) {
+    private boolean isPhoneNumberTaken(final String sPhoneNumber) {
+        for (String e : phoneNumbers) {
+            if (e.equals(sPhoneNumber)) {
                 return true;
             }
         }
@@ -285,11 +286,11 @@ public class SignUpActivity extends AppCompatActivity {
         return false;
     }
 
-    private boolean isValidInputs(String username, String email, String password, String doorID) {
-        if (!username.isEmpty() && !email.isEmpty() && !password.isEmpty() && !doorID.isEmpty()) {
+    private boolean isValidInputs(String username, String phoneNum, String password, String doorID) {
+        if (!username.isEmpty() && !phoneNum.isEmpty() && !password.isEmpty() && !doorID.isEmpty()) {
             if (username.matches("[a-zA-Z0-9]+")) {
                 if (username.length() < 16) {
-                    if (!TextUtils.isEmpty(email) && Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                    if (!TextUtils.isEmpty(phoneNum) && Pattern.matches("[a-zA-Z]+", phoneNum) == false && phoneNum.length() == 10) {
                         if (doorID.matches("[0-9]+")) {
                             int id = Integer.parseInt(doorID);
                             if (id > 0) {
@@ -298,7 +299,7 @@ public class SignUpActivity extends AppCompatActivity {
                                         if (!password.contains(" ")) {
                                             //Save valid information
                                             profile.setUsername(username);
-                                            profile.setEmail(email);
+                                            profile.setPhoneNumber(phoneNum);
                                             profile.setPassword(password);
                                             profile.setDoorID(id);
 
@@ -319,7 +320,7 @@ public class SignUpActivity extends AppCompatActivity {
                             toast = Toast.makeText(this, "Door ID should only contain numbers!", Toast.LENGTH_SHORT);
                         }
                     } else {
-                        toast = Toast.makeText(this, "Invalid email!", Toast.LENGTH_SHORT);
+                        toast = Toast.makeText(this, "Invalid phone number!", Toast.LENGTH_SHORT);
                     }
                 } else {
                     toast = Toast.makeText(this, "Maximum length for user names is 16 characters!", Toast.LENGTH_SHORT);
