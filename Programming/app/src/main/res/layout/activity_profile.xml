@@ -4,9 +4,9 @@
     android:id="@+id/relativeLayout"
     android:searchSuggestAuthority="com.project.coen_elec_390"
     android:searchSuggestSelection=" ?"
+    android:background="@drawable/open_door"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/blue_city"
     tools:context=".ProfileActivity">
 
     <com.github.siyamed.shapeimageview.CircularImageView
