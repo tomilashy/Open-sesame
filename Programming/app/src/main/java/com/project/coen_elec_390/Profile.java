@@ -11,13 +11,6 @@ public class Profile {
     // Constructors
     public Profile() {}
 
-    public Profile(String username, String phone, String password, int doorID) {
-        this.username = username;
-        this.phoneNum = phone;
-        this.password = password;
-        this.doorID = doorID;
-    }
-
     public Profile(String username, String phone, String password, int doorID, String imageUrl) {
         this.username = username;
         this.phoneNum = phone;
@@ -37,6 +30,5 @@ public class Profile {
     public void setUsername(String username) {this.username = username;}
     public void setPassword(String password) {this.password = password;}
     public void setPhoneNumber(String phone) {this.phoneNum = phone;}
-    public void setImageUrl(String url) {this.imageUrl = url;}
     public void setDoorID(int doorID) {this.doorID = doorID;}
 }

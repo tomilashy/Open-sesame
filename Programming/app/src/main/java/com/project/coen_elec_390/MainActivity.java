@@ -1,5 +1,7 @@
 package com.project.coen_elec_390;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -63,23 +65,34 @@ public class MainActivity extends AppCompatActivity {
         });
         unlock.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                database.collection("doors")
-                        .document(sDoorID)
-                        .update("lock", false)
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                toast = Toast.makeText(MainActivity.this, "Door successfully unlocked!", Toast.LENGTH_LONG);
-                                toast.show();
+                new AlertDialog.Builder(MainActivity.this)
+                        .setTitle("Unlock Door")
+                        .setMessage("Are you sure you want to unlock the door?")
 
-                                Log.d(TAG, "Door successfully unlocked!");
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                database.collection("doors")
+                                        .document(sDoorID)
+                                        .update("lock", false)
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                toast = Toast.makeText(MainActivity.this, "Door successfully unlocked!", Toast.LENGTH_LONG);
+                                                toast.show();
+
+                                                Log.d(TAG, "Door successfully unlocked!");
+                                            }
+                                        }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.w(TAG, "Error updating document ", e);
+                                    }
+                                });
                             }
-                        }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error updating document ", e);
-                    }
-                });
+                        })
+                        .setNegativeButton(android.R.string.no, null)
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
             }
         });
         admins.setOnClickListener(new View.OnClickListener() {
@@ -98,12 +111,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        FirebaseMessaging.getInstance().subscribeToTopic(Integer.toString(doorID))
+        FirebaseMessaging.getInstance().subscribeToTopic(sDoorID)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         String prevTopic = sharedPreference.getString("topic", "DEFAULT");
-                        FirebaseMessaging.getInstance().unsubscribeFromTopic(prevTopic);
+
+                        if (!prevTopic.equals("DEFAULT")) {
+                            FirebaseMessaging.getInstance().unsubscribeFromTopic(prevTopic);
+                            Log.d(TAG, "Unsubscribed to door: " + prevTopic);
+                        }
 
                         SharedPreferences.Editor editor = sharedPreference.edit();
                         editor.putString("topic", sDoorID);
