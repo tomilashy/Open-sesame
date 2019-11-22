@@ -102,6 +102,13 @@ public class MainActivity extends AppCompatActivity {
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
+                        String prevTopic = sharedPreference.getString("topic", "DEFAULT");
+                        FirebaseMessaging.getInstance().unsubscribeFromTopic(prevTopic);
+
+                        SharedPreferences.Editor editor = sharedPreference.edit();
+                        editor.putString("topic", sDoorID);
+                        editor.commit();
+
                         toast = Toast.makeText(MainActivity.this, "Subscribed to door: " + doorID, Toast.LENGTH_LONG);
                         toast.show();
 
