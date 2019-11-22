@@ -83,6 +83,7 @@ public class ForgotPassActivity extends AppCompatActivity {
                                             String sms = usernameInput + ": Your password is " + password;
                                             SmsManager smsManager = SmsManager.getDefault();
                                             smsManager.sendTextMessage(phoneNum, null, sms, null, null);
+                                            Toast.makeText(ForgotPassActivity.this, "SMS sent successfully!", Toast.LENGTH_SHORT).show();
                                         }else {
                                             Toast.makeText(ForgotPassActivity.this, "Permission denied", Toast.LENGTH_SHORT).show();
                                         }
