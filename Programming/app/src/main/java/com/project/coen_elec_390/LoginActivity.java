@@ -18,6 +18,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.iid.FirebaseInstanceId;
+
+import java.io.IOException;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -102,11 +105,6 @@ public class LoginActivity extends AppCompatActivity {
 
         signUp.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                SharedPreferences.Editor editor = sharedPreference.edit();
-                editor.remove("username");
-                editor.remove("doorID");
-                editor.commit();
-
                 startActivity(new Intent(LoginActivity.this, SignUpActivity.class));
             }
         });

@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/blue_city"
+    android:background="@drawable/open_door"
     tools:context=".DisplayHistory">
 
     <androidx.recyclerview.widget.RecyclerView
