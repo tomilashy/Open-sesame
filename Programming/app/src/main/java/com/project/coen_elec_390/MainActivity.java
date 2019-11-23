@@ -11,6 +11,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -25,11 +26,11 @@ import com.google.firebase.messaging.FirebaseMessaging;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Button peek;
-    private Button unlock;
-    private Button admins;
-    private Button history;
-    private Button logout;
+    private ImageButton peek;
+    private ImageButton unlock;
+    private ImageButton admins;
+    private ImageButton history;
+    private ImageButton logout;
     private Toast toast;
 
     private SharedPreferences sharedPreference;
