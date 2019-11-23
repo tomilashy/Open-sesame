@@ -11,8 +11,12 @@ import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -21,26 +25,60 @@ public class FirebaseMessageService extends FirebaseMessagingService {
 
     private SharedPreferences sharedPreference;
 
-    private int doorID;
-
     private final String TAG = "MESSAGESERVICE";
 
     @Override
-    public void onMessageReceived(RemoteMessage remoteMessage) {
+    public void onNewToken(String token) {
+        sharedPreference = getSharedPreferences("ProfilePreference", this.MODE_PRIVATE);
+        String prevTopic = sharedPreference.getString("topic", "DEFAULT");
+        final int doorID = sharedPreference.getInt("doorID", 0);
+        final String sDoorID = Integer.toString(doorID);
+        if (prevTopic.equals("DEFAULT")) {
+            FirebaseMessaging.getInstance().subscribeToTopic(sDoorID)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            SharedPreferences.Editor editor = sharedPreference.edit();
+                            editor.remove("topic");
+                            editor.putString("topic", sDoorID);
+                            editor.commit();
 
+                            Log.d(TAG, "Subscribed to door: " + doorID);
+                        }
+                    });
+        } else {
+            if (!prevTopic.equals(sDoorID)) {
+                FirebaseMessaging.getInstance().unsubscribeFromTopic(prevTopic);
+                FirebaseMessaging.getInstance().subscribeToTopic(sDoorID)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                SharedPreferences.Editor editor = sharedPreference.edit();
+                                editor.remove("topic");
+                                editor.putString("topic", sDoorID);
+                                editor.commit();
+
+                                Log.d(TAG, "Subscribed to door: " + doorID);
+                            }
+                        });
+            }
+        }
+    }
+
+    @Override
+    public void onMessageReceived(RemoteMessage remoteMessage) {
         Log.d(TAG, "From: " + remoteMessage.getFrom());
 
-        // Check if message contains a notification payload.
-        if (remoteMessage.getNotification() != null) {
-            Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
-            sendNotification(remoteMessage.getNotification().getBody());
+        if (remoteMessage.getData().size() > 0) {
+            Log.d(TAG, "Message data payload: " + remoteMessage.getData());
+            sendNotification(remoteMessage.getData().get("body"));
         }
     }
 
     private void sendNotification(String messageBody) {
 
         sharedPreference = getSharedPreferences("ProfilePreference", this.MODE_PRIVATE);
-        doorID = sharedPreference.getInt("doorID", 0);
+        final int doorID = sharedPreference.getInt("doorID", 0);
 
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

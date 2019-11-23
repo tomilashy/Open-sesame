@@ -19,6 +19,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -47,8 +48,7 @@ public class LoginActivity extends AppCompatActivity {
         forgotPassword = findViewById(R.id.forgot_pass);
 
         databaseHelper = new DatabaseHelper();
-        sharedPreference = getSharedPreferences("ProfilePreference",
-                this.MODE_PRIVATE);
+        sharedPreference = getSharedPreferences("ProfilePreference", this.MODE_PRIVATE);
 
         login.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {

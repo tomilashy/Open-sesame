@@ -13,11 +13,11 @@ exports.onMotionDetected = functions.firestore
         var topic = newValue.doorID.toString();
 
         var message = {
-         notification: {
-            title: 'Peek Door',
-            body: 'Motion detected! Someone is at the door!'
-          },
+          data: {
+              body: 'Motion detected! Someone is at the door!'
+            },
           topic: topic
+          priority: "high"
         };
 
         // Send a message to devices subscribed to the provided topic.

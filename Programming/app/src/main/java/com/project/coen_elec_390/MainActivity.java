@@ -111,27 +111,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        FirebaseMessaging.getInstance().subscribeToTopic(sDoorID)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        String prevTopic = sharedPreference.getString("topic", "DEFAULT");
-
-                        if (!prevTopic.equals("DEFAULT")) {
-                            FirebaseMessaging.getInstance().unsubscribeFromTopic(prevTopic);
-                            Log.d(TAG, "Unsubscribed to door: " + prevTopic);
-                        }
-
-                        SharedPreferences.Editor editor = sharedPreference.edit();
-                        editor.putString("topic", sDoorID);
-                        editor.commit();
-
-                        toast = Toast.makeText(MainActivity.this, "Subscribed to door: " + doorID, Toast.LENGTH_LONG);
-                        toast.show();
-
-                        Log.d(TAG, "Subscribed to door: " + doorID);
-                    }
-                });
+        String prevTopic = sharedPreference.getString("topic", "DEFAULT");
+        if (prevTopic.equals("DEFAULT")) {
+            addTopicToDevice(sDoorID);
+        } else {
+            if (!prevTopic.equals(sDoorID)) {
+                FirebaseMessaging.getInstance().unsubscribeFromTopic(prevTopic);
+                addTopicToDevice(sDoorID);
+            }
+        }
     }
 
     @Override
@@ -154,6 +142,24 @@ public class MainActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
 
+    }
+
+    private void addTopicToDevice(final String sDoorID) {
+        FirebaseMessaging.getInstance().subscribeToTopic(sDoorID)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        SharedPreferences.Editor editor = sharedPreference.edit();
+                        editor.remove("topic");
+                        editor.putString("topic", sDoorID);
+                        editor.commit();
+
+                        toast = Toast.makeText(MainActivity.this, "Subscribed to door: " + doorID, Toast.LENGTH_LONG);
+                        toast.show();
+
+                        Log.d(TAG, "Subscribed to door: " + doorID);
+                    }
+                });
     }
 
     private void goToPeek() {
