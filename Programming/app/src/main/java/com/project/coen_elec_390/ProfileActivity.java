@@ -59,6 +59,7 @@ public class ProfileActivity extends AppCompatActivity {
     private StorageReference storageRef;
     private StorageTask uploadTask;
     private DocumentReference docRef;
+    private DocumentReference docRef1;
 
     private String profileName;
     private String profilePhoneNumber;
@@ -94,6 +95,7 @@ public class ProfileActivity extends AppCompatActivity {
         profileName = sharedPreference.getString("username", "");
         profileDoorID = sharedPreference.getInt("doorID", 0);
         docRef = db.collection("profiles").document(profileName);
+        docRef1 = db.collection("doors").document(String.valueOf(profileDoorID));
         storageRef = FirebaseStorage.getInstance().getReference("door_" + profileDoorID + "/profiles");
 
         getListOfPhoneNumbers();
@@ -295,6 +297,18 @@ public class ProfileActivity extends AppCompatActivity {
                             toast = Toast.makeText(ProfileActivity.this, "Image Updated!", Toast.LENGTH_SHORT);
                             toast.show();
                             Log.d(TAG, "DocumentSnapshot successfully updated!");
+                        }
+                    })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.w(TAG, "Error updating document", e);
+                                }
+                            });
+                    docRef1.update("adminChanged", false).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Log.d(TAG, "adminChanged set to true!");
                         }
                     })
                             .addOnFailureListener(new OnFailureListener() {
