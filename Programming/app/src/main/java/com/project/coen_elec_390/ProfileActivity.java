@@ -305,7 +305,7 @@ public class ProfileActivity extends AppCompatActivity {
                                     Log.w(TAG, "Error updating document", e);
                                 }
                             });
-                    docRef1.update("adminChanged", false).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    docRef1.update("adminChanged", true).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
                             Log.d(TAG, "adminChanged set to true!");
