@@ -61,8 +61,8 @@ public class DisplayHistory extends AppCompatActivity {
                     fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                         @Override
                         public void onSuccess(Uri uri) {
-                            imageInfoList.add(new ImageInfo(getFileName(uri.toString())
-                                    , uri.toString()));
+                            String rawDate = getFileName(uri.toString());
+                            imageInfoList.add(new ImageInfo(getDate(rawDate), rawDate, uri.toString()));
                             Log.d(TAG, uri.toString());
 
                             Collections.sort(imageInfoList, new Comparator<ImageInfo>() {
@@ -110,5 +110,40 @@ public class DisplayHistory extends AppCompatActivity {
             }
         }
         return name;
+    }
+
+    private String getDate(String input) {
+        int counter = 0;
+        String date = "";
+        String temp = "";
+        for (int i = 0; i < input.length(); ++i) {
+            if (input.charAt(i) == '.' || i == input.length()) {
+                if (counter == 0) {
+                    date += temp + " hours ";
+                    temp = "";
+                    ++counter;
+                } else if (counter == 1) {
+                    date += temp + " minutes ";
+                    temp = "";
+                    ++counter;
+                }  else if (counter == 2) {
+                    temp = "";
+                    ++counter;
+                } else if (counter == 3) {
+                    date += temp + "/";
+                    temp = "";
+                    ++counter;
+                } else if (counter == 4) {
+                    date += temp + "/";
+                    temp = "";
+                    ++counter;
+                } else if (counter == 5) {
+                    date += temp;
+                }
+            } else {
+                temp += input.charAt(i);
+            }
+        }
+        return date;
     }
 }

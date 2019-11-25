@@ -3,21 +3,21 @@ package com.project.coen_elec_390;
 import android.util.Log;
 
 public class ImageInfo {
-    
+
     private String imageName;
     private String imageUrl;
     private long dateInSeconds;
 
     final String TAG = "IMAGEINFO";
 
-    public ImageInfo(String name, String url) {
+    public ImageInfo(String name, String rawDate, String url) {
         imageName = name;
         imageUrl = url;
 
-        parseNameToMinutes();
+        parseNameToMinutes(rawDate);
     }
 
-    public void parseNameToMinutes() {
+    public void parseNameToMinutes(String rawDate) {
         String parsed = "";
         long seconds = -1;
         long minutes = -1;
@@ -25,8 +25,8 @@ public class ImageInfo {
         long days = -1;
         long months = -1;
         long years = -1;
-        for (int i = 0; i < imageName.length(); ++i) {
-            if (imageName.charAt(i) == '.') {
+        for (int i = 0; i < rawDate.length(); ++i) {
+            if (rawDate.charAt(i) == '.') {
                 if (hours == -1) {
                     hours = Long.parseLong(parsed);
                     parsed = "";
@@ -47,7 +47,7 @@ public class ImageInfo {
                     parsed = "";
                 }
             } else {
-                parsed += imageName.charAt(i);
+                parsed += rawDate.charAt(i);
             }
         }
 

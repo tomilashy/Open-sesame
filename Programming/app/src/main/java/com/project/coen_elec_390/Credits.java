@@ -31,7 +31,7 @@ public class Credits extends AppCompatActivity {
         alecList.addAll(Arrays.asList(new String[]{ "Alec Kurkdijan","Developer"}));
         irfanList.addAll(Arrays.asList(new String[]{"Irfan Ahmed","Developer" }));
         tomiList.addAll(Arrays.asList(new String[]{"Olasubulumi Jesutomi","Developer"}));
-        cvuList.addAll(Arrays.asList(new String[]{"Cong-Vinh Vu","Developer" }));
+        cvuList.addAll(Arrays.asList(new String[]{"Cong-Vinh Vu","Technical Lead" }));
 //        setting adapter
         shadiAdapter = new ArrayAdapter<String>(this, R.layout.listview2, shadiList);
         alecAdapter = new ArrayAdapter<String>(this, R.layout.listview2, alecList);
