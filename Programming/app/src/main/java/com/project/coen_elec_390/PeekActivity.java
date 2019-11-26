@@ -5,13 +5,10 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-<<<<<<< Updated upstream
 import android.view.View;
 import android.widget.ImageButton;
-=======
 import android.view.MenuItem;
 import android.view.View;
->>>>>>> Stashed changes
 import android.widget.ImageView;
 import android.widget.Toast;
 
