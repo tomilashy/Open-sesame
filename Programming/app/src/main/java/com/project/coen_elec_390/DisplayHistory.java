@@ -4,6 +4,9 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -45,6 +48,10 @@ public class DisplayHistory extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(DisplayHistory.this));
         recyclerView.setHasFixedSize(true);
 
+        //Add back button
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         sharedPreference = getSharedPreferences("ProfilePreference", this.MODE_PRIVATE);
         doorID = sharedPreference.getInt("doorID", 0);
         imageInfoList = new ArrayList<>();
@@ -54,6 +61,37 @@ public class DisplayHistory extends AppCompatActivity {
 
         storageReference = databaseHelper.getStorageReference("door_" + doorID + "/history");
 
+        getPicturesFromStorage();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        getPicturesFromStorage();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_display, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                this.finish(); // When home button in clicked, end the activity and return to MainActivity
+                return true;
+            case R.id.refresh:
+                onStart();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void getPicturesFromStorage() {
         storageReference.listAll().addOnSuccessListener(new OnSuccessListener<ListResult>() {
             @Override
             public void onSuccess(ListResult result) {

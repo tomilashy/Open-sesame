@@ -1,9 +1,11 @@
 package com.project.coen_elec_390;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -32,14 +34,19 @@ public class Credits extends AppCompatActivity {
         irfanList.addAll(Arrays.asList(new String[]{"Irfan Ahmed","Developer" }));
         tomiList.addAll(Arrays.asList(new String[]{"Olasubulumi Jesutomi","Developer"}));
         cvuList.addAll(Arrays.asList(new String[]{"Cong-Vinh Vu","Technical Lead" }));
-//        setting adapter
+
+        //Add back button
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        //setting adapter
         shadiAdapter = new ArrayAdapter<String>(this, R.layout.listview2, shadiList);
         alecAdapter = new ArrayAdapter<String>(this, R.layout.listview2, alecList);
         irfanAdapter = new ArrayAdapter<String>(this, R.layout.listview2, irfanList);
         tomiAdapter = new ArrayAdapter<String>(this, R.layout.listview2, tomiList);
         cvuAdapter = new ArrayAdapter<String>(this, R.layout.listview2, cvuList);
-//        displaying list view
 
+        //displaying list view
         shadiListView = findViewById(R.id.shadiListview);
         shadiListView.setAdapter(shadiAdapter);
         alecListView = findViewById(R.id.alecListview);
@@ -53,5 +60,14 @@ public class Credits extends AppCompatActivity {
 
     }
 
-
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                this.finish(); // When home button in clicked, end the activity and return to MainActivity
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 }

@@ -89,6 +89,10 @@ public class ProfileActivity extends AppCompatActivity {
         saveButton = findViewById(R.id.saveButton);
         circularImageView = findViewById(R.id.circular_view);
 
+        //Add back button
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         databaseHelper = new DatabaseHelper();
         db = databaseHelper.getDatabase();
         sharedPreference = getSharedPreferences("ProfilePreference", this.MODE_PRIVATE);
@@ -137,6 +141,8 @@ public class ProfileActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
+            case android.R.id.home:
+                this.finish(); // When home button in clicked, end the activity and return to MainActivity
             case R.id.editInfo:
                 editMode = 1;
                 phone_text.setVisibility(View.INVISIBLE);

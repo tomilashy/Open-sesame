@@ -3,6 +3,7 @@ package com.project.coen_elec_390;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -39,6 +40,10 @@ public class AdminsActivity extends AppCompatActivity {
         adminsView = findViewById(R.id.adminsView);
         adminsView.setLayoutManager(new LinearLayoutManager(this));
 
+        //Add back button
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         databaseHelper = new DatabaseHelper();
         sharedPreference = this.getSharedPreferences("ProfilePreference",
                 this.MODE_PRIVATE);
@@ -72,5 +77,16 @@ public class AdminsActivity extends AppCompatActivity {
                     }
                 });
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                this.finish(); // When home button in clicked, end the activity and return to MainActivity
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }
