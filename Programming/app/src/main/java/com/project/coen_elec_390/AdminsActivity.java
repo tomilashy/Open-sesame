@@ -88,7 +88,7 @@ public class AdminsActivity extends AppCompatActivity {
                 });
         handler.postDelayed(networkCheck, 0);
     }
-    
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){

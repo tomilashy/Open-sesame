@@ -91,33 +91,64 @@ public class PeekActivity extends AppCompatActivity {
 
         unlock.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                new AlertDialog.Builder(PeekActivity.this)
-                        .setTitle("Unlock Door")
-                        .setMessage("Are you sure you want to unlock the door?")
+                database.collection("doors")
+                        .document(sDoorID)
+                        .update("isDoorConnected", false)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                new AlertDialog.Builder(PeekActivity.this)
+                                        .setTitle("Unlock Door")
+                                        .setMessage("Are you sure you want to unlock the door?")
 
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                database.collection("doors")
-                                        .document(sDoorID)
-                                        .update("lock", false)
-                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void aVoid) {
-                                                Toast.makeText(PeekActivity.this, "Door successfully unlocked!", Toast.LENGTH_LONG).show();
+                                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                database.collection("doors")
+                                                        .document(sDoorID)
+                                                        .get()
+                                                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                                if (task.isSuccessful()) {
+                                                                    // Document found in the offline cache
+                                                                    DocumentSnapshot document = task.getResult();
+                                                                    if (document.getData().get("isDoorConnected").toString().equals("true")) {
+                                                                        database.collection("doors")
+                                                                                .document(sDoorID)
+                                                                                .update("lock", false)
+                                                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                                    @Override
+                                                                                    public void onSuccess(Void aVoid) {
+                                                                                        Toast.makeText(PeekActivity.this, "Door successfully unlocked!", Toast.LENGTH_LONG).show();
 
-                                                Log.d(TAG, "Door successfully unlocked!");
+                                                                                        Log.d(TAG, "Door successfully unlocked!");
+                                                                                    }
+                                                                                }).addOnFailureListener(new OnFailureListener() {
+                                                                            @Override
+                                                                            public void onFailure(@NonNull Exception e) {
+                                                                                Log.w(TAG, "Error updating document ", e);
+                                                                            }
+                                                                        });
+                                                                    } else {
+                                                                        Toast.makeText(PeekActivity.this, "Door is not connected!", Toast.LENGTH_LONG).show();
+                                                                    }
+                                                                } else {
+                                                                    Log.d(TAG, "get failed: ", task.getException());
+                                                                }
+                                                            }
+                                                        });
                                             }
-                                        }).addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Log.w(TAG, "Error updating document ", e);
-                                    }
-                                });
+                                        })
+                                        .setNegativeButton(android.R.string.no, null)
+                                        .setIcon(android.R.drawable.ic_dialog_alert)
+                                        .show();
                             }
-                        })
-                        .setNegativeButton(android.R.string.no, null)
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .show();
+                        }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error updating document ", e);
+                    }
+                });
             }
         });
         handler.postDelayed(networkCheck, 0);
