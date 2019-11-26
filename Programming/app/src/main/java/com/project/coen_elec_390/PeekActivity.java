@@ -2,8 +2,12 @@ package com.project.coen_elec_390;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
@@ -32,6 +36,9 @@ public class PeekActivity extends AppCompatActivity {
     private DatabaseHelper databaseHelper;
     private FirebaseFirestore database;
 
+    private Handler handler;
+    private boolean check;
+
     private int doorID;
 
     private final String TAG = "HISTORY";
@@ -54,6 +61,9 @@ public class PeekActivity extends AppCompatActivity {
         sharedPreference = getSharedPreferences("ProfilePreference", this.MODE_PRIVATE);
         doorID = sharedPreference.getInt("doorID", 0);
         database = databaseHelper.getDatabase();
+
+        handler = new Handler();
+        check = true;
 
         final String sDoorID = Integer.toString(doorID);
 
@@ -110,9 +120,10 @@ public class PeekActivity extends AppCompatActivity {
                         .show();
             }
         });
+        handler.postDelayed(networkCheck, 0);
     }
 
-    @Override
+     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
             case android.R.id.home:
@@ -122,4 +133,22 @@ public class PeekActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    Runnable networkCheck = new Runnable() {
+        @Override
+        public void run() {
+
+            ConnectivityManager connectivityManager
+                    = (ConnectivityManager) getSystemService(PeekActivity.this.CONNECTIVITY_SERVICE);
+            NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+            if (activeNetworkInfo == null || !activeNetworkInfo.isConnected()) {
+                if (check) {
+                    check = false;
+                    startActivity(new Intent(PeekActivity.this, LoginActivity.class));
+                }
+            }
+
+            handler.postDelayed(this, 500);
+        }
+    };
 }

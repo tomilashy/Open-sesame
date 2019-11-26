@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -122,127 +124,138 @@ public class SignUpActivity extends AppCompatActivity {
 
         login.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                startActivity(new Intent(SignUpActivity.this, LoginActivity.class));
+                if (isNetworkAvailable()) {
+                    startActivity(new Intent(SignUpActivity.this, LoginActivity.class));
+                } else {
+                    toast = Toast.makeText(SignUpActivity.this, "No network connection!", Toast.LENGTH_SHORT);
+                    toast.show();
+                }
             }
         });
 
         signUp.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                final String sDoorID = doorID.getText().toString();
-                final String sUsername = username.getText().toString();
-                final String sPhoneNum = phoneNumber.getText().toString();
-                getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                if (!locked) {
-                    if (isValidInputs(sUsername,
-                            sPhoneNum,
-                            password.getText().toString(),
-                            sDoorID)) {
-                        if (!isUsernameTaken(sUsername)) {
-                            if (!isPhoneNumberTaken(sPhoneNum)) {
-                                if (filePath != null) {
-                                    final StorageReference storageReference = databaseHelper.getStorageReference("door_" + sDoorID + "/profiles");
-                                    database.collection("doors")
-                                            .document(sDoorID)
-                                            .update("adminChanged", true)
-                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                public void onSuccess(Void aVoid) {
-                                                    if (filePath != null) {
-                                                        storageReference.child(profile.getUsername() + ".jpg").putFile(filePath)
-                                                                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                                                                    @Override
-                                                                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                                                        Task<Uri> urlTask = taskSnapshot.getStorage().getDownloadUrl();
-                                                                        while (!urlTask.isSuccessful());
-                                                                        Uri downloadUrl = urlTask.getResult();
+                if (isNetworkAvailable()) {
+                    final String sDoorID = doorID.getText().toString();
+                    final String sUsername = username.getText().toString();
+                    final String sPhoneNum = phoneNumber.getText().toString();
+                    getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                    if (!locked) {
+                        if (isValidInputs(sUsername,
+                                sPhoneNum,
+                                password.getText().toString(),
+                                sDoorID)) {
+                            if (!isUsernameTaken(sUsername)) {
+                                if (!isPhoneNumberTaken(sPhoneNum)) {
+                                    if (filePath != null) {
+                                        final StorageReference storageReference = databaseHelper.getStorageReference("door_" + sDoorID + "/profiles");
+                                        database.collection("doors")
+                                                .document(sDoorID)
+                                                .update("adminChanged", true)
+                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    public void onSuccess(Void aVoid) {
+                                                        if (filePath != null) {
+                                                            storageReference.child(profile.getUsername() + ".jpg").putFile(filePath)
+                                                                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                                                        @Override
+                                                                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                                                            Task<Uri> urlTask = taskSnapshot.getStorage().getDownloadUrl();
+                                                                            while (!urlTask.isSuccessful())
+                                                                                ;
+                                                                            Uri downloadUrl = urlTask.getResult();
 
-                                                                        SharedPreferences.Editor editor = sharedPreference.edit();
-                                                                        editor.putString("username", profile.getUsername());
-                                                                        editor.putInt("doorID", profile.getDoorID());
-                                                                        editor.commit();
+                                                                            SharedPreferences.Editor editor = sharedPreference.edit();
+                                                                            editor.putString("username", profile.getUsername());
+                                                                            editor.putInt("doorID", profile.getDoorID());
+                                                                            editor.commit();
 
-                                                                        HashMap<String, Object> user = new HashMap<>();
-                                                                        user.put("username", profile.getUsername());
-                                                                        user.put("phoneNum", profile.getPhoneNumber());
-                                                                        user.put("password", profile.getPassword());
-                                                                        user.put("doorID", profile.getDoorID());
-                                                                        user.put("imageUrl", downloadUrl.toString());
+                                                                            HashMap<String, Object> user = new HashMap<>();
+                                                                            user.put("username", profile.getUsername());
+                                                                            user.put("phoneNum", profile.getPhoneNumber());
+                                                                            user.put("password", profile.getPassword());
+                                                                            user.put("doorID", profile.getDoorID());
+                                                                            user.put("imageUrl", downloadUrl.toString());
 
-                                                                        database.collection("profiles")
-                                                                                .document(profile.getUsername())
-                                                                                .set(user)
-                                                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                                                    @Override
-                                                                                    public void onSuccess(Void aVoid) {
-                                                                                        startActivity(new Intent(SignUpActivity.this, MainActivity.class));
-                                                                                    }
-                                                                                })
-                                                                                .addOnFailureListener(new OnFailureListener() {
-                                                                                    @Override
-                                                                                    public void onFailure(@NonNull Exception e) {
-                                                                                        toast = Toast.makeText(SignUpActivity.this, "Unable to sign up, please try again.", Toast.LENGTH_SHORT);
-                                                                                        toast.show();
-                                                                                        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                                                                                    }
-                                                                                });
-                                                                    }
-                                                                })
-                                                                .addOnFailureListener(new OnFailureListener() {
-                                                                    @Override
-                                                                    public void onFailure(@NonNull Exception e) {
-                                                                        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                                                                    }
-                                                                });
+                                                                            database.collection("profiles")
+                                                                                    .document(profile.getUsername())
+                                                                                    .set(user)
+                                                                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                                        @Override
+                                                                                        public void onSuccess(Void aVoid) {
+                                                                                            startActivity(new Intent(SignUpActivity.this, MainActivity.class));
+                                                                                        }
+                                                                                    })
+                                                                                    .addOnFailureListener(new OnFailureListener() {
+                                                                                        @Override
+                                                                                        public void onFailure(@NonNull Exception e) {
+                                                                                            toast = Toast.makeText(SignUpActivity.this, "Unable to sign up, please try again.", Toast.LENGTH_SHORT);
+                                                                                            toast.show();
+                                                                                            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                                                                                        }
+                                                                                    });
+                                                                        }
+                                                                    })
+                                                                    .addOnFailureListener(new OnFailureListener() {
+                                                                        @Override
+                                                                        public void onFailure(@NonNull Exception e) {
+                                                                            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                                                                        }
+                                                                    });
+                                                        }
                                                     }
+                                                }).addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                ++invalidCount;
+                                                if (invalidCount > 2) {
+                                                    locked = true;
+
+                                                    timeout = ((new Date().getTime()) / 1000) + 3600L;
+                                                    SharedPreferences.Editor editor = sharedPreference.edit();
+                                                    editor.putLong("time", timeout);
+                                                    editor.apply();
+
+                                                    Log.d(TAG, "Timeout: " + timeout);
+
+                                                    toast = Toast.makeText(SignUpActivity.this, "Timeout! Please wait for 1 hour!", Toast.LENGTH_SHORT);
+                                                    ;
+                                                } else {
+                                                    toast = Toast.makeText(SignUpActivity.this, "Wrong door identifier!", Toast.LENGTH_SHORT);
                                                 }
-                                            }).addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            ++invalidCount;
-                                            if (invalidCount > 2) {
-                                                locked = true;
-
-                                                timeout = ((new Date().getTime()) / 1000) + 3600L;
-                                                SharedPreferences.Editor editor = sharedPreference.edit();
-                                                editor.putLong("time", timeout);
-                                                editor.apply();
-
-                                                Log.d(TAG, "Timeout: " + timeout);
-
-                                                toast = Toast.makeText(SignUpActivity.this, "Timeout! Please wait for 1 hour!", Toast.LENGTH_SHORT);;
-                                            } else {
-                                                toast = Toast.makeText(SignUpActivity.this, "Wrong door identifier!", Toast.LENGTH_SHORT);
+                                                toast.show();
+                                                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                                             }
-                                            toast.show();
-                                            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
-                                        }
-                                    });
+                                        });
+                                    } else {
+                                        toast = Toast.makeText(SignUpActivity.this, "A picture has not been chosen!", Toast.LENGTH_SHORT);
+                                        toast.show();
+                                        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                                    }
                                 } else {
-                                    toast = Toast.makeText(SignUpActivity.this, "A picture has not been chosen!", Toast.LENGTH_SHORT);
+                                    toast = Toast.makeText(SignUpActivity.this, "Phone number has been taken!", Toast.LENGTH_SHORT);
                                     toast.show();
                                     getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                                 }
                             } else {
-                                toast = Toast.makeText(SignUpActivity.this, "Phone number has been taken!", Toast.LENGTH_SHORT);
+                                toast = Toast.makeText(SignUpActivity.this, "Username has been taken!", Toast.LENGTH_SHORT);
                                 toast.show();
                                 getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                             }
                         } else {
-                            toast = Toast.makeText(SignUpActivity.this, "Username has been taken!", Toast.LENGTH_SHORT);
-                            toast.show();
                             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                         }
                     } else {
+                        toast = Toast.makeText(SignUpActivity.this, "You have been timed out!", Toast.LENGTH_SHORT);
+                        toast.show();
                         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                     }
                 } else {
-                    toast = Toast.makeText(SignUpActivity.this, "You have been timed out!", Toast.LENGTH_SHORT);
+                    toast = Toast.makeText(SignUpActivity.this, "No network connection!", Toast.LENGTH_SHORT);
                     toast.show();
-                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                 }
             }
         });
-
     }
 
     @Override
@@ -332,5 +345,12 @@ public class SignUpActivity extends AppCompatActivity {
         }
         toast.show();
         return false;
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(this.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }

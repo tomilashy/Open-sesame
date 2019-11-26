@@ -1,8 +1,12 @@
 package com.project.coen_elec_390;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -31,6 +35,9 @@ public class DisplayHistory extends AppCompatActivity {
     private DatabaseHelper databaseHelper;
     private StorageReference storageReference;
 
+    private Handler handler;
+    private boolean check;
+
     private ArrayList<ImageInfo> imageInfoList;
     private int doorID;
 
@@ -55,6 +62,9 @@ public class DisplayHistory extends AppCompatActivity {
         sharedPreference = getSharedPreferences("ProfilePreference", this.MODE_PRIVATE);
         doorID = sharedPreference.getInt("doorID", 0);
         imageInfoList = new ArrayList<>();
+
+        handler = new Handler();
+        check = true;
 
         adapter = new ImageAdapter(DisplayHistory.this, imageInfoList);
         recyclerView.setAdapter(adapter);
@@ -127,7 +137,26 @@ public class DisplayHistory extends AppCompatActivity {
                 Log.d(TAG, "listALL() failed!");
             }
         });
+        handler.postDelayed(networkCheck, 0);
     }
+
+    Runnable networkCheck = new Runnable() {
+        @Override
+        public void run() {
+
+            ConnectivityManager connectivityManager
+                    = (ConnectivityManager) getSystemService(DisplayHistory.this.CONNECTIVITY_SERVICE);
+            NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+            if (activeNetworkInfo == null || !activeNetworkInfo.isConnected()) {
+                if (check) {
+                    check = false;
+                    startActivity(new Intent(DisplayHistory.this, LoginActivity.class));
+                }
+            }
+
+            handler.postDelayed(this, 500);
+        }
+    };
 
     private String getFileName(String url) {
         int counter = 0;

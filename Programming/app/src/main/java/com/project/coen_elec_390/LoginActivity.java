@@ -2,7 +2,10 @@ package com.project.coen_elec_390;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -19,7 +22,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.messaging.FirebaseMessaging;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -52,60 +54,70 @@ public class LoginActivity extends AppCompatActivity {
 
         login.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                final String sUsername = username.getText().toString();
-                final String sPassword = password.getText().toString();
-                getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-                        WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                if (isNetworkAvailable()) {
+                    final String sUsername = username.getText().toString();
+                    final String sPassword = password.getText().toString();
+                    getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
 
-                if (isValidInputs(sUsername, sPassword)) {
-                    FirebaseFirestore database = databaseHelper.getDatabase();
-                    database.collection("profiles").document(sUsername).get()
-                            .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        DocumentSnapshot document = task.getResult();
-                                        if (document.exists()) {
+                    if (isValidInputs(sUsername, sPassword)) {
+                        FirebaseFirestore database = databaseHelper.getDatabase();
+                        database.collection("profiles").document(sUsername).get()
+                                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            DocumentSnapshot document = task.getResult();
+                                            if (document.exists()) {
 
-                                            if (sPassword.equals(document.getData().get("password").toString())) {
-                                                int doorID =  Integer.parseInt(document.getData().get("doorID").toString());
-                                                Log.d(TAG, sUsername);
-                                                Log.d(TAG, Integer.toString(doorID));
+                                                if (sPassword.equals(document.getData().get("password").toString())) {
+                                                    int doorID = Integer.parseInt(document.getData().get("doorID").toString());
+                                                    Log.d(TAG, sUsername);
+                                                    Log.d(TAG, Integer.toString(doorID));
 
-                                                SharedPreferences.Editor editor = sharedPreference.edit();
-                                                editor.putString("username", sUsername);
-                                                editor.putInt("doorID", doorID);
-                                                editor.commit();
+                                                    SharedPreferences.Editor editor = sharedPreference.edit();
+                                                    editor.putString("username", sUsername);
+                                                    editor.putInt("doorID", doorID);
+                                                    editor.commit();
 
-                                                startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                                                finish();
+                                                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                                                    finish();
+                                                } else {
+                                                    toast = Toast.makeText(LoginActivity.this, "Wrong password or username!", Toast.LENGTH_SHORT);
+                                                    toast.show();
+
+                                                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                                                }
                                             } else {
-                                                toast = Toast.makeText(LoginActivity.this, "Wrong password or username!", Toast.LENGTH_SHORT);
+                                                toast = Toast.makeText(LoginActivity.this, "User does not exist!", Toast.LENGTH_SHORT);
                                                 toast.show();
 
                                                 getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                                             }
                                         } else {
-                                            toast = Toast.makeText(LoginActivity.this, "User does not exist!", Toast.LENGTH_SHORT);
-                                            toast.show();
+                                            Log.d(TAG, "get() failed with ", task.getException());
 
                                             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                                         }
-                                    } else {
-                                        Log.d(TAG, "get() failed with ", task.getException());
-
-                                        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                                     }
-                                }
-                            });
+                                });
+                    } else {
+                        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                    }
                 } else {
-                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                    toast = Toast.makeText(LoginActivity.this, "No network connection!", Toast.LENGTH_SHORT);
+                    toast.show();
                 }
             }
         });
 
         signUp.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                startActivity(new Intent(LoginActivity.this, SignUpActivity.class));
+                if (isNetworkAvailable()) {
+                    startActivity(new Intent(LoginActivity.this, SignUpActivity.class));
+                } else {
+                    toast = Toast.makeText(LoginActivity.this, "No network connection!", Toast.LENGTH_SHORT);
+                    toast.show();
+                }
             }
         });
 
@@ -135,5 +147,12 @@ public class LoginActivity extends AppCompatActivity {
         }
         toast.show();
         return false;
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(this.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }

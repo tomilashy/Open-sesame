@@ -2,8 +2,11 @@ package com.project.coen_elec_390;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Patterns;
@@ -67,6 +70,9 @@ public class ProfileActivity extends AppCompatActivity {
     private int profileDoorID;
     private List<String> phoneNumbers;
 
+    private Handler handler;
+    private boolean check;
+
     private final String TAG = "ProfileActivity";
     private static final int PICK_IMAGE_REQUEST = 1;
 
@@ -105,6 +111,9 @@ public class ProfileActivity extends AppCompatActivity {
         getListOfPhoneNumbers();
         getDataFromFirestore();
 
+        handler = new Handler();
+        check = true;
+
         saveButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 if(editMode == 1) {
@@ -117,7 +126,26 @@ public class ProfileActivity extends AppCompatActivity {
                 }
             }
         });
+        handler.postDelayed(networkCheck, 0);
     }
+
+    Runnable networkCheck = new Runnable() {
+        @Override
+        public void run() {
+
+            ConnectivityManager connectivityManager
+                    = (ConnectivityManager) getSystemService(ProfileActivity.this.CONNECTIVITY_SERVICE);
+            NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+            if (activeNetworkInfo == null || !activeNetworkInfo.isConnected()) {
+                if (check) {
+                    check = false;
+                    startActivity(new Intent(ProfileActivity.this, LoginActivity.class));
+                }
+            }
+
+            handler.postDelayed(this, 500);
+        }
+    };
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

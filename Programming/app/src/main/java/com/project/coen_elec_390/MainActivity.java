@@ -4,7 +4,10 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -36,6 +39,9 @@ public class MainActivity extends AppCompatActivity {
     private SharedPreferences sharedPreference;
     private DatabaseHelper databaseHelper;
 
+    private Handler handler;
+    private boolean check;
+
     private int doorID;
 
     private String TAG = "MAIN";
@@ -51,6 +57,9 @@ public class MainActivity extends AppCompatActivity {
         admins = findViewById(R.id.admins);
         history = findViewById(R.id.history);
         logout = findViewById(R.id.logout);
+
+        handler = new Handler();
+        check = true;
 
         databaseHelper = new DatabaseHelper();
         final FirebaseFirestore database = databaseHelper.getDatabase();
@@ -121,7 +130,26 @@ public class MainActivity extends AppCompatActivity {
                 addTopicToDevice(sDoorID);
             }
         }
+        handler.postDelayed(networkCheck, 0);
     }
+
+    Runnable networkCheck = new Runnable() {
+        @Override
+        public void run() {
+
+            ConnectivityManager connectivityManager
+                    = (ConnectivityManager) getSystemService(MainActivity.this.CONNECTIVITY_SERVICE);
+            NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+            if (activeNetworkInfo == null || !activeNetworkInfo.isConnected()) {
+                if (check) {
+                    check = false;
+                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                }
+            }
+
+            handler.postDelayed(this, 500);
+        }
+    };
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

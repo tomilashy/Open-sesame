@@ -1,7 +1,11 @@
 package com.project.coen_elec_390;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.MenuItem;
 
@@ -26,6 +30,9 @@ public class AdminsActivity extends AppCompatActivity {
     private DatabaseHelper databaseHelper;
     private SharedPreferences sharedPreference;
 
+    private Handler handler;
+    private boolean check;
+
     private ArrayList<Profile> profiles;
 
     private final String TAG = "ADMINS";
@@ -49,6 +56,9 @@ public class AdminsActivity extends AppCompatActivity {
                 this.MODE_PRIVATE);
 
         profiles = new ArrayList<>();
+
+        handler = new Handler();
+        check = true;
 
         final FirebaseFirestore database = databaseHelper.getDatabase();
         final int doorID = sharedPreference.getInt("doorID", 0);
@@ -76,9 +86,9 @@ public class AdminsActivity extends AppCompatActivity {
                         }
                     }
                 });
-
+        handler.postDelayed(networkCheck, 0);
     }
-
+    
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
@@ -89,4 +99,22 @@ public class AdminsActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    Runnable networkCheck = new Runnable() {
+        @Override
+        public void run() {
+
+            ConnectivityManager connectivityManager
+                    = (ConnectivityManager) getSystemService(AdminsActivity.this.CONNECTIVITY_SERVICE);
+            NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+            if (activeNetworkInfo == null || !activeNetworkInfo.isConnected()) {
+                if (check) {
+                    check = false;
+                    startActivity(new Intent(AdminsActivity.this, LoginActivity.class));
+                }
+            }
+
+            handler.postDelayed(this, 500);
+        }
+    };
 }
