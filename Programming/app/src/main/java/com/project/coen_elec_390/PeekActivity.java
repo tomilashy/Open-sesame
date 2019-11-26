@@ -1,14 +1,21 @@
 package com.project.coen_elec_390;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -17,6 +24,7 @@ import com.squareup.picasso.Picasso;
 public class PeekActivity extends AppCompatActivity {
 
     private ImageView peekImage;
+    private ImageButton unlock;
 
     private SharedPreferences sharedPreference;
     private DatabaseHelper databaseHelper;
@@ -33,6 +41,7 @@ public class PeekActivity extends AppCompatActivity {
         setTitle("Peek Door");
 
         peekImage = findViewById(R.id.peekImage);
+        unlock = findViewById(R.id.unlockDoor);
 
         databaseHelper = new DatabaseHelper();
 
@@ -40,8 +49,10 @@ public class PeekActivity extends AppCompatActivity {
         doorID = sharedPreference.getInt("doorID", 0);
         database = databaseHelper.getDatabase();
 
+        final String sDoorID = Integer.toString(doorID);
+
         database.collection("doors")
-                .document(Integer.toString(doorID))
+                .document(sDoorID)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
@@ -61,5 +72,37 @@ public class PeekActivity extends AppCompatActivity {
                         }
                     }
                 });
+
+        unlock.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                new AlertDialog.Builder(PeekActivity.this)
+                        .setTitle("Unlock Door")
+                        .setMessage("Are you sure you want to unlock the door?")
+
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                database.collection("doors")
+                                        .document(sDoorID)
+                                        .update("lock", false)
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                Toast.makeText(PeekActivity.this, "Door successfully unlocked!", Toast.LENGTH_LONG).show();
+
+                                                Log.d(TAG, "Door successfully unlocked!");
+                                            }
+                                        }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.w(TAG, "Error updating document ", e);
+                                    }
+                                });
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, null)
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
+            }
+        });
     }
 }
