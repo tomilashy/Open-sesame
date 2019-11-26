@@ -25,6 +25,7 @@
         android:layout_height="70dp"
         android:background="@drawable/smart_door_bacground_1_rectangle_67"
         android:text="Unlock Door"
+        android:paddingBottom="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"

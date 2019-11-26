@@ -9,10 +9,10 @@ import google.cloud
 #  SETTING VARIABLES
 ###################################################################
 
-doorPin = 12
+doorPin = 37
 GPIO.setwarnings(False) # Ignore warning for now
 GPIO.setmode(GPIO.BOARD) # Use physical pin numbering, BCM for other numbering
-GPIO.setup(doorPin, GPIO.OUT, initial=GPIO.LOW) # Set pin 8 to be an output pin and set initial value to low (off)
+GPIO.setup(doorPin, GPIO.OUT, initial=GPIO.HIGH) # Set pin 37 to be an output pin and set initial value to High(on)
 
 cred={
   "type": "service_account",
@@ -26,33 +26,38 @@ cred={
   "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
   "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-qgtwz%40coen-elec-390-d0535.iam.gserviceaccount.com"
 }
-print("wifi connected")
+
 #firebase Admin library
 app=firebase_admin.initialize_app(credentials.Certificate(cred),{'storageBucket':"coen-elec-390-d0535.appspot.com"})
 store =firestore.client()
+print("wifi connected")
 doc_ref = store.collection(u'doors').document(u'6768')
 doc_ref.update({
     u'lock': True})
 doc_refs = store.collection(u'doors')
 while True:
-      try:
-        docs = doc_refs.stream()
-        for doc in docs:
-          if str(doc.id) == "6768":
-            dict = doc.to_dict()
-            # print(dict)
-            if dict["lock"]== False:
-              # print(u'Doc Data:{} {}'.format(doc.to_dict(), doc.id))
-              #unlock door
-              print("door unlocked")
-              sleep(5)
-              doc_ref.update({u'lock': True})
-              #lock door
-              print("door locked")
-            else:
-              #lock door
-              print("door locked")
-              pass
-
-      except google.cloud.exceptions.NotFound:
-        print(u'Missing data')
+    doc_ref.update({u'isDoorConnected': True})
+    try:
+      docs = doc_refs.stream()
+      for doc in docs:
+        if str(doc.id) == "6768":
+          dict = doc.to_dict()
+          # print(dict)
+          if dict["lock"]== False:
+            # print(u'Doc Data:{} {}'.format(doc.to_dict(), doc.id))
+            #unlock door
+            print("door unlocked")
+            GPIO.output(doorPin,GPIO.LOW)
+            sleep(5)
+            doc_ref.update({u'lock': True})
+            #lock door
+            GPIO.output(doorPin,GPIO.HIGH)
+            print("door locked")
+          else:
+            #lock door
+            GPIO.output(doorPin,GPIO.HIGH)
+            print("door locked")
+            pass
+    
+    except google.cloud.exceptions.NotFound:
+      print(u'Missing data')

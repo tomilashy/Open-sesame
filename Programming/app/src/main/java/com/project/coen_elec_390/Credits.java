@@ -29,11 +29,11 @@ public class Credits extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_credits);
         setTitle("Credits");
-        shadiList.addAll(Arrays.asList(new String[]{"Shadi Makdissi","Project Leader"}));
-        alecList.addAll(Arrays.asList(new String[]{ "Alec Kurkdijan","Developer"}));
-        irfanList.addAll(Arrays.asList(new String[]{"Irfan Ahmed","Developer" }));
-        tomiList.addAll(Arrays.asList(new String[]{"Olasubulumi Jesutomi","Developer"}));
-        cvuList.addAll(Arrays.asList(new String[]{"Cong-Vinh Vu","Technical Lead" }));
+        shadiList.addAll(Arrays.asList(new String[]{"Shadi Makdissi","smakdissi@gmail.com"}));
+        alecList.addAll(Arrays.asList(new String[]{ "Alec Kurkdijan","Aleckurk@gmail.com"}));
+        irfanList.addAll(Arrays.asList(new String[]{"Irfan Ahmed","irfan298@gmail.com" }));
+        tomiList.addAll(Arrays.asList(new String[]{"Olasubulumi Jesutomi","tomilashy@gmail.com"}));
+        cvuList.addAll(Arrays.asList(new String[]{"Cong-Vinh Vu","cvu@gmail.com" }));
 
         //Add back button
         getSupportActionBar().setDisplayShowHomeEnabled(true);

@@ -32,7 +32,7 @@ def sendPicHistory(imagePath, name):
     print("sending pic started")
     # posting to firebase storage
     storage = firebase.storage()
-    # as admin
+    # as admins
     storage.child("door_6768/history/" + name + ".jpg").put(imagePath)
 
 
@@ -56,7 +56,7 @@ def downloadAdminPics():  # store admin pics to a certain folder for face recogn
         if "door_6768/profiles/" in name:  # '''and ("png" or "jpg")'''
             #print(name)
             blob_img = bucket_1.blob(name)
-            X_url = blob_img.generate_signed_url(timedelta(seconds=300), method='GET')
+            X_url = blob_img.public_url
             # print(X_url)
             image_urls.append(X_url)
             namelist.append(name.split("door_6768/profiles/")[1])
@@ -80,7 +80,6 @@ def downloadAdminPics():  # store admin pics to a certain folder for face recogn
 #  CAMERA
 ####################################
 def camera():
-
     global bucket_1
     store = firestore.client()
     doc_ref = store.collection(u'doors').document(u'6768')
@@ -107,16 +106,10 @@ def camera():
                 u'lastImageUrl': str(imgUrl)})
 
     print("camera stopped")
-    downloadAdminPics()
-
-
-#     facefaceRecognition(name)#call face detection
-
-
 ###################################################################
 #  SETTING VARIABLES
 ###################################################################
-sensorPin = 37
+sensorPin = 38
 doorPin = 12
 GPIO.setwarnings(False)  # Ignore warning for now
 GPIO.setmode(GPIO.BOARD)  # Use physical pin numbering, BCM for other numbering
@@ -152,8 +145,12 @@ user = auth.sign_in_with_email_and_password("tomilashy@gmail.com", "Elec_Coen_39
 app = firebase_admin.initialize_app(credentials.Certificate(cred), {'storageBucket': firebase.storage_bucket})
 bucket_1 = admin_storage.bucket(app=app)
 RFID_tags = {"225486185361": "tomi"}
+store =firestore.client()
+doc_refs = store.collection(u'doors')
+doc_ref = store.collection(u'doors').document(u'6768')
 test = True
 print("Wifi connected")
+
 ##pir = MotionSensor(2)
 # 304578982797 - BLUE TAG
 # 225486185361 - WHITE TAG
@@ -168,8 +165,20 @@ while test:  # Run forever
         print("Motion Detected")
 
         camera()
+        try:
+            docs = doc_refs.stream()
+            for doc in docs:
+                
+                if str(doc.id) == "6768":
+                    
+                    dict = doc.to_dict()
+                    #print(dict)
+                    doc_ref.update({u'motionDetected': True})
+        except Exception as e:
+            print(e)
+        sleep(10)
         print("Motion ended")
-        # test=False
+                # test=False
     else:
         # print("Motion Stopped")
         pass
