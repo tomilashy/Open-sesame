@@ -101,7 +101,8 @@ def camera():
         if dt_string in name:  # '''and ("png" or "jpg")'''
             #print(name)
             blob_img = bucket_1.blob(name)
-            imgUrl = blob_img.generate_signed_url(timedelta(seconds=300), method='GET')
+#             imgUrl = blob_img.generate_signed_url(timedelta(seconds=300), method='GET')
+            imgUrl = blob_img.public_url()
             doc_ref.update({
                 u'lastImageUrl': str(imgUrl)})
 

@@ -20,6 +20,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -49,6 +50,7 @@ public class LoginActivity extends AppCompatActivity {
         signUp = findViewById(R.id.lSignUp);
         forgotPassword = findViewById(R.id.forgot_pass);
 
+        FirebaseApp.initializeApp(this);
         databaseHelper = new DatabaseHelper();
         sharedPreference = getSharedPreferences("ProfilePreference", this.MODE_PRIVATE);
 

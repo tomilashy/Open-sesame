@@ -90,7 +90,7 @@
             <ListView
                 android:id="@+id/alecListview"
                 android:layout_width="match_parent"
-                android:layout_height="30dp"
+                android:layout_height="54dp"
                 android:scrollbars="vertical"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -137,7 +137,7 @@
             <ListView
                 android:id="@+id/irfanListview"
                 android:layout_width="match_parent"
-                android:layout_height="30dp"
+                android:layout_height="54dp"
                 android:scrollbars="vertical"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -184,7 +184,7 @@
             <ListView
                 android:id="@+id/tomiListview"
                 android:layout_width="match_parent"
-                android:layout_height="54dp"
+                android:layout_height="56dp"
                 android:scrollbars="vertical"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

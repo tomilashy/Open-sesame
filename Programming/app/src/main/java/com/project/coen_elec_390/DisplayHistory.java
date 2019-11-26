@@ -75,26 +75,10 @@ public class DisplayHistory extends AppCompatActivity {
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        getPicturesFromStorage();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_display, menu);
-        return true;
-    }
-
-    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
             case android.R.id.home:
                 this.finish(); // When home button in clicked, end the activity and return to MainActivity
-                return true;
-            case R.id.refresh:
-                onStart();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
