@@ -5,8 +5,13 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+<<<<<<< Updated upstream
 import android.view.View;
 import android.widget.ImageButton;
+=======
+import android.view.MenuItem;
+import android.view.View;
+>>>>>>> Stashed changes
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -44,6 +49,10 @@ public class PeekActivity extends AppCompatActivity {
         unlock = findViewById(R.id.unlockDoor);
 
         databaseHelper = new DatabaseHelper();
+
+        //Add back button
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         sharedPreference = getSharedPreferences("ProfilePreference", this.MODE_PRIVATE);
         doorID = sharedPreference.getInt("doorID", 0);
@@ -104,5 +113,16 @@ public class PeekActivity extends AppCompatActivity {
                         .show();
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                this.finish(); // When home button in clicked, end the activity and return to MainActivity
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }
