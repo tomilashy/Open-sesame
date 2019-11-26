@@ -1,9 +1,12 @@
 package com.project.coen_elec_390;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.View;
@@ -81,6 +84,13 @@ public class ForgotPassActivity extends AppCompatActivity {
                                             String sms = usernameInput + ": Your password is " + password;
                                             SmsManager smsManager = SmsManager.getDefault();
                                             smsManager.sendTextMessage(phoneNum, null, sms, null, null);
+                                            Handler h = new Handler(){
+                                                @Override
+                                                public void handleMessage(Message msg) {
+                                                    goToSignIn();
+                                                }
+                                            };
+                                            h.sendEmptyMessageDelayed(0, 2500); // 1500 is time in miliseconds
                                             Toast.makeText(ForgotPassActivity.this, "SMS sent successfully!", Toast.LENGTH_SHORT).show();
                                         }else {
                                             Toast.makeText(ForgotPassActivity.this, "Permission denied", Toast.LENGTH_SHORT).show();
@@ -156,5 +166,9 @@ public class ForgotPassActivity extends AppCompatActivity {
             }
         }
         return false;
+    }
+
+    private void goToSignIn() {
+        startActivity(new Intent(this, LoginActivity.class));
     }
 }

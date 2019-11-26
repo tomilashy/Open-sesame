@@ -47,7 +47,7 @@ public class PeekActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_peek);
-        setTitle("Peek Door");
+        setTitle("Check Door");
 
         peekImage = findViewById(R.id.peekImage);
         unlock = findViewById(R.id.unlockDoor);
