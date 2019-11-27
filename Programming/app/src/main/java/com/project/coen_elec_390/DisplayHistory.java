@@ -8,8 +8,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
@@ -36,7 +34,6 @@ public class DisplayHistory extends AppCompatActivity {
     private StorageReference storageReference;
 
     private Handler handler;
-    private boolean check;
 
     private ArrayList<ImageInfo> imageInfoList;
     private int doorID;
@@ -64,7 +61,6 @@ public class DisplayHistory extends AppCompatActivity {
         imageInfoList = new ArrayList<>();
 
         handler = new Handler();
-        check = true;
 
         adapter = new ImageAdapter(DisplayHistory.this, imageInfoList);
         recyclerView.setAdapter(adapter);
@@ -121,6 +117,7 @@ public class DisplayHistory extends AppCompatActivity {
                 Log.d(TAG, "listALL() failed!");
             }
         });
+
         handler.postDelayed(networkCheck, 0);
     }
 
@@ -132,15 +129,18 @@ public class DisplayHistory extends AppCompatActivity {
                     = (ConnectivityManager) getSystemService(DisplayHistory.this.CONNECTIVITY_SERVICE);
             NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
             if (activeNetworkInfo == null || !activeNetworkInfo.isConnected()) {
-                if (check) {
-                    check = false;
                     startActivity(new Intent(DisplayHistory.this, LoginActivity.class));
-                }
+            } else {
+                handler.postDelayed(this, 1000);
             }
-
-            handler.postDelayed(this, 500);
         }
     };
+
+    @Override
+    protected void onStop() {
+        handler.removeCallbacksAndMessages(null);
+        super.onStop();
+    }
 
     private String getFileName(String url) {
         int counter = 0;

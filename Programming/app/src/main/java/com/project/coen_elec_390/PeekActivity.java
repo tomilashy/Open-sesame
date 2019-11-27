@@ -12,7 +12,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -37,7 +36,6 @@ public class PeekActivity extends AppCompatActivity {
     private FirebaseFirestore database;
 
     private Handler handler;
-    private boolean check;
 
     private int doorID;
 
@@ -63,7 +61,6 @@ public class PeekActivity extends AppCompatActivity {
         database = databaseHelper.getDatabase();
 
         handler = new Handler();
-        check = true;
 
         final String sDoorID = Integer.toString(doorID);
 
@@ -151,18 +148,8 @@ public class PeekActivity extends AppCompatActivity {
                 });
             }
         });
-        handler.postDelayed(networkCheck, 0);
-    }
 
-     @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()){
-            case android.R.id.home:
-                this.finish(); // When home button in clicked, end the activity and return to MainActivity
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
+        handler.postDelayed(networkCheck, 0);
     }
 
     Runnable networkCheck = new Runnable() {
@@ -173,13 +160,27 @@ public class PeekActivity extends AppCompatActivity {
                     = (ConnectivityManager) getSystemService(PeekActivity.this.CONNECTIVITY_SERVICE);
             NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
             if (activeNetworkInfo == null || !activeNetworkInfo.isConnected()) {
-                if (check) {
-                    check = false;
                     startActivity(new Intent(PeekActivity.this, LoginActivity.class));
-                }
+            } else {
+                handler.postDelayed(this, 1000);
             }
-
-            handler.postDelayed(this, 500);
         }
     };
+
+    @Override
+    protected void onStop() {
+        handler.removeCallbacksAndMessages(null);
+        super.onStop();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                this.finish(); // When home button in clicked, end the activity and return to MainActivity
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 }

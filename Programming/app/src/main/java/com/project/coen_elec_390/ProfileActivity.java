@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
-import android.util.Patterns;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -71,7 +70,6 @@ public class ProfileActivity extends AppCompatActivity {
     private List<String> phoneNumbers;
 
     private Handler handler;
-    private boolean check;
 
     private final String TAG = "ProfileActivity";
     private static final int PICK_IMAGE_REQUEST = 1;
@@ -112,7 +110,6 @@ public class ProfileActivity extends AppCompatActivity {
         getDataFromFirestore();
 
         handler = new Handler();
-        check = true;
 
         saveButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -126,6 +123,7 @@ public class ProfileActivity extends AppCompatActivity {
                 }
             }
         });
+
         handler.postDelayed(networkCheck, 0);
     }
 
@@ -137,15 +135,18 @@ public class ProfileActivity extends AppCompatActivity {
                     = (ConnectivityManager) getSystemService(ProfileActivity.this.CONNECTIVITY_SERVICE);
             NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
             if (activeNetworkInfo == null || !activeNetworkInfo.isConnected()) {
-                if (check) {
-                    check = false;
                     startActivity(new Intent(ProfileActivity.this, LoginActivity.class));
-                }
+            } else {
+                handler.postDelayed(this, 1000);
             }
-
-            handler.postDelayed(this, 500);
         }
     };
+
+    @Override
+    protected void onStop() {
+        handler.removeCallbacksAndMessages(null);
+        super.onStop();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

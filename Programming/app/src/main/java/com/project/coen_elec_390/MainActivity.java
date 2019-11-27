@@ -41,7 +41,6 @@ public class MainActivity extends AppCompatActivity {
     private DatabaseHelper databaseHelper;
 
     private Handler handler;
-    private boolean check;
 
     private int doorID;
 
@@ -60,7 +59,6 @@ public class MainActivity extends AppCompatActivity {
         logout = findViewById(R.id.logout);
 
         handler = new Handler();
-        check = true;
 
         databaseHelper = new DatabaseHelper();
         final FirebaseFirestore database = databaseHelper.getDatabase();
@@ -163,6 +161,7 @@ public class MainActivity extends AppCompatActivity {
                 addTopicToDevice(sDoorID);
             }
         }
+
         handler.postDelayed(networkCheck, 0);
     }
 
@@ -174,15 +173,18 @@ public class MainActivity extends AppCompatActivity {
                     = (ConnectivityManager) getSystemService(MainActivity.this.CONNECTIVITY_SERVICE);
             NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
             if (activeNetworkInfo == null || !activeNetworkInfo.isConnected()) {
-                if (check) {
-                    check = false;
                     startActivity(new Intent(MainActivity.this, LoginActivity.class));
-                }
+            } else {
+                handler.postDelayed(this, 1000);
             }
-
-            handler.postDelayed(this, 500);
         }
     };
+
+    @Override
+    protected void onStop() {
+        handler.removeCallbacksAndMessages(null);
+        super.onStop();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
