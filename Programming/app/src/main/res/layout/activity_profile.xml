@@ -59,7 +59,7 @@
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="Password"
+        android:hint="Change password here!"
         android:focusable="false"
         android:visibility="invisible"
         android:inputType="textPassword"
@@ -90,6 +90,7 @@
     <TextView
         style="@style/MediumText"
         android:id="@+id/text_password"
+        android:text="Password"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:ems="10"

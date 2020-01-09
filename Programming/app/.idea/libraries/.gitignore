@@ -42,3 +42,4 @@
 /Gradle__org_hamcrest_hamcrest_core_1_3_jar.xml
 /Gradle__org_hamcrest_hamcrest_integration_1_3_jar.xml
 /Gradle__org_hamcrest_hamcrest_library_1_3_jar.xml
+*.xml

@@ -32,6 +32,9 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -161,8 +164,7 @@ public class SignUpActivity extends AppCompatActivity {
                                                                         @Override
                                                                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                                                                             Task<Uri> urlTask = taskSnapshot.getStorage().getDownloadUrl();
-                                                                            while (!urlTask.isSuccessful())
-                                                                                ;
+                                                                            while (!urlTask.isSuccessful());
                                                                             Uri downloadUrl = urlTask.getResult();
 
                                                                             SharedPreferences.Editor editor = sharedPreference.edit();
@@ -173,7 +175,7 @@ public class SignUpActivity extends AppCompatActivity {
                                                                             HashMap<String, Object> user = new HashMap<>();
                                                                             user.put("username", profile.getUsername());
                                                                             user.put("phoneNum", profile.getPhoneNumber());
-                                                                            user.put("password", profile.getPassword());
+                                                                            user.put("password", get_SHA_512_SecurePassword(profile.getPassword(), "yourmom"));
                                                                             user.put("doorID", profile.getDoorID());
                                                                             user.put("imageUrl", downloadUrl.toString());
 
@@ -352,5 +354,22 @@ public class SignUpActivity extends AppCompatActivity {
                 = (ConnectivityManager) getSystemService(this.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    public String get_SHA_512_SecurePassword(String passwordToHash, String salt){
+        String generatedPassword = null;
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-512");
+            md.update(salt.getBytes(StandardCharsets.UTF_8));
+            byte[] bytes = md.digest(passwordToHash.getBytes(StandardCharsets.UTF_8));
+            StringBuilder sb = new StringBuilder();
+            for(int i=0; i< bytes.length ;i++){
+                sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
+            }
+            generatedPassword = sb.toString();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return generatedPassword;
     }
 }

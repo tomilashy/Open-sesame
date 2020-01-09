@@ -37,6 +37,9 @@ import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -209,11 +212,13 @@ public class ProfileActivity extends AppCompatActivity {
 
     private void updateProfileInfo() {
         final String editPhoneNumber = phoneNumber.getText().toString();
-        final String editPassword =  password.getText().toString();
+        final String editPassword = password.getText().toString();
 
         if (isValidInputs(editPhoneNumber, editPassword)) {
             if (!isPhoneNumberTaken(editPhoneNumber) || editPhoneNumber.equals(profilePhoneNumber)) {
-                docRef.update("phoneNum", editPhoneNumber, "password", password.getText().toString()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                docRef.update("phoneNum", editPhoneNumber,
+                        "password", get_SHA_512_SecurePassword(editPassword, "yourmom"))
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
                         saveButton.setVisibility(View.INVISIBLE);
@@ -221,7 +226,6 @@ public class ProfileActivity extends AppCompatActivity {
                         password.setFocusable(false);
 
                         phone_text.setText(editPhoneNumber);
-                        password_text.setText(editPassword);
 
                         phoneNumber.setVisibility(View.INVISIBLE);
                         password.setVisibility(View.INVISIBLE);
@@ -258,9 +262,7 @@ public class ProfileActivity extends AppCompatActivity {
                     if (document.exists()) {
                         username.setText(profileName);
                         phoneNumber.setText(document.getData().get("phoneNum").toString());
-                        password.setText(document.getData().get("password").toString());
                         phone_text.setText(document.getData().get("phoneNum").toString());
-                        password_text.setText(document.getData().get("password").toString());
                         doorID.setText(document.getData().get("doorID").toString());
                         profilePhoneNumber = document.getData().get("phoneNum").toString();
                         profileUrl = document.getData().get("imageUrl").toString();
@@ -400,12 +402,29 @@ public class ProfileActivity extends AppCompatActivity {
                     toast = Toast.makeText(this, "Length of password should be between 6 and 16!", Toast.LENGTH_SHORT);
                 }
             } else {
-                toast = Toast.makeText(this, "Password contains invalid characters!", Toast.LENGTH_SHORT);
+                toast = Toast.makeText(this, "Password contains invalid characters or is empty!", Toast.LENGTH_SHORT);
             }
         } else {
             toast = Toast.makeText(this, "Invalid phone number!", Toast.LENGTH_SHORT);
         }
         toast.show();
         return false;
+    }
+
+    public String get_SHA_512_SecurePassword(String passwordToHash, String salt){
+        String generatedPassword = null;
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-512");
+            md.update(salt.getBytes(StandardCharsets.UTF_8));
+            byte[] bytes = md.digest(passwordToHash.getBytes(StandardCharsets.UTF_8));
+            StringBuilder sb = new StringBuilder();
+            for(int i=0; i< bytes.length ;i++){
+                sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
+            }
+            generatedPassword = sb.toString();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return generatedPassword;
     }
 }
