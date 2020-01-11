@@ -200,10 +200,10 @@ public class LoginActivity extends AppCompatActivity {
     private boolean isValidInputs(String username, String password) {
         if (!username.isEmpty() && !password.isEmpty()) {
             if (username.length() < 16) {
-                if (password.length() > 5 && password.length() < 16) {
+                if (password.length() > 5) {
                     return true;
                 } else {
-                    toast = Toast.makeText(this, "Length of the password should be between 6 and 16 characters!", Toast.LENGTH_SHORT);
+                    toast = Toast.makeText(this, "Password length must be at least 6 characters!", Toast.LENGTH_SHORT);
                 }
             } else {
                 toast = Toast.makeText(this, "Maximum length for user names is 16 characters!", Toast.LENGTH_SHORT);
