@@ -20,6 +20,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -29,6 +31,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class ForgotPassActivity extends AppCompatActivity {
 
@@ -58,7 +61,7 @@ public class ForgotPassActivity extends AppCompatActivity {
 
         if (Build.VERSION.SDK_INT >= 23) {
             if (checkPermission()) {
-                Log.e("permission", "Permission already granted.");
+                Log.d("permission", "Permission already granted.");
             } else {
                 requestPermission();
             }
@@ -77,20 +80,33 @@ public class ForgotPassActivity extends AppCompatActivity {
                                 DocumentSnapshot document = task.getResult();
                                 if (document.exists()) {
                                     String phoneNum = document.getData().get("phoneNum").toString();
-                                    String password = document.getData().get("password").toString();
                                     Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-                                    if(!phoneNum.isEmpty() && !password.isEmpty()) {
+                                    if(!phoneNum.isEmpty()) {
                                         if(checkPermission()) {
-                                            String sms = usernameInput + ": Your password is " + password;
+                                            final String tempPassword = UUID.randomUUID().toString();
+                                            String sms = usernameInput + ": Your password is " + tempPassword;
                                             SmsManager smsManager = SmsManager.getDefault();
                                             smsManager.sendTextMessage(phoneNum, null, sms, null, null);
-                                            Handler h = new Handler(){
+                                            Handler handler = new Handler(){
                                                 @Override
                                                 public void handleMessage(Message msg) {
-                                                    goToSignIn();
+                                                    docRef.update("temporary", tempPassword)
+                                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                @Override
+                                                                public void onSuccess(Void aVoid) {
+                                                                    Toast.makeText(ForgotPassActivity.this, "Temporary password activated!", Toast.LENGTH_SHORT).show();
+                                                                }
+                                                            })
+                                                            .addOnFailureListener(new OnFailureListener() {
+                                                                @Override
+                                                                public void onFailure(@NonNull Exception e) {
+                                                                    Log.w(TAG, "Error updating document", e);
+                                                                }
+                                                            });
                                                 }
                                             };
-                                            h.sendEmptyMessageDelayed(0, 2500); // 1500 is time in miliseconds
+                                            startActivity(new Intent(ForgotPassActivity.this, LoginActivity.class));
+                                            handler.sendEmptyMessageDelayed(0, 2500);
                                             Toast.makeText(ForgotPassActivity.this, "SMS sent successfully!", Toast.LENGTH_SHORT).show();
                                         }else {
                                             Toast.makeText(ForgotPassActivity.this, "Permission denied", Toast.LENGTH_SHORT).show();
@@ -166,9 +182,5 @@ public class ForgotPassActivity extends AppCompatActivity {
             }
         }
         return false;
-    }
-
-    private void goToSignIn() {
-        startActivity(new Intent(this, LoginActivity.class));
     }
 }

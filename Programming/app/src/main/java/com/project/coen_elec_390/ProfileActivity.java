@@ -37,9 +37,6 @@ import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -217,7 +214,7 @@ public class ProfileActivity extends AppCompatActivity {
         if (isValidInputs(editPhoneNumber, editPassword)) {
             if (!isPhoneNumberTaken(editPhoneNumber) || editPhoneNumber.equals(profilePhoneNumber)) {
                 docRef.update("phoneNum", editPhoneNumber,
-                        "password", get_SHA_512_SecurePassword(editPassword, "yourmom"))
+                        "password", databaseHelper.get_SHA_512_SecurePassword(editPassword))
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -409,22 +406,5 @@ public class ProfileActivity extends AppCompatActivity {
         }
         toast.show();
         return false;
-    }
-
-    public String get_SHA_512_SecurePassword(String passwordToHash, String salt){
-        String generatedPassword = null;
-        try {
-            MessageDigest md = MessageDigest.getInstance("SHA-512");
-            md.update(salt.getBytes(StandardCharsets.UTF_8));
-            byte[] bytes = md.digest(passwordToHash.getBytes(StandardCharsets.UTF_8));
-            StringBuilder sb = new StringBuilder();
-            for(int i=0; i< bytes.length ;i++){
-                sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
-            }
-            generatedPassword = sb.toString();
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-        return generatedPassword;
     }
 }

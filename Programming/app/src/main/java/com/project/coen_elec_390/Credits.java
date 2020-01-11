@@ -33,7 +33,7 @@ public class Credits extends AppCompatActivity {
         alecList.addAll(Arrays.asList(new String[]{ "Alec Kurkdijan","Aleckurk@gmail.com"}));
         irfanList.addAll(Arrays.asList(new String[]{"Irfan Ahmed","irfan298@gmail.com" }));
         tomiList.addAll(Arrays.asList(new String[]{"Olasubulumi Jesutomi","tomilashy@gmail.com"}));
-        cvuList.addAll(Arrays.asList(new String[]{"Cong-Vinh Vu","cvu@gmail.com" }));
+        cvuList.addAll(Arrays.asList(new String[]{"Cong-Vinh Vu","congvinhvu98@gmail.com" }));
 
         //Add back button
         getSupportActionBar().setDisplayShowHomeEnabled(true);
