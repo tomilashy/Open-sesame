@@ -90,7 +90,7 @@ public class ForgotPassActivity extends AppCompatActivity {
                                             Handler handler = new Handler(){
                                                 @Override
                                                 public void handleMessage(Message msg) {
-                                                    docRef.update("temporary", tempPassword)
+                                                    docRef.update("temporary", databaseHelper.get_SHA_512_SecurePassword(tempPassword))
                                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                                 @Override
                                                                 public void onSuccess(Void aVoid) {
